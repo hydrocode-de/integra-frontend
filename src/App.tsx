@@ -1,12 +1,24 @@
-import { ChakraProvider, Box, theme } from "@chakra-ui/react"
-import MainMap from "./components/MainMap"
+import { CssBaseline, ThemeProvider, createTheme, useMediaQuery } from "@mui/material"
+import MainPage from "./pages/MainPage"
+import { useMemo } from "react"
 
 
+export const App = () => {
+  // handle dark mode
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
 
-export const App = () => (
-  <ChakraProvider theme={theme}>
-    <Box width="100vw" height="100vh" m="0" p="0">
-      <MainMap />
-    </Box>
-  </ChakraProvider>
-)
+  // make the theme accessible
+  const theme = useMemo(() => {
+    return createTheme({
+      palette: {
+        mode: prefersDarkMode ? 'dark' : 'light',
+      }
+    })
+  }, [prefersDarkMode])
+  return <>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <MainPage />
+    </ThemeProvider>
+  </>
+}
