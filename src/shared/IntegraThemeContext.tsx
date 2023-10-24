@@ -25,7 +25,7 @@ const themeReducer = ((theme: Theme, action: ThemeAction) => {
             //return {...theme, palette: {mode: 'light'}}
         }
         case ThemeActionTypes.DARK: {
-            return createTheme({palette: {mode: 'dark'}})
+            return createTheme({...theme, palette: {mode: 'dark'}})
         }
     }
 })
@@ -48,11 +48,13 @@ const IntegraThemeProvider: React.FC<React.PropsWithChildren> = ({ children }) =
     // render the Application wrapped in the contexts
     return <>
         <ThemeContext.Provider value={theme}>
+            <ThemeProvider theme={theme}>
             <ThemeDispatchContext.Provider value={dispatch}>
-                <ThemeProvider theme={theme}>
+                
                     { children }
-                </ThemeProvider>
+                
             </ThemeDispatchContext.Provider>
+            </ThemeProvider>
         </ThemeContext.Provider>
     </>
 }
