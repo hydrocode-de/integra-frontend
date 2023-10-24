@@ -1,5 +1,5 @@
 import { Theme, ThemeProvider, createTheme, useMediaQuery } from "@mui/material";
-import { Dispatch, createContext, useReducer } from "react";
+import { Dispatch, createContext, useContext, useReducer } from "react";
 
 
 // initialize the contexts
@@ -58,5 +58,22 @@ const IntegraThemeProvider: React.FC<React.PropsWithChildren> = ({ children }) =
         </ThemeContext.Provider>
     </>
 }
+
+export const useIntegraTheme = () => useContext(ThemeContext)
+
+export const useIntegraThemeDispatch = () => useContext(ThemeDispatchContext)
+
+export const useLightMode = () => {
+    const dispatch = useIntegraThemeDispatch()
+
+    dispatch({type: ThemeActionTypes.LIGHT})
+}
+
+export const useDarkMode = () => {
+    const dispatch = useIntegraThemeDispatch()
+
+    dispatch({type: ThemeActionTypes.DARK})
+}
+
 
 export default IntegraThemeProvider

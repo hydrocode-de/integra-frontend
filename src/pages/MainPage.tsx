@@ -1,24 +1,19 @@
-import { AppBar, Box, Button, IconButton, Toolbar, Typography, useTheme } from "@mui/material"
+import { AppBar, Box, Button, IconButton, Toolbar, Typography } from "@mui/material"
+import {   useDarkMode, useIntegraTheme, useLightMode, } from "../shared/IntegraThemeContext"
 import  { Menu, LightMode, DarkMode } from "@mui/icons-material"
 
 import MainMap from "../components/MainMap"
-import { useContext } from "react"
-import { ThemeActionTypes, ThemeContext, ThemeDispatchContext } from "../shared/IntegraThemeContext"
 
 
 const MainPage: React.FC = () => {
     // get the theme 
-    //const theme = useTheme()
-    const theme = useContext(ThemeContext)
-
-    // get a theme dispatch
-    const dispatch = useContext(ThemeDispatchContext)
+    const theme = useIntegraTheme()
 
     const onThemeToggle = () => {
         if (theme.palette.mode === 'dark') {
-            dispatch({type: ThemeActionTypes.LIGHT})
+            useLightMode()
         } else {
-            dispatch({type: ThemeActionTypes.DARK})
+            useDarkMode()
         }
     }
 
