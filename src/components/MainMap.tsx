@@ -13,7 +13,7 @@ const MapContext = createContext<Map | null>(null);
 export const useMap = () => useContext(MapContext);
 
 // main Component
-const MainMap: React.FC = () => {
+const MainMap: React.FC<React.PropsWithChildren> = ({ children }) => {
     // set up some refs to hold the map and container
     const mapContainer = useRef<HTMLDivElement>(null)
     const map = useRef<Map | null>(null)
@@ -58,6 +58,7 @@ const MainMap: React.FC = () => {
     return <>
         <MapContext.Provider value={map.current}>
             <div ref={mapContainer} className="map-container" style={{height: '100%', width: '100%'}} />
+            { children }
         </MapContext.Provider>
     </>
 }
