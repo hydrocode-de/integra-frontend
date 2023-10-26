@@ -1,5 +1,5 @@
 import { AppBar, Box, Button, IconButton, Toolbar, Typography } from "@mui/material"
-import {   useDarkMode, useIntegraTheme, useLightMode, } from "../shared/IntegraThemeContext"
+import {   useDarkMode, useIntegraTheme, useLightMode, } from "../context/IntegraThemeContext"
 import  { Menu, LightMode, DarkMode } from "@mui/icons-material"
 
 import MainMap from "../components/MainMap"

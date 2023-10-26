@@ -1,6 +1,6 @@
 import { CssBaseline } from "@mui/material"
 import MainPage from "./pages/MainPage"
-import IntegraThemeProvider from "./shared/IntegraThemeContext"
+import IntegraThemeProvider from "./context/IntegraThemeContext"
 
 
 export const App = () => {
