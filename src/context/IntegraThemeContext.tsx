@@ -63,16 +63,24 @@ export const useIntegraTheme = () => useContext(ThemeContext)
 
 export const useIntegraThemeDispatch = () => useContext(ThemeDispatchContext)
 
+export const useModeToggler = () => {
+    // get the contexts
+    const dispatch = useIntegraThemeDispatch()
+    const theme = useIntegraTheme()
+
+    return () => dispatch({type: theme.palette.mode === "dark" ? ThemeActionTypes.LIGHT : ThemeActionTypes.DARK })
+}
+
 export const useLightMode = () => {
     const dispatch = useIntegraThemeDispatch()
 
-    dispatch({type: ThemeActionTypes.LIGHT})
+    return () => dispatch({type: ThemeActionTypes.LIGHT})
 }
 
 export const useDarkMode = () => {
     const dispatch = useIntegraThemeDispatch()
 
-    dispatch({type: ThemeActionTypes.DARK})
+    return () => dispatch({type: ThemeActionTypes.DARK})
 }
 
 

@@ -1,5 +1,5 @@
 import { AppBar, Box, Button, IconButton, Toolbar, Typography } from "@mui/material"
-import {   useDarkMode, useIntegraTheme, useLightMode, } from "../context/IntegraThemeContext"
+import { useIntegraTheme, useModeToggler, } from "../context/IntegraThemeContext"
 import  { Menu, LightMode, DarkMode } from "@mui/icons-material"
 
 import MainMap from "../components/MainMap"
@@ -8,14 +8,7 @@ import MainMap from "../components/MainMap"
 const MainPage: React.FC = () => {
     // get the theme 
     const theme = useIntegraTheme()
-
-    const onThemeToggle = () => {
-        if (theme.palette.mode === 'dark') {
-            useLightMode()
-        } else {
-            useDarkMode()
-        }
-    }
+    const modeToggler = useModeToggler()
 
     return <>
         <Box sx={{flexGrow: 1}}>
@@ -30,7 +23,7 @@ const MainPage: React.FC = () => {
                     </Typography>
 
                     <Button color="inherit">Button</Button>
-                    <IconButton size="medium" edge="start" color="inherit" aria-label="switch color mode" sx={{ml: 2}} onClick={onThemeToggle}>
+                    <IconButton size="medium" edge="start" color="inherit" aria-label="switch color mode" sx={{ml: 2}} onClick={modeToggler}>
                         { theme.palette.mode === 'dark' ? <LightMode /> : <DarkMode />}
                     </IconButton>
                 </Toolbar>
