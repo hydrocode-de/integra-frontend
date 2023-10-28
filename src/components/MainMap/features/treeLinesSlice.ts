@@ -26,14 +26,14 @@ type TreeLocation = FeatureCollection<Point, TreeLocationProperties>
 
 // define the interface for the tree lines state
 interface TreeLinesState {
-    treeLines: TreeLine[],
-    treeLocations: TreeLocation[]
+    treeLines: TreeLine,
+    treeLocations: TreeLocation
 }
 
 // define the initial state
 const initialState: TreeLinesState = {
-    treeLines: [],
-    treeLocations: []
+    treeLines: {type: "FeatureCollection", features: []},
+    treeLocations: {type: "FeatureCollection", features: []}
 }
 
 // create the slice
@@ -41,11 +41,12 @@ export const treeLinesSlice = createSlice({
     name: 'treeLines',
     initialState,
     reducers: {
-        addLine: () => {}
+        addLine: () => {},
+        removeLine: () => {}
     }
 })
 
 // export the actions
-export const { addLine } = treeLinesSlice.actions
+export const { addLine, removeLine } = treeLinesSlice.actions
 
 export default treeLinesSlice.reducer

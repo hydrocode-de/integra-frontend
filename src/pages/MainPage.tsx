@@ -3,6 +3,7 @@ import { useIntegraTheme, useModeToggler, } from "../context/IntegraThemeContext
 import  { Menu, LightMode, DarkMode } from "@mui/icons-material"
 
 import MainMap from "../components/MainMap/MainMap"
+import TreeLineSource from "../components/MainMap/TreeLineSource"
 
 
 const MainPage: React.FC = () => {
@@ -31,7 +32,9 @@ const MainPage: React.FC = () => {
         </Box>
 
         <Box width="100vw" height="calc(100vh - 64px)" m="0" p="0">
-            <MainMap />
+            <MainMap>
+                <TreeLineSource />
+            </MainMap>
         </Box>
     </>
 }
