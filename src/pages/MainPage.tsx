@@ -2,7 +2,7 @@ import { AppBar, Box, Button, IconButton, Toolbar, Typography } from "@mui/mater
 import { useIntegraTheme, useModeToggler, } from "../context/IntegraThemeContext"
 import  { Menu, LightMode, DarkMode } from "@mui/icons-material"
 
-import MainMap from "../components/MainMap"
+import MainMap from "../components/MainMap/MainMap"
 
 
 const MainPage: React.FC = () => {
