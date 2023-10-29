@@ -5,12 +5,20 @@ import  { Menu, LightMode, DarkMode } from "@mui/icons-material"
 import MainMap from "../components/MainMap/MainMap"
 import TreeLineSource from "../components/MainMap/TreeLineSource"
 import DrawControl from "../components/MainMap/DrawControl"
+import { useAppDispatch } from "../hooks"
+import { addLineAction } from "../components/MainMap/features/treeLinesSlice"
+import { useDrawBuffer } from "../components/MainMap/features/treeLinesHooks"
 
 
 const MainPage: React.FC = () => {
     // get the theme 
     const theme = useIntegraTheme()
     const modeToggler = useModeToggler()
+
+    // development only
+    const buffer = useDrawBuffer()
+    const dispatch = useAppDispatch()
+    const onSave = () => dispatch(addLineAction({}))
 
     return <>
         <Box sx={{flexGrow: 1}}>
@@ -24,7 +32,7 @@ const MainPage: React.FC = () => {
                         INTEGRA
                     </Typography>
 
-                    <Button color="inherit">Button</Button>
+                    <Button color="inherit" onClick={onSave} disabled={buffer.features.length === 0}>SAVE</Button>
                     <IconButton size="medium" edge="start" color="inherit" aria-label="switch color mode" sx={{ml: 2}} onClick={modeToggler}>
                         { theme.palette.mode === 'dark' ? <LightMode /> : <DarkMode />}
                     </IconButton>
