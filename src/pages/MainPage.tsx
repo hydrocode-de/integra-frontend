@@ -4,6 +4,7 @@ import  { Menu, LightMode, DarkMode } from "@mui/icons-material"
 
 import MainMap from "../components/MainMap/MainMap"
 import TreeLineSource from "../components/MainMap/TreeLineSource"
+import DrawControl from "../components/MainMap/DrawControl"
 
 
 const MainPage: React.FC = () => {
@@ -33,6 +34,7 @@ const MainPage: React.FC = () => {
 
         <Box width="100vw" height="calc(100vh - 64px)" m="0" p="0">
             <MainMap>
+                <DrawControl />
                 <TreeLineSource />
             </MainMap>
         </Box>
