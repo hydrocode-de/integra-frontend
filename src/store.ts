@@ -1,11 +1,15 @@
 import { configureStore } from "@reduxjs/toolkit"
-import treeLinesReducer from "./components/MainMap/features/treeLinesSlice"
+
+// import the reducers
+import treeLinesReducer from "./components/MainMap/treeLineFeatures/treeLinesSlice"
+import mapSliceReducer from "./components/MainMap/mapFeatures/mapSlice"
 
 
 // create the application wide State store
 export const store = configureStore({
     reducer: {
-        treeLines: treeLinesReducer
+        treeLines: treeLinesReducer,
+        map: mapSliceReducer
     }
 })
 

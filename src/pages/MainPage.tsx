@@ -6,8 +6,9 @@ import MainMap from "../components/MainMap/MainMap"
 import TreeLineSource from "../components/MainMap/TreeLineSource"
 import DrawControl from "../components/MainMap/DrawControl"
 import { useAppDispatch } from "../hooks"
-import { addLineAction } from "../components/MainMap/features/treeLinesSlice"
-import { useDrawBuffer } from "../components/MainMap/features/treeLinesHooks"
+import { addLineAction } from "../components/MainMap/treeLineFeatures/treeLinesSlice"
+import { useDrawBuffer } from "../components/MainMap/treeLineFeatures/treeLinesHooks"
+import { useCenter, useZoom } from "../components/MainMap/mapFeatures/mapHooks"
 
 
 const MainPage: React.FC = () => {
@@ -20,6 +21,10 @@ const MainPage: React.FC = () => {
     const dispatch = useAppDispatch()
     const onSave = () => dispatch(addLineAction({distance: 40, type: 'birch'}))
 
+    // development only
+    const center = useCenter()
+    const zoom = useZoom()
+
     return <>
         <Box sx={{flexGrow: 1}}>
             <AppBar position="static">
@@ -30,6 +35,10 @@ const MainPage: React.FC = () => {
 
                     <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
                         INTEGRA
+                    </Typography>
+
+                    <Typography variant="h6" component="div" sx={{flexFlow: 1, mr: 2}}>
+                        Lng: {center.lng} Lat: {center.lat} Zoom: {zoom}
                     </Typography>
 
                     <Button color="inherit" onClick={onSave} disabled={buffer.features.length === 0}>SAVE</Button>

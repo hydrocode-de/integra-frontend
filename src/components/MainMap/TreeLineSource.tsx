@@ -1,6 +1,6 @@
 import { Source, Layer } from "react-map-gl"
 
-import { useTreeLines, useTreeLocations } from "./features/treeLinesHooks"
+import { useTreeLines, useTreeLocations } from "./treeLineFeatures/treeLinesHooks"
 import { useEffect } from "react"
 
 const TreeLineSource: React.FC = () => {

@@ -6,8 +6,8 @@ import { ControlPosition, useControl } from "react-map-gl"
 // import the css of mapbox draw
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css"
 import { useAppDispatch } from "../../hooks"
-import { updateDrawBuffer } from "./features/treeLinesSlice"
-import { useDrawBuffer } from "./features/treeLinesHooks"
+import { updateDrawBuffer } from "./treeLineFeatures/treeLinesSlice"
+import { useDrawBuffer } from "./treeLineFeatures/treeLinesHooks"
 
 
 interface DrawControlProps {
