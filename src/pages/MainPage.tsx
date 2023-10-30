@@ -18,7 +18,7 @@ const MainPage: React.FC = () => {
     // development only
     const buffer = useDrawBuffer()
     const dispatch = useAppDispatch()
-    const onSave = () => dispatch(addLineAction({}))
+    const onSave = () => dispatch(addLineAction({distance: 40, type: 'birch'}))
 
     return <>
         <Box sx={{flexGrow: 1}}>

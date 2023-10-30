@@ -1,8 +1,7 @@
 import { useEffect } from "react"
 
 import MapboxDraw from "@mapbox/mapbox-gl-draw"
-import { ControlPosition, useControl, useMap } from "react-map-gl"
-import cloneDeep from "lodash.clonedeep"
+import { ControlPosition, useControl } from "react-map-gl"
 
 // import the css of mapbox draw
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css"
@@ -68,7 +67,7 @@ const DrawControl: React.FC<DrawControlProps> = ({ position  }) => {
 
     useEffect(() => {
         if (!mapboxDraw) return
-        console.log("updated")
+        // console.log("updated")
         mapboxDraw.set(buffer)
     }, [buffer, mapboxDraw])
 

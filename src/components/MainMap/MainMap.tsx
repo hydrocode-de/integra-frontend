@@ -11,7 +11,7 @@ const MainMap: React.FC<React.PropsWithChildren> = ({ children }) => {
                 longitude: 7.83,
                 latitude: 48.0,
                 zoom: 9,
-                pitch: 60,
+                pitch: 0,
             }}
             style={{width: '100%', height: '100%'}}
             mapStyle="mapbox://styles/hydrocode-de/clnzu7dd1000b01pg2eqxcemy"

@@ -1,12 +1,16 @@
 import { Source, Layer } from "react-map-gl"
 
 import { useTreeLines, useTreeLocations } from "./features/treeLinesHooks"
+import { useEffect } from "react"
 
 const TreeLineSource: React.FC = () => {
     // use the TreeLines and TreeLocations hook to subscribe to data
     const treeLines = useTreeLines()
     const treeLocations = useTreeLocations()
 
+    useEffect(() => {
+        console.log(treeLocations)
+    }, [treeLocations])
     return <>
         <Source id="tree-lines" type="geojson" data={treeLines}>
             <Layer id="tree-lines" source="tree-lines" type="line" paint={{
