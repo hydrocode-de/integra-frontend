@@ -6,7 +6,7 @@ import along from "@turf/along"
 import length from "@turf/length"
 
 import { PayloadAction } from "@reduxjs/toolkit";
-import { TreeLinesState } from "./treeLinesSlice";
+import { DrawControlState, TreeLinesState } from "./treeLinesSlice";
 
 
 
@@ -15,6 +15,10 @@ export const updateDrawBufferReducer = (state: TreeLinesState, action: PayloadAc
     return {...state, drawBuffer: action.payload}
 }
 
+export const updateDrawStateReducer = (state: TreeLinesState, action: PayloadAction<DrawControlState>) => {
+    // overwrite the draw state
+    return {...state, draw: action.payload}
+}
 
 
 // define the Payload interface for addLineReducer
@@ -72,6 +76,9 @@ export const addLineReducer = (state: TreeLinesState, action: PayloadAction<AddL
 
     // remove the buffer
     state.drawBuffer.features = []
+
+    // disable edit mode
+    state.draw = DrawControlState.OFF
 
     return state
 }

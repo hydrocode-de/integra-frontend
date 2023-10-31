@@ -5,8 +5,8 @@ import { ControlPosition, useControl } from "react-map-gl"
 
 // import the css of mapbox draw
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css"
-import { useAppDispatch } from "../../hooks"
-import { updateDrawBuffer } from "./treeLineFeatures/treeLinesSlice"
+import { useAppDispatch, useAppSelector } from "../../hooks"
+import { DrawControlState, updateDrawBuffer, updateDrawState } from "./treeLineFeatures/treeLinesSlice"
 import { useDrawBuffer } from "./treeLineFeatures/treeLinesHooks"
 
 
@@ -20,6 +20,9 @@ const DrawControl: React.FC<DrawControlProps> = ({ position  }) => {
 
     // check the draw buffer in the state to update
     const buffer = useDrawBuffer()
+
+    // development only
+    const drawState = useAppSelector(state => state.treeLines.draw)
 
     // define the handlers for map draw events
     const onMapDrawCreate = (event: MapboxDraw.DrawCreateEvent) => {
@@ -42,9 +45,9 @@ const DrawControl: React.FC<DrawControlProps> = ({ position  }) => {
     const mapboxDraw = useControl<MapboxDraw>(
         // create a new instance of the DrawControl
         () => new MapboxDraw({
-                controls: {line_string: true, trash: true},
+                // controls: {line_string: true, trash: true},
                 displayControlsDefault: false,
-                defaultMode: "draw_line_string",
+                defaultMode: "simple_select",
             }),
 
         // pass the callback function called on map load
@@ -64,12 +67,52 @@ const DrawControl: React.FC<DrawControlProps> = ({ position  }) => {
         // pass the position of the control
         { position: position || "top-right" }
     )
-
+    
+    // update the draw buffer from the App state, so that the application
+    // can empty and re-fill it on user interaction
     useEffect(() => {
         if (!mapboxDraw) return
         // console.log("updated")
         mapboxDraw.set(buffer)
     }, [buffer, mapboxDraw])
+
+    // switch the modes based on the app state
+    useEffect(() => {
+        if (!mapboxDraw) return
+        if (drawState === DrawControlState.SELECT) {
+            mapboxDraw.changeMode("simple_select")
+        } 
+        else if (drawState === DrawControlState.LINE) {
+            mapboxDraw.changeMode("draw_line_string")
+        } 
+        
+        else if (drawState === "off") {
+            // off means delete everything and go to select mode
+            // thus the user interactions do not have any effect
+            mapboxDraw.deleteAll()
+            mapboxDraw.changeMode("simple_select")
+        } 
+        
+        else if (drawState === "trash") {
+            // check if something is selected
+            const selected = mapboxDraw.getSelected()
+            // check if there are selected features
+            if (selected.features.length > 0) {
+                // delete the selected features
+                mapboxDraw.delete(selected.features.map(f => String(f.id)))
+            }
+            
+            // jump into select mode
+            dispatch(updateDrawState(DrawControlState.SELECT))
+        } 
+        
+        else if (drawState === DrawControlState.ADD_LINE) {
+            // this one is an ugly workaround - we need to go to line add and reset the state
+            // otherwise the user can't keep on hitting the button to add lines
+            mapboxDraw.changeMode("simple_select")
+            dispatch(updateDrawState(DrawControlState.LINE))
+        }
+    }, [drawState, mapboxDraw])
 
     // this component doesn't render anything
     return null
