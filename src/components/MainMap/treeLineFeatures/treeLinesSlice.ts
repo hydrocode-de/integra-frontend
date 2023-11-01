@@ -1,4 +1,4 @@
-import { FeatureCollection, LineString, Point, Feature } from "geojson"
+import { FeatureCollection, LineString, Point } from "geojson"
 
 import { createSlice } from "@reduxjs/toolkit"
 import { addLineReducer, removeLineReducer, updateDrawBufferReducer, updateDrawStateReducer } from "./treeLineActions"
