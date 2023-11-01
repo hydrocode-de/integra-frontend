@@ -4,6 +4,7 @@ import {v4 as uuid} from "uuid"
 // import the needed turf functions
 import along from "@turf/along"
 import length from "@turf/length"
+import bbox from "@turf/bbox"
 
 import { PayloadAction } from "@reduxjs/toolkit";
 import { DrawControlState, TreeLinesState } from "./treeLinesSlice";
@@ -92,5 +93,29 @@ export const addLineReducer = (state: TreeLinesState, action: PayloadAction<AddL
 }
 
 export const removeLineReducer = (state: TreeLinesState, action: PayloadAction<string>) => {
-    return state
+    const lineId = action.payload
+
+    // to remove the line, the bbox of the remaining features needs to be re-calculated
+    const newLines = {
+        ...state.treeLines,
+        features: state.treeLines.features.filter(feature => feature.id !== lineId)
+    }
+    if (newLines.features.length > 0) {
+        newLines.bbox = bbox(newLines)
+    }
+    
+    // filter out the tree location that belong to the line
+    const newLocations = {
+        ...state.treeLocations,
+        features: state.treeLocations.features.filter(tree => tree.properties.treeLineId !== lineId)
+    }
+    if (newLocations.features.length > 0) {
+        newLocations.bbox = bbox(newLocations)
+    }
+
+    return {
+        ...state,
+        treeLines: newLines,
+        treeLocations: newLocations
+    }
 }
