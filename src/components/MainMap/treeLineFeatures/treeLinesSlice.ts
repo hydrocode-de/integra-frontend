@@ -1,7 +1,7 @@
 import { FeatureCollection, LineString, Point } from "geojson"
 
 import { createSlice } from "@reduxjs/toolkit"
-import { addLineReducer, removeLineReducer, updateDrawBufferReducer, updateDrawStateReducer } from "./treeLineActions"
+import { addLineReducer, lineToDrawReducer, removeLineReducer, updateDrawBufferReducer, updateDrawStateReducer } from "./treeLineActions"
 
 // define the properties of a TreeLine
 interface TreeLineProperties {
@@ -60,11 +60,12 @@ export const treeLinesSlice = createSlice({
         updateDrawState: updateDrawStateReducer,
         updateDrawBuffer: updateDrawBufferReducer,
         addLineAction: addLineReducer,
-        removeLineAction: removeLineReducer
+        removeLineAction: removeLineReducer,
+        lineToDrawAction: lineToDrawReducer
     }
 })
 
 // export the actions
-export const { updateDrawState, updateDrawBuffer, addLineAction, removeLineAction } = treeLinesSlice.actions
+export const { updateDrawState, updateDrawBuffer, addLineAction, removeLineAction, lineToDrawAction } = treeLinesSlice.actions
 
 export default treeLinesSlice.reducer

@@ -119,3 +119,17 @@ export const removeLineReducer = (state: TreeLinesState, action: PayloadAction<s
         treeLocations: newLocations
     }
 }
+
+export const lineToDrawReducer = (state: TreeLinesState, action: PayloadAction<string>) => {
+    // find the correct line feature
+    const lineFeature = state.treeLines.features.find(feature => feature.id === action.payload)
+
+    if (lineFeature) {
+        // add the current line Feature back to the draw buffer
+        state.drawBuffer.features.push(lineFeature)
+    }
+
+    return state
+    // finally call the reducer to remove the line and treeLocations and re-calculate the bbox
+    //return removeLineReducer(state, action)
+}

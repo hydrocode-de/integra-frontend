@@ -33,7 +33,7 @@ const DrawPalette: React.FC = () => {
     const onAddLine = () => dispatch(updateDrawState(DrawControlState.ADD_LINE))
 
     return <>
-        <Typography variant="h6" component="div" display="flex" justifyContent="space-between">
+        <Typography variant="h6" component="div" sx={{flexGrow: 1}} display="flex" justifyContent="space-between">
             Pflanzungen
         
             { drawState === DrawControlState.OFF ? (

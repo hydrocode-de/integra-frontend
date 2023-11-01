@@ -2,7 +2,7 @@ import { AccordionActions, AccordionDetails, Button, ButtonGroup } from "@mui/ma
 import { VisibilityOutlined, EditOutlined, DeleteOutline } from "@mui/icons-material"
 import center from "@turf/center"
 
-import { TreeLine, removeLineAction } from "../MainMap/treeLineFeatures/treeLinesSlice"
+import { DrawControlState, TreeLine, lineToDrawAction, removeLineAction, updateDrawState } from "../MainMap/treeLineFeatures/treeLinesSlice"
 import { flyTo } from "../MainMap/MapObservableStore"
 import { useAppDispatch } from "../../hooks"
 
@@ -29,11 +29,21 @@ const TreeLineDetails: React.FC<TreeLineDetailsProps> = ({ treeLine }) => {
         dispatch(removeLineAction(String(treeLine.id)))
     }
 
+    // define the event handler to edit the treeLine
+    const onEdit = () => {
+        // add the geometry back to the draw buffer
+        dispatch(lineToDrawAction(String(treeLine.id)))
+        dispatch(removeLineAction(String(treeLine.id)))
+
+        // enable drawing again
+        dispatch(updateDrawState(DrawControlState.SELECT))
+    }
+
     return <>
         <AccordionActions>
             <ButtonGroup>
                 <Button size="small" startIcon={<VisibilityOutlined />} onClick={onView}>Anzeigen</Button>
-                <Button size="small" startIcon={<EditOutlined />} disabled>Bearbeiten</Button>
+                <Button size="small" startIcon={<EditOutlined />} onClick={onEdit}>Bearbeiten</Button>
                 <Button size="small" startIcon={<DeleteOutline />} onClick={onRemove}>Löschen</Button>
             </ButtonGroup>
         </AccordionActions>
