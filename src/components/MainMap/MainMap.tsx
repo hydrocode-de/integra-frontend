@@ -4,6 +4,7 @@ import ReactMap, { ViewStateChangeEvent } from "react-map-gl"
 import 'mapbox-gl/dist/mapbox-gl.css'
 import { useAppDispatch } from "../../hooks"
 import { updateViewport } from "./mapFeatures/mapSlice"
+import MapObserver from "./MapObserver"
 
 
 const MainMap: React.FC<React.PropsWithChildren> = ({ children }) => {
@@ -29,7 +30,9 @@ const MainMap: React.FC<React.PropsWithChildren> = ({ children }) => {
             //mapStyle="mapbox://styles/hydrocode-de/clnzu7dd1000b01pg2eqxcemy"
             mapStyle="mapbox://styles/mapbox/satellite-v9"
             onMove={onMove}
-        >
+        >   
+            {/* The Map observer is added here, as it add needed functionality. But maybe it can also be added at MainPage?! */}
+            <MapObserver />
             { children }
         </ReactMap>
     </>
