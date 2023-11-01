@@ -6,7 +6,9 @@ import { addLineReducer, removeLineReducer, updateDrawBufferReducer, updateDrawS
 // define the properties of a TreeLine
 interface TreeLineProperties {
     id: string,
-    treeCount: number
+    treeCount: number,
+    width?: number,
+    length?: number
 }
 
 // define the interface for user created tree lines

@@ -16,7 +16,7 @@ const TreeLineList: React.FC = () => {
     { treeLines.features.map(((treeLine, idx) => (
         <Accordion key={treeLine.id!} TransitionProps={{unmountOnExit: false}}>
             <AccordionSummary expandIcon={<ExpandMore />} aria-controls={`line-${treeLine.id!}`} id={`line-${treeLine.id!}`}>
-                <Typography>Pflanzreihe { idx + 1}  ({treeLine.properties.treeCount} Bäume)</Typography>
+                <Typography>Pflanzreihe { idx + 1}  ({treeLine.properties.treeCount} Bäume - {treeLine.properties.length?.toFixed(0)}m)</Typography>
             </AccordionSummary>
             <TreeLineDetails treeLine={treeLine} />
         </Accordion>
