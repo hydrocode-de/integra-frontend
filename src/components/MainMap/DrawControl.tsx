@@ -90,6 +90,7 @@ const DrawControl: React.FC<DrawControlProps> = ({ position  }) => {
             // off means delete everything and go to select mode
             // thus the user interactions do not have any effect
             mapboxDraw.deleteAll()
+            dispatch(updateDrawBuffer({type: "FeatureCollection", features: []}))
             mapboxDraw.changeMode("simple_select")
         } 
         
@@ -100,6 +101,10 @@ const DrawControl: React.FC<DrawControlProps> = ({ position  }) => {
             if (selected.features.length > 0) {
                 // delete the selected features
                 mapboxDraw.delete(selected.features.map(f => String(f.id)))
+
+                // now update the buffer
+                const features = mapboxDraw.getAll() as GeoJSON.FeatureCollection<GeoJSON.LineString>
+                dispatch(updateDrawBuffer(features))
             }
             
             // jump into select mode
