@@ -1,15 +1,20 @@
-import { ButtonGroup, IconButton, Typography } from "@mui/material"
-import { AddBoxOutlined, DeleteOutline, CloseOutlined, CheckOutlined } from "@mui/icons-material"
+import { Box, ButtonGroup, Card, CardContent, Collapse, FormControl, IconButton, Input, InputLabel, MenuItem, Select, Slider, Typography } from "@mui/material"
+import { AddBoxOutlined, DeleteOutline, CloseOutlined, CheckOutlined, Park } from "@mui/icons-material"
 
 import { useAppDispatch, useAppSelector } from "../hooks"
 import { DrawControlState, addLineAction, updateDrawState } from "./MainMap/treeLineFeatures/treeLinesSlice"
 import { useZoom } from "./MainMap/mapFeatures/mapHooks"
 import { useDrawBuffer } from "./MainMap/treeLineFeatures/treeLinesHooks"
+import { useState } from "react"
 
 const DrawPalette: React.FC = () => {
     // get the current state of the DrawControl
     const drawState = useAppSelector(state => state.treeLines.draw)
 
+    // define component state for adjusting the way how the line is drawn
+    const [treeDistance, setTreeDistance] = useState<number>(40)
+    const [treeType, setTreeType] = useState<string>('birch')
+    
     // get a state dispatcher
     const dispatch = useAppDispatch()
 
@@ -21,7 +26,7 @@ const DrawPalette: React.FC = () => {
 
     // define the functions to change the edit state
     const onEdit = () => dispatch(updateDrawState(DrawControlState.LINE))
-    const onSave = () => dispatch(addLineAction({distance: 40, type: 'birch'}))
+    const onSave = () => dispatch(addLineAction({distance: treeDistance, type: treeType}))
     const onDiscard = () => dispatch(updateDrawState(DrawControlState.TRASH))
     const onTurnOff = () => dispatch(updateDrawState(DrawControlState.OFF))
     const onAddLine = () => dispatch(updateDrawState(DrawControlState.ADD_LINE))
@@ -52,6 +57,33 @@ const DrawPalette: React.FC = () => {
             )}
 
         </Typography>
+
+        {/* Add a control box to select the tree type, age and distance along the line */}
+        <Collapse in={drawState !== DrawControlState.OFF} timeout="auto" unmountOnExit>
+            <Card>
+                <CardContent>
+                    <Typography id="distance-slider" gutterBottom>Pflanzabstand</Typography>
+                    <Box display="flex">
+                        <Park sx={{mr: 2}} />
+                        <Slider min={0} max={150} value={treeDistance} onChange={(_, value) => setTreeDistance(value as number)} />
+                        <Input sx={{ml: 2, minWidth: '45px'}} size="small" type="number" inputProps={{min: 0, max: 150, step: 10}} value={treeDistance} onChange={e => setTreeDistance(Number(e.target.value))} /> 
+                    </Box>
+
+                    <FormControl fullWidth sx={{mt: 3}}>
+                        <InputLabel id="tree-type">Baumart</InputLabel>
+                        <Select labelId="tree-type" value={treeType} onChange={e => setTreeType(e.target.value)}>
+                            <MenuItem value="birch">Birke</MenuItem>
+                            <MenuItem value="oak">Eiche</MenuItem>
+                            <MenuItem value="maple">Ahorn</MenuItem>
+                            <MenuItem value="beech">Buche</MenuItem>
+                            <MenuItem value="pine">Kiefer</MenuItem>
+                        </Select>
+                    </FormControl>
+                    
+                    
+                </CardContent>
+            </Card>
+        </Collapse>
     </>
 }
 
