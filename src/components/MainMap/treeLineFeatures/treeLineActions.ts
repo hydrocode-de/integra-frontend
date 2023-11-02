@@ -24,7 +24,7 @@ export const updateDrawStateReducer = (state: TreeLinesState, action: PayloadAct
 
 // define the Payload interface for addLineReducer
 interface AddLinePayload {
-    distance: number,
+    spacing: number,
     type: string,
     age?: number,
     width?: number,
@@ -38,25 +38,25 @@ export const addLineReducer = (state: TreeLinesState, action: PayloadAction<AddL
     // add to the lines
     buffer.features.forEach(lineFeature => {
         // get the defined distance between trees
-        const distance = action.payload.distance
+        const spacing = action.payload.spacing
 
         // get the length of the line
         const len = length(lineFeature, {units: "meters"})
 
         // get the number of trees along the line to add
-        const numTrees = Math.floor(len / distance)
+        const numTrees = Math.floor(len / spacing)
 
         // make sure mapbox assigned a unique id to the line
         const lineId = String(lineFeature.id) || uuid()
 
         // Add half of the rest of len - numTrees * distance as offset to the first tree
         // to align the trees to the center of the line if needed
-        const offset = action.payload.centerOnLine ? (len - numTrees * distance) / 2 : 0
+        const offset = action.payload.centerOnLine ? (len - numTrees * spacing) / 2 : 0
 
         // create a TreeLocation for every tree needed along the line
         for (let i = 0; i <= numTrees; i++) {
             // get the geometry of the tree
-            const point = along(lineFeature, (i * distance)  + offset, {units: "meters"})
+            const point = along(lineFeature, (i * spacing)  + offset, {units: "meters"})
 
             // set the properties of the point and push to the treeLocations
             state.treeLocations.features.push({

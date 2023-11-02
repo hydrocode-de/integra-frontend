@@ -12,7 +12,7 @@ const DrawPalette: React.FC = () => {
     const drawState = useAppSelector(state => state.treeLines.draw)
 
     // define component state for adjusting the way how the line is drawn
-    const [treeDistance, setTreeDistance] = useState<number>(40)
+    const [treeSpacing, setTreeSpacing] = useState<number>(40)
     const [treeType, setTreeType] = useState<string>('birch')
     const [centerTreeLine, setCenterTreeLine] = useState<boolean>(false)
     
@@ -27,7 +27,7 @@ const DrawPalette: React.FC = () => {
 
     // define the functions to change the edit state
     const onEdit = () => dispatch(updateDrawState(DrawControlState.LINE))
-    const onSave = () => dispatch(addLineAction({distance: treeDistance, type: treeType, centerOnLine: centerTreeLine}))
+    const onSave = () => dispatch(addLineAction({spacing: treeSpacing, type: treeType, centerOnLine: centerTreeLine}))
     const onDiscard = () => dispatch(updateDrawState(DrawControlState.TRASH))
     const onTurnOff = () => dispatch(updateDrawState(DrawControlState.OFF))
     const onAddLine = () => dispatch(updateDrawState(DrawControlState.ADD_LINE))
@@ -66,8 +66,8 @@ const DrawPalette: React.FC = () => {
                     <Typography id="distance-slider" gutterBottom>Pflanzabstand</Typography>
                     <Box display="flex">
                         <Park sx={{mr: 2}} />
-                        <Slider min={0} max={150} value={treeDistance} onChange={(_, value) => setTreeDistance(value as number)} />
-                        <Input sx={{ml: 2, minWidth: '45px'}} size="small" type="number" inputProps={{min: 0, max: 150, step: 10}} value={treeDistance} onChange={e => setTreeDistance(Number(e.target.value))} /> 
+                        <Slider min={0} max={150} value={treeSpacing} onChange={(_, value) => setTreeSpacing(value as number)} />
+                        <Input sx={{ml: 2, minWidth: '45px'}} size="small" type="number" inputProps={{min: 0, max: 150, step: 10}} value={treeSpacing} onChange={e => setTreeSpacing(Number(e.target.value))} /> 
                     </Box>
 
                     <FormControlLabel control={<Checkbox checked={centerTreeLine} onChange={e => setCenterTreeLine(e.target.checked)} />} label="Pflanzreihe zentrieren" />
