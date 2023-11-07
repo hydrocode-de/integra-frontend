@@ -8,8 +8,9 @@ import DrawControl from "../components/MainMap/DrawControl"
 // import { useAppDispatch } from "../hooks"
 // import { useDrawBuffer } from "../components/MainMap/treeLineFeatures/treeLinesHooks"
 import { useCenter, useZoom } from "../components/MainMap/mapFeatures/mapHooks"
-import DrawPalette from "../components/DrawPalette"
+// import DrawPalette from "../components/DrawPalette"
 import TreeLineList from "../components/TreeLines/TreeLineList"
+import NewTreeLineControl from "../components/NewTreeLineControl"
 
 
 const MainPage: React.FC = () => {
@@ -50,11 +51,12 @@ const MainPage: React.FC = () => {
         </Box>
         
         <Box width="100vw" height="calc(100vh - 64px)" m="0" p="0" display="flex">
-            <Box height="100%" width="33vw" maxWidth="600px" m="0" display="flex" justifyContent="space-between" flexDirection="column">
+            <Box height="100%" minWidth="33vw" maxWidth="600px" m="0" display="flex" justifyContent="space-between" flexDirection="column">
                 
                 <Box>
                     <Box sx={{p: 1}}>
-                        <DrawPalette />
+                        <NewTreeLineControl />
+                        {/* <DrawPalette /> */}
                     </Box>
                     <TreeLineList /> 
                 </Box>
