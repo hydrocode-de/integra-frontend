@@ -27,7 +27,8 @@ const DrawPalette: React.FC = () => {
 
     // define the functions to change the edit state
     const onEdit = () => dispatch(updateDrawState(DrawControlState.LINE))
-    const onSave = () => dispatch(addLineAction({spacing: treeSpacing, type: treeType, centerOnLine: centerTreeLine}))
+    //const onSave = () => dispatch(addLineAction({spacing: treeSpacing, type: treeType, centerOnLine: centerTreeLine}))
+    const onSave = () => dispatch(addLineAction())
     const onDiscard = () => dispatch(updateDrawState(DrawControlState.TRASH))
     const onTurnOff = () => dispatch(updateDrawState(DrawControlState.OFF))
     const onAddLine = () => dispatch(updateDrawState(DrawControlState.ADD_LINE))
