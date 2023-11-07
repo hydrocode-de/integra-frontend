@@ -30,8 +30,11 @@ type TreeLocation = FeatureCollection<Point, TreeLocationProperties>
 // define the state for the draw control
 export enum DrawControlState {
     OFF = "off",
-    SELECT = "select",
     LINE = "line",
+    EDIT_LINE = "edit_line",
+
+    // the following should be removed in the future
+    SELECT = "select",
     ADD_LINE = "add_line",
     TRASH = "trash"
 }

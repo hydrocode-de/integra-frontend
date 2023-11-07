@@ -58,7 +58,7 @@ const NewTreeLineControl: React.FC = () => {
 
     // render the correct version of the control
     return <>
-        <Slide in={drawState === DrawControlState.LINE} direction="right" unmountOnExit>
+        <Slide in={drawState === DrawControlState.LINE || drawState === DrawControlState.EDIT_LINE} direction="right" unmountOnExit>
             <Box>
                 <Box sx={{flexGrow: 1}} display="flex" justifyContent="space-between">
                     <IconButton size="small" edge="start" color="inherit" aria-label="zurück" sx={{mr: 2}} onClick={onAbort}>

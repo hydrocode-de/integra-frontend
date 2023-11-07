@@ -36,7 +36,7 @@ const TreeLineDetails: React.FC<TreeLineDetailsProps> = ({ treeLine }) => {
         dispatch(removeLineAction(String(treeLine.id)))
 
         // enable drawing again
-        dispatch(updateDrawState(DrawControlState.SELECT))
+        dispatch(updateDrawState(DrawControlState.EDIT_LINE))
     }
 
     return <>
