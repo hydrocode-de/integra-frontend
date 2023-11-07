@@ -1,7 +1,7 @@
 import { FeatureCollection, LineString, Point } from "geojson"
 
 import { createSlice } from "@reduxjs/toolkit"
-import { addLineReducer, lineToDrawReducer, removeLineReducer, updateDrawBufferReducer, updateDrawStateReducer } from "./treeLineActions"
+import { addLineReducer, lineToDrawReducer, removeLineReducer, updateDrawBufferReducer, updateDrawStateReducer, updateLastEditSettingsReducer } from "./treeLineActions"
 
 // define the properties of a TreeLine
 interface TreeLineProperties {
@@ -36,20 +36,36 @@ export enum DrawControlState {
     TRASH = "trash"
 }
 
+export interface TreeEditSettings {
+    spacing: number,
+    treeType: string,
+    width: number,
+    centerOnLine: boolean
+}
+
 // define the interface for the tree lines state
 export interface TreeLinesState {
     draw: DrawControlState
     drawBuffer: FeatureCollection<LineString>,
     treeLines: TreeLine,
-    treeLocations: TreeLocation
+    treeLocations: TreeLocation,
+    lastEditSettings: TreeEditSettings
 }
+
+
 
 // define the initial state
 const initialState: TreeLinesState = {
     draw: DrawControlState.OFF,
     drawBuffer: {type: "FeatureCollection", features: []},
     treeLines: {type: "FeatureCollection", features: []},
-    treeLocations: {type: "FeatureCollection", features: []}
+    treeLocations: {type: "FeatureCollection", features: []},
+    lastEditSettings: {
+        spacing: 40,
+        treeType: "birch",
+        width: 5,
+        centerOnLine: true
+    }
 }
 
 // create the slice
@@ -61,11 +77,12 @@ export const treeLinesSlice = createSlice({
         updateDrawBuffer: updateDrawBufferReducer,
         addLineAction: addLineReducer,
         removeLineAction: removeLineReducer,
-        lineToDrawAction: lineToDrawReducer
+        lineToDrawAction: lineToDrawReducer,
+        updateLastEditSettings: updateLastEditSettingsReducer
     }
 })
 
 // export the actions
-export const { updateDrawState, updateDrawBuffer, addLineAction, removeLineAction, lineToDrawAction } = treeLinesSlice.actions
+export const { updateDrawState, updateDrawBuffer, addLineAction, removeLineAction, lineToDrawAction, updateLastEditSettings } = treeLinesSlice.actions
 
 export default treeLinesSlice.reducer

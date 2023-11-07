@@ -7,7 +7,7 @@ import length from "@turf/length"
 import bbox from "@turf/bbox"
 
 import { PayloadAction } from "@reduxjs/toolkit";
-import { DrawControlState, TreeLinesState } from "./treeLinesSlice";
+import { DrawControlState, TreeEditSettings, TreeLinesState } from "./treeLinesSlice";
 
 
 
@@ -21,25 +21,15 @@ export const updateDrawStateReducer = (state: TreeLinesState, action: PayloadAct
     return {...state, draw: action.payload}
 }
 
-
-// define the Payload interface for addLineReducer
-interface AddLinePayload {
-    spacing: number,
-    type: string,
-    age?: number,
-    width?: number,
-    centerOnLine?: boolean
-}
-
-export const addLineReducer = (state: TreeLinesState, action: PayloadAction<AddLinePayload>) => {
+export const addLineReducer = (state: TreeLinesState) => {
     // get the current buffer
     const buffer = state.drawBuffer
 
+    // get the last edit settings
+    const { spacing, treeType, width, centerOnLine } = state.lastEditSettings
+
     // add to the lines
     buffer.features.forEach(lineFeature => {
-        // get the defined distance between trees
-        const spacing = action.payload.spacing
-
         // get the length of the line
         const len = length(lineFeature, {units: "meters"})
 
@@ -51,7 +41,7 @@ export const addLineReducer = (state: TreeLinesState, action: PayloadAction<AddL
 
         // Add half of the rest of len - numTrees * distance as offset to the first tree
         // to align the trees to the center of the line if needed
-        const offset = action.payload.centerOnLine ? (len - numTrees * spacing) / 2 : 0
+        const offset = centerOnLine ? (len - numTrees * spacing) / 2 : 0
 
         // create a TreeLocation for every tree needed along the line
         for (let i = 0; i <= numTrees; i++) {
@@ -64,8 +54,7 @@ export const addLineReducer = (state: TreeLinesState, action: PayloadAction<AddL
                 properties: {
                     id: String(i),
                     treeLineId: lineId,
-                    treeType: action.payload.type,
-                    age: action.payload.age,
+                    treeType: treeType
                 }
             })
         }
@@ -77,7 +66,7 @@ export const addLineReducer = (state: TreeLinesState, action: PayloadAction<AddL
             properties: {
                 id: lineId,
                 treeCount: numTrees,
-                width: action.payload.width,
+                width: width,
                 length: len
             }
         })
@@ -132,4 +121,15 @@ export const lineToDrawReducer = (state: TreeLinesState, action: PayloadAction<s
     return state
     // finally call the reducer to remove the line and treeLocations and re-calculate the bbox
     //return removeLineReducer(state, action)
+}
+
+export const updateLastEditSettingsReducer = (state: TreeLinesState, action: PayloadAction<Partial<TreeEditSettings>>) => {
+    // update the last edit settings
+    return {
+        ...state,
+        lastEditSettings: {
+            ...state.lastEditSettings,
+            ...action.payload
+        }
+    }
 }
