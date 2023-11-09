@@ -22,7 +22,7 @@ const TreeLineDetails: React.FC<TreeLineDetailsProps> = ({ treeLine }) => {
     const treeId = treeLine.properties.id
     useEffect(() => {
         dispatch(updateSpacingAction({treeId,  spacing}))
-    }, [spacing, treeId])
+    }, [spacing, treeId, dispatch])
 
     // define a functtion to flyTo the selected treeLine
     const onView = () => {
@@ -65,13 +65,13 @@ const TreeLineDetails: React.FC<TreeLineDetailsProps> = ({ treeLine }) => {
             </Box>
             
             {/* Spacing slider */}
-            <Box>
+            <Box sx={{mt: 2}}>
                 <Typography id="spacing-slider" gutterBottom>
                     Abstand
                 </Typography>
                 <Box display="flex">
                     <Slider aria-labelledby="spacing-slider" min={1} max={Math.floor(treeLine.properties.length as number)} value={spacing} onChange={(e, value) => setSpacing(value as number)} />
-                    <Typography variant="caption">{spacing}m</Typography>
+                    <Typography sx={{ml: 1}} variant="body1">{spacing}m</Typography>
                 </Box>
             </Box>
 
