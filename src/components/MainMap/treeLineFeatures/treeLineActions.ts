@@ -92,14 +92,14 @@ export const updateTreeGeometryReducer = (state: TreeLinesState, action: Payload
     const settings = treeLine.properties.editSettings
 
     // update with the new spacing or centerOnLine settings
-    if (action.payload.spacing) {
+    if (action.payload.spacing && action.payload.spacing !== settings.spacing) {
         // update in the current settings
         settings.spacing = action.payload.spacing
 
         // and remember the settings
         state.lastEditSettings.spacing = action.payload.spacing
     }
-    if (action.payload.centerOnLine) {
+    if (action.payload.centerOnLine !== undefined && action.payload.centerOnLine !== settings.centerOnLine) {
         // update in the current settings
         settings.centerOnLine = action.payload.centerOnLine
 
@@ -107,7 +107,7 @@ export const updateTreeGeometryReducer = (state: TreeLinesState, action: Payload
         state.lastEditSettings.centerOnLine = action.payload.centerOnLine
     }
     // if both did not change, return the current state
-    if (!action.payload.spacing && !action.payload.centerOnLine) return state
+    if (!action.payload.spacing && action.payload.centerOnLine === undefined) return state
 
     // remove all tree locations that belong to the tree line
     const newTreeLocations = state.treeLocations.features.filter(tree => tree.properties.treeLineId !== action.payload.treeId)

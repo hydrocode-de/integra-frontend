@@ -81,7 +81,7 @@ export const treeLinesSlice = createSlice({
         updateDrawState: updateDrawStateReducer,
         updateDrawBuffer: updateDrawBufferReducer,
         addLineAction: addLineReducer,
-        updateSpacingAction: updateTreeGeometryReducer,
+        updateTreeGeometryAction: updateTreeGeometryReducer,
         removeLineAction: removeLineReducer,
         lineToDrawAction: lineToDrawReducer,
         updateLastEditSettings: updateLastEditSettingsReducer
@@ -89,6 +89,6 @@ export const treeLinesSlice = createSlice({
 })
 
 // export the actions
-export const { updateDrawState, updateDrawBuffer, addLineAction, updateSpacingAction, removeLineAction, lineToDrawAction, updateLastEditSettings } = treeLinesSlice.actions
+export const { updateDrawState, updateDrawBuffer, addLineAction, updateTreeGeometryAction, removeLineAction, lineToDrawAction, updateLastEditSettings } = treeLinesSlice.actions
 
 export default treeLinesSlice.reducer

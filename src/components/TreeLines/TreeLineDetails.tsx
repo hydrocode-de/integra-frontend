@@ -1,8 +1,8 @@
-import { AccordionActions, AccordionDetails, Box, Button, ButtonGroup, Slider, Typography } from "@mui/material"
+import { AccordionActions, AccordionDetails, Box, Button, ButtonGroup, Checkbox, FormControlLabel, Slider, Typography } from "@mui/material"
 import { VisibilityOutlined, EditOutlined, DeleteOutline } from "@mui/icons-material"
 import center from "@turf/center"
 
-import { DrawControlState, TreeLine, lineToDrawAction, removeLineAction, updateDrawState, updateSpacingAction } from "../MainMap/treeLineFeatures/treeLinesSlice"
+import { DrawControlState, TreeLine, lineToDrawAction, removeLineAction, updateDrawState, updateTreeGeometryAction } from "../MainMap/treeLineFeatures/treeLinesSlice"
 import { flyTo } from "../MainMap/MapObservableStore"
 import { useAppDispatch } from "../../hooks"
 import { useEffect, useState } from "react"
@@ -14,15 +14,24 @@ interface TreeLineDetailsProps {
 const TreeLineDetails: React.FC<TreeLineDetailsProps> = ({ treeLine }) => {
     // set component state to change the treeLine on the fly
     const [spacing, setSpacing] = useState<number>(treeLine.properties.editSettings.spacing)
+    const [width, setWidth] = useState<number>(treeLine.properties.editSettings.width)
+    const [centered, setCentered] = useState<boolean>(treeLine.properties.editSettings.centerOnLine)
 
     // get a state dispatcher
     const dispatch = useAppDispatch()
 
-    // effect to adjust the treeLine in the state , when the spacing changes
+    // extract the treeId for more readable code
     const treeId = treeLine.properties.id
+
+    // effect to adjust the treeLine geometry, when the spacing changes
     useEffect(() => {
-        dispatch(updateSpacingAction({treeId,  spacing}))
+        dispatch(updateTreeGeometryAction({treeId,  spacing}))
     }, [spacing, treeId, dispatch])
+
+    // effect to adjust the treeLine geometry, when the centered flag changes
+    useEffect(() => {
+        dispatch(updateTreeGeometryAction({treeId, centerOnLine: centered}))
+    }, [centered, treeId, dispatch])
 
     // define a functtion to flyTo the selected treeLine
     const onView = () => {
@@ -70,12 +79,44 @@ const TreeLineDetails: React.FC<TreeLineDetailsProps> = ({ treeLine }) => {
                     Abstand
                 </Typography>
                 <Box display="flex">
-                    <Slider aria-labelledby="spacing-slider" min={1} max={Math.floor(treeLine.properties.length as number)} value={spacing} onChange={(e, value) => setSpacing(value as number)} />
+                    <Slider 
+                        aria-labelledby="spacing-slider" 
+                        min={1} 
+                        max={Math.floor(treeLine.properties.length as number)} 
+                        value={spacing} 
+                        onChange={(e, value) => setSpacing(value as number)} 
+                    />
                     <Typography sx={{ml: 1}} variant="body1">{spacing}m</Typography>
                 </Box>
             </Box>
 
-            <pre><code>{ JSON.stringify(treeLine, null, 4) }</code></pre>
+            {/* width slider */}
+            <Box sx={{mt: 2}}>
+                <Typography id="width-slider" gutterBottom>
+                    Breite
+                </Typography>
+                <Box display="flex">
+                    <Slider 
+                        aria-labelledby="width-slider"
+                        min={1}
+                        max={25}
+                        marks={true}
+                        value={width}
+                        onChange={(e, value) => setWidth(value as number)}
+                    />
+                    <Typography sx={{ml: 1}} variant="body1">{width}m</Typography>
+                </Box>
+            </Box>
+
+            {/* center on line */}
+            <Box sx={{mt: 2}}>
+                <Typography id="width-slider" gutterBottom>
+                    Position
+                </Typography>
+                <FormControlLabel control={<Checkbox checked={centered} onChange={(e, checked) => setCentered(checked)} />} label="gleichmäßig Ausrichten"/>
+            </Box>
+
+            {/* <pre><code>{ JSON.stringify(treeLine, null, 4) }</code></pre> */}
 
         </AccordionDetails>
     </>
