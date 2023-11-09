@@ -15,7 +15,8 @@ export interface TreeEditSettings {
 interface TreeLineProperties {
     id: string,
     treeCount: number,
-    width?: number,
+    width: number,
+    treeType: string,
     length?: number,
     editSettings: TreeEditSettings
 }

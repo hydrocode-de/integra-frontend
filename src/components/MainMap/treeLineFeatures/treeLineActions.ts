@@ -66,8 +66,9 @@ export const addLineReducer = (state: TreeLinesState) => {
             properties: {
                 id: lineId,
                 treeCount: numTrees,
-                width: width,
+                width,
                 length: len,
+                treeType,
                 editSettings: {treeType, spacing, width, centerOnLine}
             }
         })
