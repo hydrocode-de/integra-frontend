@@ -1,18 +1,28 @@
-import { AccordionActions, AccordionDetails, Button, ButtonGroup } from "@mui/material"
+import { AccordionActions, AccordionDetails, Box, Button, ButtonGroup, Slider, Typography } from "@mui/material"
 import { VisibilityOutlined, EditOutlined, DeleteOutline } from "@mui/icons-material"
 import center from "@turf/center"
 
-import { DrawControlState, TreeLine, lineToDrawAction, removeLineAction, updateDrawState } from "../MainMap/treeLineFeatures/treeLinesSlice"
+import { DrawControlState, TreeLine, lineToDrawAction, removeLineAction, updateDrawState, updateSpacingAction } from "../MainMap/treeLineFeatures/treeLinesSlice"
 import { flyTo } from "../MainMap/MapObservableStore"
 import { useAppDispatch } from "../../hooks"
+import { useEffect, useState } from "react"
 
 interface TreeLineDetailsProps {
     treeLine:  TreeLine["features"][0],
 }
 
 const TreeLineDetails: React.FC<TreeLineDetailsProps> = ({ treeLine }) => {
+    // set component state to change the treeLine on the fly
+    const [spacing, setSpacing] = useState<number>(treeLine.properties.editSettings.spacing)
+
     // get a state dispatcher
     const dispatch = useAppDispatch()
+
+    // effect to adjust the treeLine in the state , when the spacing changes
+    const treeId = treeLine.properties.id
+    useEffect(() => {
+        dispatch(updateSpacingAction({treeId,  spacing}))
+    }, [spacing, treeId])
 
     // define a functtion to flyTo the selected treeLine
     const onView = () => {
@@ -48,7 +58,25 @@ const TreeLineDetails: React.FC<TreeLineDetailsProps> = ({ treeLine }) => {
             </ButtonGroup>
         </AccordionActions>
         <AccordionDetails>
+
+            <Box sx={{flexGrow: 1}} display="flex" justifyContent="space-between">
+                <Typography variant="body1">Länge</Typography>
+                <Typography variant="body1">{treeLine.properties.length?.toFixed(0)}m</Typography>
+            </Box>
+            
+            {/* Spacing slider */}
+            <Box>
+                <Typography id="spacing-slider" gutterBottom>
+                    Abstand
+                </Typography>
+                <Box display="flex">
+                    <Slider aria-labelledby="spacing-slider" min={1} max={Math.floor(treeLine.properties.length as number)} value={spacing} onChange={(e, value) => setSpacing(value as number)} />
+                    <Typography variant="caption">{spacing}m</Typography>
+                </Box>
+            </Box>
+
             <pre><code>{ JSON.stringify(treeLine, null, 4) }</code></pre>
+
         </AccordionDetails>
     </>
 }

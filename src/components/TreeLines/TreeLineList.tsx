@@ -28,7 +28,7 @@ const TreeLineList: React.FC = () => {
 
     // if we are editing, do not show anything
     // DEVELOPMENT ONLY -> this should all be done better in the final version
-    if (drawState === DrawControlState.LINE) return null
+    if (drawState === DrawControlState.LINE || drawState === DrawControlState.EDIT_LINE) return null
 
     return <>
         {/* Place a heading and a ADD button */}

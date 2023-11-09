@@ -67,7 +67,8 @@ export const addLineReducer = (state: TreeLinesState) => {
                 id: lineId,
                 treeCount: numTrees,
                 width: width,
-                length: len
+                length: len,
+                editSettings: {treeType, spacing, width, centerOnLine}
             }
         })
     })
@@ -77,6 +78,58 @@ export const addLineReducer = (state: TreeLinesState) => {
 
     // disable edit mode
     state.draw = DrawControlState.OFF
+
+    return state
+}
+
+export const updateSpacingReducer = (state: TreeLinesState, action: PayloadAction<{treeId: string, spacing: number}>) => {
+    // get the geometry of the selected tree line
+    const treeLine = state.treeLines.features.find(line => line.properties.id === action.payload.treeId)
+    if (!treeLine) return state  // an error is needed here...
+
+    // get the original settings
+    const settings = treeLine.properties.editSettings
+
+    // update with the new spacing
+    settings.spacing = action.payload.spacing    
+
+    // remove all tree locations that belong to the tree line
+    const newTreeLocations = state.treeLocations.features.filter(tree => tree.properties.treeLineId !== action.payload.treeId)
+
+    // calculate the new tree amount
+    const len = length(treeLine, {units: 'meters'})
+    const numTrees = Math.floor(len / settings.spacing)
+    const offset = settings.centerOnLine ? (len - numTrees * settings.spacing) / 2 : 0
+
+    // add the new tree locations using the new spacing
+    for (let i = 0; i <= numTrees; i++) {
+        const newPoint = along(treeLine, (i * settings.spacing) + offset, {units: 'meters'})
+
+        // add to new tree locations
+        newTreeLocations.push({
+            ...newPoint,
+            properties: {
+                id: String(i),
+                treeLineId: action.payload.treeId,
+                treeType: settings.treeType
+            }
+        })
+    }
+
+    // update the state for the new Locations
+    state.treeLocations.features = [...newTreeLocations]
+
+    // update the treeLine itself
+    const idx = state.treeLines.features.findIndex(f => f.properties.id === action.payload.treeId)
+    state.treeLines.features[idx] = {
+        ...treeLine,
+        properties: {
+            ...treeLine.properties,
+            editSettings: settings,
+            treeCount: numTrees,
+            length: len
+        }
+    }
 
     return state
 }
