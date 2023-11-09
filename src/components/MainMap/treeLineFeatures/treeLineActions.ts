@@ -82,16 +82,32 @@ export const addLineReducer = (state: TreeLinesState) => {
     return state
 }
 
-export const updateSpacingReducer = (state: TreeLinesState, action: PayloadAction<{treeId: string, spacing: number}>) => {
+export const updateTreeGeometryReducer = (state: TreeLinesState, action: PayloadAction<{treeId: string, spacing?: number, centerOnLine?: boolean}>) => {
     // get the geometry of the selected tree line
     const treeLine = state.treeLines.features.find(line => line.properties.id === action.payload.treeId)
     if (!treeLine) return state  // an error is needed here...
 
-    // get the original settings
+    // get the original settings - this is technically unnecessary,
+    // but makes the code more readable, as we do not need to access the full state path all the time
     const settings = treeLine.properties.editSettings
 
-    // update with the new spacing
-    settings.spacing = action.payload.spacing    
+    // update with the new spacing or centerOnLine settings
+    if (action.payload.spacing) {
+        // update in the current settings
+        settings.spacing = action.payload.spacing
+
+        // and remember the settings
+        state.lastEditSettings.spacing = action.payload.spacing
+    }
+    if (action.payload.centerOnLine) {
+        // update in the current settings
+        settings.centerOnLine = action.payload.centerOnLine
+
+        // and remember the settings
+        state.lastEditSettings.centerOnLine = action.payload.centerOnLine
+    }
+    // if both did not change, return the current state
+    if (!action.payload.spacing && !action.payload.centerOnLine) return state
 
     // remove all tree locations that belong to the tree line
     const newTreeLocations = state.treeLocations.features.filter(tree => tree.properties.treeLineId !== action.payload.treeId)
