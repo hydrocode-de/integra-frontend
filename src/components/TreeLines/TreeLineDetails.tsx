@@ -2,7 +2,7 @@ import { AccordionActions, AccordionDetails, Box, Button, ButtonGroup, Checkbox,
 import { VisibilityOutlined, EditOutlined, DeleteOutline } from "@mui/icons-material"
 import center from "@turf/center"
 
-import { DrawControlState, TreeLine, lineToDrawAction, removeLineAction, updateDrawState, updateTreeGeometryAction } from "../MainMap/treeLineFeatures/treeLinesSlice"
+import { DrawControlState, TreeLine, lineToDrawAction, removeLineAction, updateDrawState, updateTreeGeometryAction, updateTreeLinePropertiesAction } from "../MainMap/treeLineFeatures/treeLinesSlice"
 import { flyTo } from "../MainMap/MapObservableStore"
 import { useAppDispatch } from "../../hooks"
 import { useEffect, useState } from "react"
@@ -32,6 +32,11 @@ const TreeLineDetails: React.FC<TreeLineDetailsProps> = ({ treeLine }) => {
     useEffect(() => {
         dispatch(updateTreeGeometryAction({treeId, centerOnLine: centered}))
     }, [centered, treeId, dispatch])
+
+    // effect to update the treeLine Properties, when width or treeType changes
+    useEffect(() => {
+        dispatch(updateTreeLinePropertiesAction({treeId, width}))
+    }, [width, treeId, dispatch])
 
     // define a functtion to flyTo the selected treeLine
     const onView = () => {

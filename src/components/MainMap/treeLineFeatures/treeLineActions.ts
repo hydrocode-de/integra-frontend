@@ -193,6 +193,43 @@ export const lineToDrawReducer = (state: TreeLinesState, action: PayloadAction<s
     //return removeLineReducer(state, action)
 }
 
+export const updateTreeLinePropertiesReducer = (state: TreeLinesState, action: PayloadAction<{treeId: string, treeType?: string, width?: number}>) => {
+    // extract the treeId for easier code reading
+    const treeId = action.payload.treeId
+
+    // find the correct treeLine
+    const treeLine = state.treeLines.features.find(line => line.properties.id === treeId)
+    if (!treeLine) return state // TODO this should throw an error
+
+    // check if the treeType changed
+    if (action.payload.treeType && action.payload.treeType !== treeLine.properties.treeType) {
+        // update the treeType
+        treeLine.properties.treeType = action.payload.treeType
+
+        // update the treeLocations
+        state.treeLocations.features.forEach(tree => {
+            if (tree.properties.treeLineId === treeId) {
+                tree.properties.treeType = action.payload.treeType as string
+            }
+        })
+        
+        // update the last edit settings
+        state.lastEditSettings.treeType = action.payload.treeType
+    }
+
+    // check if the width changed
+    if (action.payload.width && action.payload.width !== treeLine.properties.width) {
+        // update the width
+        treeLine.properties.width = action.payload.width
+    }
+
+    // update the treeLine in the state
+    const idx = state.treeLines.features.findIndex(f => f.properties.id === treeId)
+    state.treeLines.features[idx] = treeLine
+    
+    return state
+}
+
 export const updateLastEditSettingsReducer = (state: TreeLinesState, action: PayloadAction<Partial<TreeEditSettings>>) => {
     // update the last edit settings
     return {

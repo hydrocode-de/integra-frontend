@@ -1,7 +1,7 @@
 import { FeatureCollection, LineString, Point } from "geojson"
 
 import { createSlice } from "@reduxjs/toolkit"
-import { addLineReducer, lineToDrawReducer, removeLineReducer, updateDrawBufferReducer, updateDrawStateReducer, updateLastEditSettingsReducer, updateTreeGeometryReducer } from "./treeLineActions"
+import { addLineReducer, lineToDrawReducer, removeLineReducer, updateDrawBufferReducer, updateDrawStateReducer, updateLastEditSettingsReducer, updateTreeGeometryReducer, updateTreeLinePropertiesReducer } from "./treeLineActions"
 
 // specify the settings that can be used to edit a tree line
 export interface TreeEditSettings {
@@ -85,11 +85,21 @@ export const treeLinesSlice = createSlice({
         updateTreeGeometryAction: updateTreeGeometryReducer,
         removeLineAction: removeLineReducer,
         lineToDrawAction: lineToDrawReducer,
+        updateTreeLinePropertiesAction: updateTreeLinePropertiesReducer,
         updateLastEditSettings: updateLastEditSettingsReducer
     }
 })
 
 // export the actions
-export const { updateDrawState, updateDrawBuffer, addLineAction, updateTreeGeometryAction, removeLineAction, lineToDrawAction, updateLastEditSettings } = treeLinesSlice.actions
+export const {
+    updateDrawState,
+    updateDrawBuffer,
+    addLineAction,
+    updateTreeGeometryAction,
+    removeLineAction,
+    lineToDrawAction,
+    updateTreeLinePropertiesAction,
+    updateLastEditSettings
+} = treeLinesSlice.actions
 
 export default treeLinesSlice.reducer
