@@ -68,7 +68,7 @@ const MainPage: React.FC = () => {
                 </Typography>
             </Box>
 
-            <MainMap>
+            <MainMap mapId="old map">
                 <DrawControl />
                 <TreeLineSource />
             </MainMap>

@@ -7,7 +7,7 @@ import { updateViewport } from "./mapFeatures/mapSlice"
 import MapObserver from "./MapObserver"
 
 
-const MainMap: React.FC<React.PropsWithChildren> = ({ children }) => {
+const MainMap: React.FC<React.PropsWithChildren<{mapId: string}>> = ({ mapId, children }) => {
     // get a dispatch function
     const dispatch = useAppDispatch()
 
@@ -20,10 +20,12 @@ const MainMap: React.FC<React.PropsWithChildren> = ({ children }) => {
     } 
     return <>
         <ReactMap
+            id={mapId}
+            reuseMaps
             initialViewState={{
                 longitude: 7.83,
                 latitude: 48.0,
-                zoom: 9,
+                zoom: 12,
                 pitch: 0,
             }}
             style={{width: '100%', height: '100%'}}
