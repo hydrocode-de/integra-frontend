@@ -117,7 +117,7 @@ const DrawControl: React.FC<DrawControlProps> = ({ position  }) => {
             mapboxDraw.changeMode("simple_select")
             dispatch(updateDrawState(DrawControlState.LINE))
         }
-    }, [drawState, mapboxDraw])
+    }, [drawState, mapboxDraw, dispatch])
 
     // this component doesn't render anything
     return null
