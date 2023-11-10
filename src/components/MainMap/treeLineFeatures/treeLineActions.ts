@@ -7,7 +7,7 @@ import length from "@turf/length"
 import bbox from "@turf/bbox"
 
 import { PayloadAction } from "@reduxjs/toolkit";
-import { DrawControlState, TreeLinesState } from "./treeLinesSlice";
+import { DrawControlState, TreeEditSettings, TreeLinesState } from "./treeLinesSlice";
 
 
 
@@ -21,25 +21,15 @@ export const updateDrawStateReducer = (state: TreeLinesState, action: PayloadAct
     return {...state, draw: action.payload}
 }
 
-
-// define the Payload interface for addLineReducer
-interface AddLinePayload {
-    spacing: number,
-    type: string,
-    age?: number,
-    width?: number,
-    centerOnLine?: boolean
-}
-
-export const addLineReducer = (state: TreeLinesState, action: PayloadAction<AddLinePayload>) => {
+export const addLineReducer = (state: TreeLinesState) => {
     // get the current buffer
     const buffer = state.drawBuffer
 
+    // get the last edit settings
+    const { spacing, treeType, width, centerOnLine } = state.lastEditSettings
+
     // add to the lines
     buffer.features.forEach(lineFeature => {
-        // get the defined distance between trees
-        const spacing = action.payload.spacing
-
         // get the length of the line
         const len = length(lineFeature, {units: "meters"})
 
@@ -51,7 +41,7 @@ export const addLineReducer = (state: TreeLinesState, action: PayloadAction<AddL
 
         // Add half of the rest of len - numTrees * distance as offset to the first tree
         // to align the trees to the center of the line if needed
-        const offset = action.payload.centerOnLine ? (len - numTrees * spacing) / 2 : 0
+        const offset = centerOnLine ? (len - numTrees * spacing) / 2 : 0
 
         // create a TreeLocation for every tree needed along the line
         for (let i = 0; i <= numTrees; i++) {
@@ -64,8 +54,7 @@ export const addLineReducer = (state: TreeLinesState, action: PayloadAction<AddL
                 properties: {
                     id: String(i),
                     treeLineId: lineId,
-                    treeType: action.payload.type,
-                    age: action.payload.age,
+                    treeType: treeType
                 }
             })
         }
@@ -77,8 +66,10 @@ export const addLineReducer = (state: TreeLinesState, action: PayloadAction<AddL
             properties: {
                 id: lineId,
                 treeCount: numTrees,
-                width: action.payload.width,
-                length: len
+                width,
+                length: len,
+                treeType,
+                editSettings: {treeType, spacing, width, centerOnLine}
             }
         })
     })
@@ -88,6 +79,74 @@ export const addLineReducer = (state: TreeLinesState, action: PayloadAction<AddL
 
     // disable edit mode
     state.draw = DrawControlState.OFF
+
+    return state
+}
+
+export const updateTreeGeometryReducer = (state: TreeLinesState, action: PayloadAction<{treeId: string, spacing?: number, centerOnLine?: boolean}>) => {
+    // get the geometry of the selected tree line
+    const treeLine = state.treeLines.features.find(line => line.properties.id === action.payload.treeId)
+    if (!treeLine) return state  // an error is needed here...
+
+    // get the original settings - this is technically unnecessary,
+    // but makes the code more readable, as we do not need to access the full state path all the time
+    const settings = treeLine.properties.editSettings
+
+    // update with the new spacing or centerOnLine settings
+    if (action.payload.spacing && action.payload.spacing !== settings.spacing) {
+        // update in the current settings
+        settings.spacing = action.payload.spacing
+
+        // and remember the settings
+        state.lastEditSettings.spacing = action.payload.spacing
+    }
+    if (action.payload.centerOnLine !== undefined && action.payload.centerOnLine !== settings.centerOnLine) {
+        // update in the current settings
+        settings.centerOnLine = action.payload.centerOnLine
+
+        // and remember the settings
+        state.lastEditSettings.centerOnLine = action.payload.centerOnLine
+    }
+    // if both did not change, return the current state
+    if (!action.payload.spacing && action.payload.centerOnLine === undefined) return state
+
+    // remove all tree locations that belong to the tree line
+    const newTreeLocations = state.treeLocations.features.filter(tree => tree.properties.treeLineId !== action.payload.treeId)
+
+    // calculate the new tree amount
+    const len = length(treeLine, {units: 'meters'})
+    const numTrees = Math.floor(len / settings.spacing)
+    const offset = settings.centerOnLine ? (len - numTrees * settings.spacing) / 2 : 0
+
+    // add the new tree locations using the new spacing
+    for (let i = 0; i <= numTrees; i++) {
+        const newPoint = along(treeLine, (i * settings.spacing) + offset, {units: 'meters'})
+
+        // add to new tree locations
+        newTreeLocations.push({
+            ...newPoint,
+            properties: {
+                id: String(i),
+                treeLineId: action.payload.treeId,
+                treeType: settings.treeType
+            }
+        })
+    }
+
+    // update the state for the new Locations
+    state.treeLocations.features = [...newTreeLocations]
+
+    // update the treeLine itself
+    const idx = state.treeLines.features.findIndex(f => f.properties.id === action.payload.treeId)
+    state.treeLines.features[idx] = {
+        ...treeLine,
+        properties: {
+            ...treeLine.properties,
+            editSettings: settings,
+            treeCount: numTrees,
+            length: len
+        }
+    }
 
     return state
 }
@@ -132,4 +191,52 @@ export const lineToDrawReducer = (state: TreeLinesState, action: PayloadAction<s
     return state
     // finally call the reducer to remove the line and treeLocations and re-calculate the bbox
     //return removeLineReducer(state, action)
+}
+
+export const updateTreeLinePropertiesReducer = (state: TreeLinesState, action: PayloadAction<{treeId: string, treeType?: string, width?: number}>) => {
+    // extract the treeId for easier code reading
+    const treeId = action.payload.treeId
+
+    // find the correct treeLine
+    const treeLine = state.treeLines.features.find(line => line.properties.id === treeId)
+    if (!treeLine) return state // TODO this should throw an error
+
+    // check if the treeType changed
+    if (action.payload.treeType && action.payload.treeType !== treeLine.properties.treeType) {
+        // update the treeType
+        treeLine.properties.treeType = action.payload.treeType
+
+        // update the treeLocations
+        state.treeLocations.features.forEach(tree => {
+            if (tree.properties.treeLineId === treeId) {
+                tree.properties.treeType = action.payload.treeType as string
+            }
+        })
+        
+        // update the last edit settings
+        state.lastEditSettings.treeType = action.payload.treeType
+    }
+
+    // check if the width changed
+    if (action.payload.width && action.payload.width !== treeLine.properties.width) {
+        // update the width
+        treeLine.properties.width = action.payload.width
+    }
+
+    // update the treeLine in the state
+    const idx = state.treeLines.features.findIndex(f => f.properties.id === treeId)
+    state.treeLines.features[idx] = treeLine
+    
+    return state
+}
+
+export const updateLastEditSettingsReducer = (state: TreeLinesState, action: PayloadAction<Partial<TreeEditSettings>>) => {
+    // update the last edit settings
+    return {
+        ...state,
+        lastEditSettings: {
+            ...state.lastEditSettings,
+            ...action.payload
+        }
+    }
 }
