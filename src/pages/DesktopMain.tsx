@@ -1,5 +1,7 @@
-import { AppBar, Box, Button, IconButton, Toolbar, Typography } from "@mui/material"
+import { AppBar, Box, Button, Card, IconButton, Toolbar, Typography } from "@mui/material"
 import { DarkMode, LightMode, Menu } from "@mui/icons-material"
+import { Outlet } from "react-router-dom"
+
 import { useIntegraTheme, useModeToggler } from "../context/IntegraThemeContext"
 import MainMap from "../components/MainMap/MainMap"
 import DrawControl from "../components/MainMap/DrawControl"
@@ -38,6 +40,10 @@ const DesktopMain: React.FC = () => {
         </Box>
 
         <Box width="100vw" height="calc(100vh - 64px)" m="0" p="0" display="flex">
+
+            {/* Navigation children can be placed on top of the map this way */}
+            <Outlet />
+
 
             <MainMap mapId="desktop">
                 <DrawControl />

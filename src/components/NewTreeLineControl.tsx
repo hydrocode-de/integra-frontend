@@ -1,5 +1,6 @@
 import { Box, CircularProgress, Fab, IconButton, Slide, Typography } from "@mui/material"
 import { ArrowBack, Close, Check } from "@mui/icons-material"
+import { useNavigate } from "react-router-dom"
 import length from "@turf/length"
 
 import { useDrawBuffer, useDrawState } from "./MainMap/treeLineFeatures/treeLinesHooks"
@@ -17,6 +18,9 @@ const NewTreeLineControl: React.FC = () => {
     // subscribe to the draw buffer to show the user some basic statistics about the new tree line
     const buffer = useDrawBuffer()
 
+    // get a navigator to navigate after the edit action is finished
+    const navigate = useNavigate()
+
     // define a state to show the statistics
     const [len, setLen] = useState<number>(0)
     const [maxLen, setMaxLen] = useState<number>(100)
@@ -28,11 +32,17 @@ const NewTreeLineControl: React.FC = () => {
 
         // disable the draw control
         dispatch(updateDrawState(DrawControlState.OFF))
+
+        // navigate back to the main page
+        navigate('/')
     }
 
     // handler to add a new tree line
     const onAdd = () => {
         dispatch(addLineAction())
+
+        // navigate to the main page
+        navigate('/')
     }
 
     // side-effect to update the current length and update the maximum length
@@ -58,7 +68,7 @@ const NewTreeLineControl: React.FC = () => {
 
     // render the correct version of the control
     return <>
-        <Slide in={drawState === DrawControlState.LINE || drawState === DrawControlState.EDIT_LINE} direction="right" unmountOnExit>
+        {/* <Slide in={drawState === DrawControlState.LINE || drawState === DrawControlState.EDIT_LINE} direction="right" unmountOnExit> */}
             <Box>
                 <Box sx={{flexGrow: 1}} display="flex" justifyContent="space-between">
                     <IconButton size="small" edge="start" color="inherit" aria-label="zurück" sx={{mr: 2}} onClick={onAbort}>
@@ -67,9 +77,10 @@ const NewTreeLineControl: React.FC = () => {
                     <Typography variant="h6" component="div">
                         Neue Baumreihe
                     </Typography>
-                    <IconButton size="small" edge="end" color="inherit" aria-label="zurück" sx={{mr: 2}} onClick={onAbort}>
+                    <span />
+                    {/* <IconButton size="small" edge="end" color="inherit" aria-label="zurück" sx={{mr: 2}} onClick={onAbort}>
                         <Close />
-                    </IconButton>
+                    </IconButton> */}
                 </Box>
                 <Box sx={{flexGrow: 1}} display="flex" justifyContent="space-around">
                     <span />
@@ -88,7 +99,7 @@ const NewTreeLineControl: React.FC = () => {
                     <span />
                 </Box>
             </Box>
-        </Slide>
+        {/* </Slide> */}
     </>
 }
 

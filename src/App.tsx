@@ -8,8 +8,8 @@ import IntegraThemeProvider from "./context/IntegraThemeContext"
 import { store } from "./store"
 
 // the two main anchor sites for the two app routes (Mobile / Desktop)
-import DesktopMain from "./pages/DesktopMain"
 import MobileMain from "./pages/MobileMain"
+import DesktopNavigation from "./layout/DesktopNavigation"
 
 
 export const App = () => {
@@ -31,7 +31,7 @@ export const App = () => {
 
         
         <MapProvider>
-          {isMobile || windowWidth < 768 ? <MobileMain /> : <DesktopMain /> }
+          {isMobile || windowWidth < 768 ? <MobileMain /> : <DesktopNavigation /> }
         </MapProvider>
 
       </IntegraThemeProvider>
