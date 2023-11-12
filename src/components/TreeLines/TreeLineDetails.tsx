@@ -1,4 +1,4 @@
-import { AccordionActions, AccordionDetails, Box, Button, ButtonGroup, Checkbox, FormControlLabel, Slider, Typography } from "@mui/material"
+import { AccordionActions, AccordionDetails, Box, Button, ButtonGroup, Checkbox, FormControl, FormControlLabel, InputLabel, MenuItem, Select, Slider, Typography } from "@mui/material"
 import { VisibilityOutlined, EditOutlined, DeleteOutline } from "@mui/icons-material"
 import center from "@turf/center"
 
@@ -14,8 +14,9 @@ interface TreeLineDetailsProps {
 const TreeLineDetails: React.FC<TreeLineDetailsProps> = ({ treeLine }) => {
     // set component state to change the treeLine on the fly
     const [spacing, setSpacing] = useState<number>(treeLine.properties.editSettings.spacing)
-    const [width, setWidth] = useState<number>(treeLine.properties.editSettings.width)
+    const [width, setWidth] = useState<number>(treeLine.properties.width)
     const [centered, setCentered] = useState<boolean>(treeLine.properties.editSettings.centerOnLine)
+    const [treeType, setTreeType] = useState<string>(treeLine.properties.treeType)
 
     // get a state dispatcher
     const dispatch = useAppDispatch()
@@ -33,10 +34,15 @@ const TreeLineDetails: React.FC<TreeLineDetailsProps> = ({ treeLine }) => {
         dispatch(updateTreeGeometryAction({treeId, centerOnLine: centered}))
     }, [centered, treeId, dispatch])
 
-    // effect to update the treeLine Properties, when width or treeType changes
+    // effect to update the treeLine Properties, when width changes
     useEffect(() => {
         dispatch(updateTreeLinePropertiesAction({treeId, width}))
     }, [width, treeId, dispatch])
+
+    // effect to update the treeLine Properties, when treeType changes
+    useEffect(() => {
+        dispatch(updateTreeLinePropertiesAction({treeId, treeType}))
+    }, [treeType, treeId, dispatch])
 
     // define a functtion to flyTo the selected treeLine
     const onView = () => {
@@ -77,7 +83,19 @@ const TreeLineDetails: React.FC<TreeLineDetailsProps> = ({ treeLine }) => {
                 <Typography variant="body1">Länge</Typography>
                 <Typography variant="body1">{treeLine.properties.length?.toFixed(0)}m</Typography>
             </Box>
-            
+
+            {/* tree type selection */}
+            <Box sx={{mt: 2}}>
+                <FormControl variant="standard" fullWidth>
+                    <InputLabel id="tree-type-select">Baumart</InputLabel>
+                    <Select labelId="tree-type-select" value={treeType} onChange={e => setTreeType(e.target.value)}>
+                        <MenuItem value="birch">Birke</MenuItem>
+                        <MenuItem value="oak">Eiche</MenuItem>
+                        <MenuItem value="poplar">Pappel</MenuItem>
+                    </Select>
+                </FormControl>
+            </Box>
+
             {/* Spacing slider */}
             <Box sx={{mt: 2}}>
                 <Typography id="spacing-slider" gutterBottom>
