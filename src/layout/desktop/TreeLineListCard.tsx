@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, Typography } from "@mui/material"
+import { Box, CardContent, Typography } from "@mui/material"
 
 import EnabledAddTreeLineButton from "../../components/TreeLines/EnableAddTreeLineButton"
 import TreeLineList from "../../components/TreeLines/TreeLineList"

@@ -2,10 +2,11 @@ import { AccordionActions, AccordionDetails, Box, Button, ButtonGroup, Checkbox,
 import { VisibilityOutlined, EditOutlined, DeleteOutline } from "@mui/icons-material"
 import center from "@turf/center"
 
-import { DrawControlState, TreeLine, lineToDrawAction, removeLineAction, updateDrawState, updateTreeGeometryAction, updateTreeLinePropertiesAction } from "../MainMap/treeLineFeatures/treeLinesSlice"
 import { flyTo } from "../MainMap/MapObservableStore"
-import { useAppDispatch } from "../../hooks"
-import { useEffect, useState } from "react"
+import { TreeLine } from "../MainMap/treeLineFeatures/treeLine.model"
+import { updateEditSettings } from "../../components/MainMap/treeLineFeatures/treeLineSignals"
+import { useSignal, useSignalEffect } from "@preact/signals-react"
+
 
 interface TreeLineDetailsProps {
     treeLine:  TreeLine["features"][0],
@@ -13,36 +14,26 @@ interface TreeLineDetailsProps {
 
 const TreeLineDetails: React.FC<TreeLineDetailsProps> = ({ treeLine }) => {
     // set component state to change the treeLine on the fly
-    const [spacing, setSpacing] = useState<number>(treeLine.properties.editSettings.spacing)
-    const [width, setWidth] = useState<number>(treeLine.properties.width)
-    const [centered, setCentered] = useState<boolean>(treeLine.properties.editSettings.centerOnLine)
-    const [treeType, setTreeType] = useState<string>(treeLine.properties.treeType)
+    const spacing = useSignal<number>(treeLine.properties.editSettings.spacing)
+    const width = useSignal<number>(treeLine.properties.editSettings.width)
+    const centered = useSignal<boolean>(treeLine.properties.editSettings.centerOnLine)
+    const treeType = useSignal<string>(treeLine.properties.editSettings.treeType)
 
-    // get a state dispatcher
-    const dispatch = useAppDispatch()
 
     // extract the treeId for more readable code
     const treeId = treeLine.properties.id
 
     // effect to adjust the treeLine geometry, when the spacing changes
-    useEffect(() => {
-        dispatch(updateTreeGeometryAction({treeId,  spacing}))
-    }, [spacing, treeId, dispatch])
+    useSignalEffect(() => updateEditSettings(treeId, {spacing: spacing.value}))
 
     // effect to adjust the treeLine geometry, when the centered flag changes
-    useEffect(() => {
-        dispatch(updateTreeGeometryAction({treeId, centerOnLine: centered}))
-    }, [centered, treeId, dispatch])
+    useSignalEffect(() => updateEditSettings(treeId, {centerOnLine: centered.value}))
 
     // effect to update the treeLine Properties, when width changes
-    useEffect(() => {
-        dispatch(updateTreeLinePropertiesAction({treeId, width}))
-    }, [width, treeId, dispatch])
+    useSignalEffect(() => updateEditSettings(treeId, {width: width.value}))
 
     // effect to update the treeLine Properties, when treeType changes
-    useEffect(() => {
-        dispatch(updateTreeLinePropertiesAction({treeId, treeType}))
-    }, [treeType, treeId, dispatch])
+    useSignalEffect(() => updateEditSettings(treeId, {treeType: treeType.value}))
 
     // define a functtion to flyTo the selected treeLine
     const onView = () => {
@@ -56,17 +47,13 @@ const TreeLineDetails: React.FC<TreeLineDetailsProps> = ({ treeLine }) => {
 
     // define the event handler to remove the treeLine entirely
     const onRemove = () => {
-        dispatch(removeLineAction(String(treeLine.id)))
+        console.log("Not yet implemented")
     }
 
     // define the event handler to edit the treeLine
     const onEdit = () => {
-        // add the geometry back to the draw buffer
-        dispatch(lineToDrawAction(String(treeLine.id)))
-        dispatch(removeLineAction(String(treeLine.id)))
-
-        // enable drawing again
-        dispatch(updateDrawState(DrawControlState.EDIT_LINE))
+        // not yet implemented
+        console.log("Not yet implemented")
     }
 
     return <>
@@ -88,7 +75,7 @@ const TreeLineDetails: React.FC<TreeLineDetailsProps> = ({ treeLine }) => {
             <Box sx={{mt: 2}}>
                 <FormControl variant="standard" fullWidth>
                     <InputLabel id="tree-type-select">Baumart</InputLabel>
-                    <Select labelId="tree-type-select" value={treeType} onChange={e => setTreeType(e.target.value)}>
+                    <Select labelId="tree-type-select" value={treeType.value} onChange={e => treeType.value = e.target.value}>
                         <MenuItem value="birch">Birke</MenuItem>
                         <MenuItem value="oak">Eiche</MenuItem>
                         <MenuItem value="poplar">Pappel</MenuItem>
@@ -105,9 +92,11 @@ const TreeLineDetails: React.FC<TreeLineDetailsProps> = ({ treeLine }) => {
                     <Slider 
                         aria-labelledby="spacing-slider" 
                         min={1} 
-                        max={Math.floor(treeLine.properties.length as number)} 
-                        value={spacing} 
-                        onChange={(e, value) => setSpacing(value as number)} 
+                        max={Math.min(Math.floor(treeLine.properties.length as number), 50)}
+                        marks={true}
+                        value={spacing.value} 
+                        //onChange={(e, value) => setSpacing(value as number)} 
+                        onChange={(e, value) => spacing.value = value as number}
                     />
                     <Typography sx={{ml: 1}} variant="body1">{spacing}m</Typography>
                 </Box>
@@ -124,8 +113,8 @@ const TreeLineDetails: React.FC<TreeLineDetailsProps> = ({ treeLine }) => {
                         min={1}
                         max={25}
                         marks={true}
-                        value={width}
-                        onChange={(e, value) => setWidth(value as number)}
+                        value={width.value}
+                        onChange={(e, value) => width.value = value as number}
                     />
                     <Typography sx={{ml: 1}} variant="body1">{width}m</Typography>
                 </Box>
@@ -136,7 +125,7 @@ const TreeLineDetails: React.FC<TreeLineDetailsProps> = ({ treeLine }) => {
                 <Typography id="width-slider" gutterBottom>
                     Position
                 </Typography>
-                <FormControlLabel control={<Checkbox checked={centered} onChange={(e, checked) => setCentered(checked)} />} label="gleichmäßig Ausrichten"/>
+                <FormControlLabel control={<Checkbox checked={centered.value} onChange={(e, checked) => centered.value = checked} />} label="gleichmäßig Ausrichten"/>
             </Box>
 
             {/* <pre><code>{ JSON.stringify(treeLine, null, 4) }</code></pre> */}

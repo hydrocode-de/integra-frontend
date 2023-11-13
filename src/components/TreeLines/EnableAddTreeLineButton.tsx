@@ -1,22 +1,22 @@
 import { useNavigate } from "react-router-dom"
+import { Button } from "@mui/material"
 import { Add } from "@mui/icons-material"
 
 import { zoom } from "../MainMap/mapFeatures/mapSignals"
-import { useAppDispatch } from "../../hooks"
-import { DrawControlState, updateDrawState } from "../MainMap/treeLineFeatures/treeLinesSlice"
-import { Button } from "@mui/material"
+import { drawState } from "../MainMap/treeLineFeatures/treeLineSignals"
+import { DrawState } from "../MainMap/treeLineFeatures/treeLine.model"
 
 const EnabledAddTreeLineButton: React.FC = () => {
-    // get a state dispatcher to enable the draw tool
-    const dispatch = useAppDispatch()
-
     // get a navigator
     const navigate = useNavigate()
 
     // add handler
     const onAdd = () => {
-        // change the state of the draw tool
-        dispatch(updateDrawState(DrawControlState.LINE))
+        // debounce if it is already on
+        if (drawState.value === DrawState.LINE) drawState.value = DrawState.OFF
+        
+        // enabled drawing
+        drawState.value = DrawState.LINE
 
         // navigate to the draw page
         navigate('/new')

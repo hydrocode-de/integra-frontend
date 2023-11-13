@@ -5,7 +5,6 @@ import { Provider as ReduxProvider } from "react-redux"
 import { isMobile } from "react-device-detect"
 
 import IntegraThemeProvider from "./context/IntegraThemeContext"
-import { store } from "./store"
 
 // the two main anchor sites for the two app routes (Mobile / Desktop)
 import MobileMain from "./pages/MobileMain"
@@ -24,17 +23,15 @@ export const App = () => {
   }, [])
 
   return <>
-    <ReduxProvider store={store}>
-      <IntegraThemeProvider>
-        
-        <CssBaseline />
+    <IntegraThemeProvider>
+      
+      <CssBaseline />
 
-        
-        <MapProvider>
-          {isMobile || windowWidth < 768 ? <MobileMain /> : <DesktopNavigation /> }
-        </MapProvider>
+      
+      <MapProvider>
+        {isMobile || windowWidth < 768 ? <MobileMain /> : <DesktopNavigation /> }
+      </MapProvider>
 
-      </IntegraThemeProvider>
-    </ReduxProvider>
+    </IntegraThemeProvider>
   </>
 }
