@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom"
 import { Add } from "@mui/icons-material"
 
+import { zoom } from "../MainMap/mapFeatures/mapSignals"
 import { useAppDispatch } from "../../hooks"
 import { DrawControlState, updateDrawState } from "../MainMap/treeLineFeatures/treeLinesSlice"
 import { Button } from "@mui/material"
@@ -22,7 +23,7 @@ const EnabledAddTreeLineButton: React.FC = () => {
     }
     
     return <>
-        <Button size="small" variant="contained" onClick={onAdd} startIcon={<Add />}>Neu</Button>
+        <Button size="small" variant="contained" onClick={onAdd} startIcon={<Add />} disabled={zoom.value < 13}>Neu</Button>
     </>
 }
 
