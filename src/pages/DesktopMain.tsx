@@ -6,6 +6,10 @@ import { useIntegraTheme, useModeToggler } from "../context/IntegraThemeContext"
 import MainMap from "../components/MainMap/MainMap"
 import DrawControl from "../components/MainMap/DrawControl"
 import TreeLineSource from "../components/MainMap/TreeLineSource"
+import { drawState } from "../components/MainMap/treeLineFeatures/treeLineSignals"
+import { DrawState } from "../components/MainMap/treeLineFeatures/treeLine.model"
+import DesktopContentCard from "../layout/desktop/DesktopContentCard"
+import TreeLineNewCard from "../layout/desktop/TreeLineNewCard"
 
 
 const DesktopMain: React.FC = () => {
@@ -41,8 +45,15 @@ const DesktopMain: React.FC = () => {
 
         <Box width="100vw" height="calc(100vh - 64px)" m="0" p="0" display="flex">
 
-            {/* Navigation children can be placed on top of the map this way */}
-            <Outlet />
+            {/* 
+              * Navigation children can be placed on top of the map this way 
+              * Only show if the draw Mode is OFF. This feels a bit hacky...
+              */}
+            { drawState.value !== DrawState.OFF ? (
+                <DesktopContentCard noOutlet>
+                    <TreeLineNewCard />
+                </DesktopContentCard>
+            ) : <Outlet /> }
 
 
             <MainMap mapId="desktop">
