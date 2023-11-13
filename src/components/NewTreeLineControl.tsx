@@ -3,8 +3,8 @@ import { Box, CircularProgress, Fab, IconButton, Typography } from "@mui/materia
 import { ArrowBack,  Check } from "@mui/icons-material"
 import length from "@turf/length"
 
-import { drawBuffer, drawState, addTreeLine } from "./MainMap/treeLineFeatures/treeLineSignals"
-import { DrawState } from "./MainMap/treeLineFeatures/treeLine.model"
+import { drawBuffer, drawState, addTreeLine } from "../appState/treeLineSignals"
+import { DrawState } from "../appState/treeLine.model"
 import { useSignalEffect } from "@preact/signals-react"
 
 

@@ -1,4 +1,4 @@
-import { signal, computed, effect } from "@preact/signals-react"
+import { signal, computed } from "@preact/signals-react"
 import { v4 } from "uuid"
 
 // some GIS functions

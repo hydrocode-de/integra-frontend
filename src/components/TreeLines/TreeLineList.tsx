@@ -2,7 +2,7 @@ import { Card, CardActionArea, CardHeader } from "@mui/material"
 import { ArrowRight } from "@mui/icons-material"
 import { Link } from "react-router-dom"
 
-import { treeLines } from "../MainMap/treeLineFeatures/treeLineSignals"
+import { treeLines } from "../../appState/treeLineSignals"
  
 
 const TreeLineList: React.FC = () => {

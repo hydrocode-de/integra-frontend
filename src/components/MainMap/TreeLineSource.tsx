@@ -1,6 +1,6 @@
 import { Source, Layer } from "react-map-gl"
 
-import { treeLines, treeLocations } from "./treeLineFeatures/treeLineSignals"
+import { treeLines, treeLocations } from "../../appState/treeLineSignals"
 
 const TreeLineSource: React.FC = () => {
     return <>

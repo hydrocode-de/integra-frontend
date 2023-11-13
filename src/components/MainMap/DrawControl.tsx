@@ -7,8 +7,8 @@ import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css"
 
 
 // import the buffer signal
-import { drawBuffer, drawState } from "./treeLineFeatures/treeLineSignals"
-import { DrawState } from "./treeLineFeatures/treeLine.model"
+import { drawBuffer, drawState } from "../../appState/treeLineSignals"
+import { DrawState } from "../../appState/treeLine.model"
 
 interface DrawControlProps {
     position?: ControlPosition

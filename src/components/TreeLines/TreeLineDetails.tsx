@@ -3,8 +3,8 @@ import { VisibilityOutlined, EditOutlined, DeleteOutline } from "@mui/icons-mate
 import center from "@turf/center"
 
 import { flyTo } from "../MainMap/MapObservableStore"
-import { TreeLine } from "../MainMap/treeLineFeatures/treeLine.model"
-import { updateEditSettings } from "../../components/MainMap/treeLineFeatures/treeLineSignals"
+import { TreeLine } from "../../appState/treeLine.model"
+import { updateEditSettings } from "../../appState/treeLineSignals"
 import { useSignal, useSignalEffect } from "@preact/signals-react"
 
 

@@ -1,7 +1,7 @@
 import ReactMap, { ViewStateChangeEvent } from "react-map-gl"
 
 // load the map signals to update the viewState
-import { viewState } from "./mapFeatures/mapSignals"
+import { viewState } from "../../appState/mapSignals"
 
 // load the mapbox css
 import 'mapbox-gl/dist/mapbox-gl.css'

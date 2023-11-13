@@ -1,6 +1,6 @@
 import { signal, computed } from "@preact/signals-react"
 
-export interface viewState {
+export interface ViewState {
     longitude: number,
     latitude: number,
     zoom: number,
@@ -8,7 +8,7 @@ export interface viewState {
     pitch: number
 }
 
-export const viewState = signal<viewState>({
+export const viewState = signal<ViewState>({
     longitude: 7.83,
     latitude: 47,
     zoom: 9,

@@ -4,7 +4,7 @@ import { ArrowBack } from "@mui/icons-material"
 
 import TreeLineDetails from "../../components/TreeLines/TreeLineDetails"
 import { Box, CircularProgress, IconButton } from "@mui/material"
-import { treeLines } from "../../components/MainMap/treeLineFeatures/treeLineSignals"
+import { treeLines } from "../../appState/treeLineSignals"
 
 
 const TreeLineDetailCard: React.FC = () => {
