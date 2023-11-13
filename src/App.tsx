@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"
 import { CssBaseline } from "@mui/material"
 import { MapProvider } from "react-map-gl"
-import { Provider as ReduxProvider } from "react-redux"
 import { isMobile } from "react-device-detect"
 
 import IntegraThemeProvider from "./context/IntegraThemeContext"
