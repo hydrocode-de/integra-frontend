@@ -4,7 +4,6 @@ import DesktopMain from "../pages/DesktopMain"
 import DesktopContentCard from "./desktop/DesktopContentCard"
 import TreeLineListCard from "./desktop/TreeLineListCard"
 import TreeLineDetailCard from "./desktop/TreeLineDetailCard"
-import TreeLineNewCard from "./desktop/TreeLineNewCard"
 
 // create the routes used on the Desktop version of the app
 const router = createBrowserRouter([
@@ -17,7 +16,6 @@ const router = createBrowserRouter([
                 children: [
                     {index: true, element: <TreeLineListCard />},
                     {path: 'detail/:treeId', element: <TreeLineDetailCard />},
-                    {path: 'new', element: <TreeLineNewCard />} 
                 ]
             }
         ]

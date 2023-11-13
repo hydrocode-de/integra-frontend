@@ -7,9 +7,6 @@ import { drawState } from "../MainMap/treeLineFeatures/treeLineSignals"
 import { DrawState } from "../MainMap/treeLineFeatures/treeLine.model"
 
 const EnabledAddTreeLineButton: React.FC = () => {
-    // get a navigator
-    const navigate = useNavigate()
-
     // add handler
     const onAdd = () => {
         // debounce if it is already on
@@ -17,9 +14,6 @@ const EnabledAddTreeLineButton: React.FC = () => {
         
         // enabled drawing
         drawState.value = DrawState.LINE
-
-        // navigate to the draw page
-        navigate('/new')
     }
     
     return <>

@@ -1,7 +1,6 @@
 import { useState } from "react"
 import { Box, CircularProgress, Fab, IconButton, Typography } from "@mui/material"
 import { ArrowBack,  Check } from "@mui/icons-material"
-import { useNavigate } from "react-router-dom"
 import length from "@turf/length"
 
 import { drawBuffer, drawState, addTreeLine } from "./MainMap/treeLineFeatures/treeLineSignals"
@@ -11,9 +10,6 @@ import { useSignalEffect } from "@preact/signals-react"
 
 
 const NewTreeLineControl: React.FC = () => {
-    // get a navigator to navigate after the edit action is finished
-    const navigate = useNavigate()
-
     // define a state to show the statistics
     const [len, setLen] = useState<number>(0)
     const [maxLen, setMaxLen] = useState<number>(100)
@@ -25,17 +21,14 @@ const NewTreeLineControl: React.FC = () => {
 
         // disable the draw control
         drawState.value = DrawState.OFF
-
-        // navigate back to the main page
-        navigate('/')
     }
 
     // handler to add a new tree line
     const onAdd = () => {
         addTreeLine()
 
-        // navigate to the main page
-        navigate('/')
+        // disable the draw control
+        drawState.value = DrawState.OFF
     }
 
     // side-effect to update the current length and update the maximum length
