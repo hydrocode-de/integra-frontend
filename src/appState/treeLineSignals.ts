@@ -78,7 +78,7 @@ const treeLocationFeatures = computed<TreeLocation["features"]>(() => {
             trees.push({
                 ...newPoint,
                 properties: {
-                    id: String(i),
+                    id: i,
                     treeLineId: treeLine.properties.id,
                     treeType: settings.treeType,
                     height: settings.height
