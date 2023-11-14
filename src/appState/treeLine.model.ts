@@ -22,7 +22,7 @@ export type TreeLine = FeatureCollection<LineString, TreeLineProperties>
 
 // define the properties of a single Tree
 export interface TreeLocationProperties {
-    id: string,
+    id: number,
     treeLineId?: string,
     treeType: string,
     height: number,
