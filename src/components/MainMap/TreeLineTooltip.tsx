@@ -1,5 +1,5 @@
 import { Box, Card, CardContent } from "@mui/material"
-import { useSignal } from "@preact/signals-react"
+import { useSignal, useSignalEffect } from "@preact/signals-react"
 import { useEffect } from "react"
 import { MapLayerMouseEvent, useMap } from "react-map-gl"
 
@@ -10,7 +10,7 @@ const TreeLineTooltip: React.FC = () => {
     const map = useMap()
 
     // subscribe to the map 
-    useEffect(() => {
+    useSignalEffect(() => {
         const onMouseMove = (e: MapLayerMouseEvent) => {
             if (e.features!.length > 0) {
                 // const f = e.features![0]
@@ -31,11 +31,11 @@ const TreeLineTooltip: React.FC = () => {
                 map.current!.off('mouseleave', 'tree-locations', onMouseLeave)
             }
         }
-    }, [map.current])
+    })
 
     return <>
         {location.value ? (
-            <Box position="fixed" top={location.value[1] + 70 + 10} left={location.value[0]} m={0} p={0}>
+            <Box position="fixed" top={location.value[1] + 70 + 10} left={location.value[0]} m={0} p={0} zIndex={999}>
             <Card>
                 <Box sx={{p: 1}}>                
                     <i>no content</i>
