@@ -97,16 +97,16 @@ const TreeLineSource: React.FC = () => {
     }, [map.current])
 
     return <>
-        <Source id="tree-lines" type="geojson" data={treeLines.value}>
+        <Source id="tree-lines" type="geojson" data={treeLines.value} generateId>
             <Layer id="tree-lines" source="tree-lines" type="line" paint={{
                 'line-color': 'lime',
                 'line-width': 5,
             }} />
         </Source>
-        <Source id="tree-locations" type="geojson" data={treeLocations.value}>
+        <Source id="tree-locations" type="geojson" data={treeLocations.value} generateId>
             <Layer id="tree-locations" source="tree-locations" type="circle" paint={{
                 'circle-color': 'darkgreen',
-                'circle-radius': 15,
+                'circle-radius': ['case', ['boolean', ['feature-state', 'hover'], false], 15, 14]
             }} />
         </Source>
     </>

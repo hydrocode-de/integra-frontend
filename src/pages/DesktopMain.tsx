@@ -10,6 +10,7 @@ import { drawState } from "../appState/treeLineSignals"
 import { DrawState } from "../appState/treeLine.model"
 import DesktopContentCard from "../layout/desktop/DesktopContentCard"
 import TreeLineNewCard from "../layout/desktop/TreeLineNewCard"
+import TreeLineTooltip from "../components/MainMap/TreeLineTooltip"
 
 
 const DesktopMain: React.FC = () => {
@@ -59,6 +60,7 @@ const DesktopMain: React.FC = () => {
             <MainMap mapId="desktop">
                 <DrawControl />
                 <TreeLineSource />
+                <TreeLineTooltip />
             </MainMap>
         </Box>
     </>
