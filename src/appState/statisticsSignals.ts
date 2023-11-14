@@ -1,7 +1,13 @@
 import { computed } from "@preact/signals-react"
 import { treeLocations } from "./treeLineSignals"
+
+// some GIS functions
 import area from "@turf/area"
 import convex from "@turf/convex"
+
+
+export const treeLocationHull = computed(() => convex(treeLocations.value))
+export const treeLineArea = computed(() => treeLocationHull.value ? area(treeLocationHull.value) : 0)
 
 interface TreeTypeStatistics {
     [treeType: string]: {
@@ -13,10 +19,6 @@ interface TreeTypeStatistics {
 export const treeTypeStatistics = computed<TreeTypeStatistics>(() => {
     // calculate the current area
     if (!treeLocations.value) return {}
-    
-    // calculate the area
-    const hull = convex(treeLocations.value)
-    const currentArea = hull ? area(hull) : 0
 
     // get all available tree types
     const treeTypes = [...new Set(treeLocations.value.features.map(tree => tree.properties.treeType))]
@@ -28,7 +30,7 @@ export const treeTypeStatistics = computed<TreeTypeStatistics>(() => {
         const count = treeLocations.value.features.filter(tree => tree.properties.treeType === treeType).length
         stats[treeType] = {
             count: count,
-            countPerHectare: count / (currentArea / 10000),
+            countPerHectare: count / (treeLineArea.value / 10000),
         }
     })
     

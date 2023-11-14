@@ -6,7 +6,7 @@ const TreeLineOverview: React.FC = () => {
         { Object.entries(treeTypeStatistics.value).map(([treeType, stats]) => {
             return <Box key={treeType} display="flex" justifyContent="space-between">
                 <Typography variant="body1">{ treeType }</Typography>
-                <Typography variant="body1">{ `${stats.count} (${Math.floor(stats.countPerHectare)}/ha)` }</Typography>
+                <Typography variant="body1">{ `${stats.count} Bäume (${Math.floor(stats.countPerHectare)} / ha)` }</Typography>
             </Box>
         })}
     </>
