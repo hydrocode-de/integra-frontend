@@ -1,29 +1,29 @@
 import ReactMap, { ViewStateChangeEvent } from "react-map-gl"
 
+// load the map signals to update the viewState
+import { viewState } from "../../appState/mapSignals"
+
 // load the mapbox css
 import 'mapbox-gl/dist/mapbox-gl.css'
-import { useAppDispatch } from "../../hooks"
-import { updateViewport } from "./mapFeatures/mapSlice"
+
 import MapObserver from "./MapObserver"
 
 
-const MainMap: React.FC<React.PropsWithChildren> = ({ children }) => {
-    // get a dispatch function
-    const dispatch = useAppDispatch()
-
+const MainMap: React.FC<React.PropsWithChildren<{mapId: string}>> = ({ mapId, children }) => {
     // define the event listener for a map move
     const onMove = (event: ViewStateChangeEvent) => {
-        // dispatch the new viewport
-        dispatch(updateViewport({
-            ...event.viewState
-        }))
-    } 
+        // update the viewState signal
+        viewState.value = {...viewState.value, ...event.viewState}
+    }
+
     return <>
         <ReactMap
+            id={mapId}
+            reuseMaps
             initialViewState={{
                 longitude: 7.83,
                 latitude: 48.0,
-                zoom: 9,
+                zoom: 12,
                 pitch: 0,
             }}
             style={{width: '100%', height: '100%'}}

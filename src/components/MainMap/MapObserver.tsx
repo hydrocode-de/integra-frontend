@@ -1,4 +1,4 @@
-import { useObservable, useSubscription } from "observable-hooks";
+import { useSubscription } from "observable-hooks";
 import { useMap } from "react-map-gl";
 import { flytoSubject$ } from "./MapObservableStore";
 
