@@ -4,7 +4,7 @@ import center from "@turf/center"
 
 import { flyTo } from "../MainMap/MapObservableStore"
 import { TreeLine } from "../../appState/treeLine.model"
-import { updateEditSettings, removeTreeLine } from "../../appState/treeLineSignals"
+import { updateEditSettings, removeTreeLine, moveTreeLineToDrawBuffer } from "../../appState/treeLineSignals"
 import { useSignal, useSignalEffect } from "@preact/signals-react"
 import { useNavigate } from "react-router-dom"
 
@@ -60,8 +60,7 @@ const TreeLineDetails: React.FC<TreeLineDetailsProps> = ({ treeLine }) => {
 
     // define the event handler to edit the treeLine
     const onEdit = () => {
-        // not yet implemented
-        console.log("Not yet implemented")
+        moveTreeLineToDrawBuffer(treeId)
     }
 
     return <>

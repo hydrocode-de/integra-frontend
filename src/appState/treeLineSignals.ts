@@ -1,4 +1,4 @@
-import { signal, computed } from "@preact/signals-react"
+import { signal, computed, batch } from "@preact/signals-react"
 import { v4 } from "uuid"
 
 // some GIS functions
@@ -136,7 +136,7 @@ export const addTreeLine = () => {
  * Although the rawTreeLineFeatures could be sliced directly in the Component, we made the
  * rawTreeLineFeatures private to make sure that the treeLineFeatures are updated correctly.
  * This is important as all other treeLine signals depend on the rawTreeLineFeatures.
- * @param treeId 
+ * @param treeId - The ID of the tree line to be removed.
  */
 export const removeTreeLine = (treeId: string) => {
     // filter the treeLineFeatures
@@ -144,6 +144,33 @@ export const removeTreeLine = (treeId: string) => {
 
     // update the rawTreeLineFeatures
     rawTreeLineFeatures.value = newTreeLineFeatures
+}
+
+/**
+ * Moves a tree line from the rawTreeLineFeatures to the drawBuffer.
+ *
+ * @param treeId - The ID of the tree line to be moved.
+ *
+ * This function performs the following steps:
+ * 1. Finds the tree line in the rawTreeLineFeatures that matches the provided treeId.
+ * 2. If the tree line is not found, the function returns immediately.
+ * 3. Filters the rawTreeLineFeatures to remove the tree line that matches the provided treeId.
+ * 4. In a batch operation, it updates the rawTreeLineFeatures with the new list that doesn't include the tree line with the provided treeId, and adds the tree line to the drawBuffer.
+ */
+export const moveTreeLineToDrawBuffer = (treeId: string) => {
+    // find the correct treeLine
+    const treeLine = rawTreeLineFeatures.peek().find(line => line.properties.id === treeId)
+    if (!treeLine) return
+
+    // filter the rawTreeLineFeatures
+    const newRawFeatures = rawTreeLineFeatures.peek().filter(line => line.properties.id !== treeId)
+
+    // in a batch, remove the treeLine and add it to the drawBuffer
+    batch(() => {
+        rawTreeLineFeatures.value = newRawFeatures
+        drawBuffer.value = [...drawBuffer.peek(), treeLine]
+        drawState.value = DrawState.EDIT
+    })
 }
 
 export const updateEditSettings = (treeId: string, settings: Partial<TreeEditSettings>) => {
