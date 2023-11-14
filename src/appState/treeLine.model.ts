@@ -39,5 +39,6 @@ export type DrawBuffer = FeatureCollection<LineString>
 // export an enum for draw state
 export enum DrawState {
     OFF = "off",
-    LINE = "line"
+    LINE = "line",
+    EDIT = "edit"
 }

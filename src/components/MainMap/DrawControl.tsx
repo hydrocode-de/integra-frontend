@@ -78,6 +78,9 @@ const DrawControl: React.FC<DrawControlProps> = ({ position  }) => {
             mapboxDraw.deleteAll()
             drawBuffer.value = []
             mapboxDraw.changeMode("simple_select")
+        } else if (drawState.value === DrawState.EDIT) {
+            // important here is that we are not OFF, but use the same mapboxDraw mode
+            mapboxDraw.changeMode("simple_select")
         }
     })
 
