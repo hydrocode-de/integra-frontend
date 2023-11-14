@@ -96,7 +96,7 @@ const TreeLineSource: React.FC = () => {
             map.current!.off('click', 'tree-lines', handleLineClick)
             map.current!.off('click', 'tree-locations', handleTreeClick)
         }
-    }, [])
+    }, [map.current])
 
     return <>
         <Source id="tree-lines" type="geojson" data={treeLines.value} generateId>
@@ -108,8 +108,7 @@ const TreeLineSource: React.FC = () => {
         <Source id="tree-locations" type="geojson" data={treeLocations.value} generateId>
             <Layer id="tree-locations" source="tree-locations" type="circle" paint={{
                 'circle-color': 'darkgreen',
-                //'circle-radius': 15,
-                'circle-radius': ['case', ['boolean', ['feature-state', 'hover'], false], 15, 13]
+                'circle-radius': ['case', ['boolean', ['feature-state', 'hover'], false], 15, 14]
             }} />
         </Source>
     </>
