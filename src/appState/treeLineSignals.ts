@@ -132,6 +132,20 @@ export const addTreeLine = () => {
     rawTreeLineFeatures.value = [...rawTreeLineFeatures.value, ...newTreeLine]
 }
 
+/**
+ * Although the rawTreeLineFeatures could be sliced directly in the Component, we made the
+ * rawTreeLineFeatures private to make sure that the treeLineFeatures are updated correctly.
+ * This is important as all other treeLine signals depend on the rawTreeLineFeatures.
+ * @param treeId 
+ */
+export const removeTreeLine = (treeId: string) => {
+    // filter the treeLineFeatures
+    const newTreeLineFeatures = rawTreeLineFeatures.peek().filter(line => line.properties.id !== treeId)
+
+    // update the rawTreeLineFeatures
+    rawTreeLineFeatures.value = newTreeLineFeatures
+}
+
 export const updateEditSettings = (treeId: string, settings: Partial<TreeEditSettings>) => {
     // find the correct treeLine
     

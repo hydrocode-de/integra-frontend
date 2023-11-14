@@ -4,8 +4,9 @@ import center from "@turf/center"
 
 import { flyTo } from "../MainMap/MapObservableStore"
 import { TreeLine } from "../../appState/treeLine.model"
-import { updateEditSettings } from "../../appState/treeLineSignals"
+import { updateEditSettings, removeTreeLine } from "../../appState/treeLineSignals"
 import { useSignal, useSignalEffect } from "@preact/signals-react"
+import { useNavigate } from "react-router-dom"
 
 
 interface TreeLineDetailsProps {
@@ -13,6 +14,9 @@ interface TreeLineDetailsProps {
 }
 
 const TreeLineDetails: React.FC<TreeLineDetailsProps> = ({ treeLine }) => {
+    // instatiante a navigator
+    const navigate = useNavigate()
+
     // set component state to change the treeLine on the fly
     const spacing = useSignal<number>(treeLine.properties.editSettings.spacing)
     const width = useSignal<number>(treeLine.properties.editSettings.width)
@@ -47,7 +51,11 @@ const TreeLineDetails: React.FC<TreeLineDetailsProps> = ({ treeLine }) => {
 
     // define the event handler to remove the treeLine entirely
     const onRemove = () => {
-        console.log("Not yet implemented")
+        // remove the raw treeLine feature
+        removeTreeLine(treeId)
+
+        // navigate to the treeLines overview
+        navigate("/")
     }
 
     // define the event handler to edit the treeLine
