@@ -41,7 +41,7 @@ const treeLineFeatures = computed<TreeLine["features"]>(() => {
     })
 })
 
-// export the current bbox of the tree Line features
+// export the current bbox and hull of the tree Line features
 export const treeLineBbox = computed(() => bbox({type: "FeatureCollection", features: rawTreeLineFeatures.value}))
 
 // compute the geoJSON Feature Collection from that

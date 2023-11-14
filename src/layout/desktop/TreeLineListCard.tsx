@@ -2,6 +2,7 @@ import { Box, CardContent, Typography } from "@mui/material"
 
 import EnabledAddTreeLineButton from "../../components/TreeLines/EnableAddTreeLineButton"
 import TreeLineList from "../../components/TreeLines/TreeLineList"
+import TreeLineOverview from "../../components/TreeLines/TreeLineOverview"
 
 /** 
  * We use these compontent to wrap the actual content components, 
@@ -17,6 +18,7 @@ const TreeLineListCard: React.FC = () => {
             </Box>
 
             <Typography variant="h6" mt="2rem">Überlick</Typography>
+            <TreeLineOverview />
             
             <Box display="flex" justifyContent="space-between" mt="2rem">
                 <Typography variant="h6" component="div">Meine Baumreihen</Typography>
