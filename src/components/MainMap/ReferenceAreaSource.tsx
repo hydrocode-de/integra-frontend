@@ -15,7 +15,7 @@ const ReferenceAreaSource: React.FC = () => {
                 source="reference-area"
                 type="fill"
                 paint={{
-                    'fill-color': theme.palette.primary.dark,
+                    'fill-color': theme.palette.secondary.dark,
                     'fill-opacity': 0.2
                 } as FillPaint}
             />
@@ -24,7 +24,7 @@ const ReferenceAreaSource: React.FC = () => {
                 source="reference-area"
                 type="line"
                 paint={{
-                    'line-color': theme.palette.primary.dark,
+                    'line-color': theme.palette.secondary.dark,
                     'line-width': 4
                 } as LinePaint}
             />
