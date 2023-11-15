@@ -87,7 +87,13 @@ export const newProject = (name?: string) => {
  * @param id - the id of the project to switch to
  */
 export const switchProject = (id: string) => {
-    // find the project
+    // check if we switch to anonymous
+    if (id === "anonymous") {
+        project.value = { id: "anonymous", name: "anonymous" }
+        return
+    }
+    
+    // otherwise find the project
     const proj = projects.peek().find(p => p.id === id)
     if (proj) {
         project.value = proj
