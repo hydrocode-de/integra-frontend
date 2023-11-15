@@ -6,8 +6,8 @@ import { isMobile } from "react-device-detect"
 import IntegraThemeProvider from "./context/IntegraThemeContext"
 
 // the two main anchor sites for the two app routes (Mobile / Desktop)
-import MobileMain from "./pages/MobileMain"
 import DesktopNavigation from "./layout/DesktopNavigation"
+import MobileNavigation from "./layout/MobileNavigation"
 
 
 export const App = () => {
@@ -28,7 +28,7 @@ export const App = () => {
 
       
       <MapProvider>
-        {isMobile || windowWidth < 768 ? <MobileMain /> : <DesktopNavigation /> }
+        {isMobile || windowWidth < 768 ? <MobileNavigation /> : <DesktopNavigation /> }
       </MapProvider>
 
     </IntegraThemeProvider>
