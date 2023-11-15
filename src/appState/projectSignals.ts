@@ -65,6 +65,11 @@ effect(() => {
 })
 
 // define some actions to manage the projects
+
+/**
+ * Create a new Project
+ * @param name - the name of the new project
+ */
 export const newProject = (name?: string) => {
     // create a new project
     const projectId = nanoid()
@@ -75,6 +80,18 @@ export const newProject = (name?: string) => {
 
     // add to the project list
     projects.value = [...projects.value, proj]
+}
+
+/**
+ * Switch Project
+ * @param id - the id of the project to switch to
+ */
+export const switchProject = (id: string) => {
+    // find the project
+    const proj = projects.peek().find(p => p.id === id)
+    if (proj) {
+        project.value = proj
+    }
 }
 
 // finally, on startup check if there was already something stored
