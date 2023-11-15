@@ -6,7 +6,8 @@
  * mobile version.
  */
 
-import { Box } from "@mui/material"
+import { Box, CardActionArea, Typography } from "@mui/material"
+import { Expand, ExpandLess } from "@mui/icons-material"
 import { useSignal } from "@preact/signals-react"
 import { PropsWithChildren } from "react"
 import { Outlet } from "react-router-dom"
@@ -18,8 +19,11 @@ const MobileBottomSheet: React.FC<PropsWithChildren<{noOutlet?: boolean}>> = ({ 
 
     // handle touch events
     const handleMove = (e: React.TouchEvent<HTMLDivElement>) => {
-        //console.log(e.changedTouches[0])
-        height.value = (window.innerHeight - e.changedTouches[0].clientY)
+        let newHeight = window.innerHeight - e.changedTouches[0].clientY
+        if (newHeight < 110) {
+            newHeight= 60
+        }
+        height.value = newHeight
         
         // throw a window resize event to force the map to resize
         window.dispatchEvent(new Event('resize'));
@@ -33,8 +37,9 @@ const MobileBottomSheet: React.FC<PropsWithChildren<{noOutlet?: boolean}>> = ({ 
             height={height.value}
             flexDirection="column"
             onTouchMove={handleMove}
-            sx={{borderRadius: '10px 10px 0 0'}}
+            sx={{borderRadius: '25px 25px 25px 25px'}}
         >
+            { height.value !== 60 ? (
             <Box 
                 component="div"
                 onTouchMove={handleMove}
@@ -43,12 +48,22 @@ const MobileBottomSheet: React.FC<PropsWithChildren<{noOutlet?: boolean}>> = ({ 
                 my="8px"
                 mx="auto"
                 borderRadius="3px"
-                sx={{backgroundColor: 'grey'}}
-            >
-                <Box p={1}>
-                    { !!noOutlet ? children : <Outlet /> }
-                </Box>
+                sx={{backgroundColor: height.value === 60 ? null : 'grey'}}
+            />
+            ) : null }
+            
+            <Box p={1}>
+                { height.value === 60 ? (
+                    <Box onClick={() => height.value = 250} display="flex" justifyContent="center" alignItems="center" sx={{color: 'text.secondary'}}>
+                        <ExpandLess />
+                        <Typography variant="body1" component="div" >
+                            Tippen um Details zu zeigen
+                        </Typography>
+                    </Box>
+                ) :  null}
+                { !!noOutlet && height.value !== 60 ? children : <Outlet /> }
             </Box>
+            
         </Box>
     </>
 }
