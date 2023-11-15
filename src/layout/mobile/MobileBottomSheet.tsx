@@ -60,8 +60,10 @@ const MobileBottomSheet: React.FC<PropsWithChildren<{noOutlet?: boolean}>> = ({ 
                             Tippen um Details zu zeigen
                         </Typography>
                     </Box>
-                ) :  null}
-                { !!noOutlet && height.value !== 60 ? children : <Outlet /> }
+                ) 
+                    :  !!noOutlet ? children : <Outlet />
+                }
+                
             </Box>
             
         </Box>
