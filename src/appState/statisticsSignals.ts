@@ -4,6 +4,7 @@ import { treeLocations } from "./treeLineSignals"
 // some GIS functions
 import area from "@turf/area"
 import convex from "@turf/convex"
+import buffer from "@turf/buffer"
 
 // update a convex hull for all treeLocations, whenever they change
 const treeLocationHull = computed(() => convex(treeLocations.value))
@@ -13,7 +14,20 @@ const treeLocationHull = computed(() => convex(treeLocations.value))
 const externalReferenceFeature = signal<GeoJSON.Feature<GeoJSON.Polygon> | null>(null)
 
 // the referenceFeature is either the externalReferenceFeature or the treeLocationHull
-export const referenceFeature = computed<GeoJSON.Feature<GeoJSON.Polygon> | null>(() => externalReferenceFeature.value || treeLocationHull.value)
+export const referenceFeature = computed<GeoJSON.Feature<GeoJSON.Polygon> | null>(() => {
+    // use the external reference feature, if available
+    if (externalReferenceFeature.value) return externalReferenceFeature.value
+
+    // if a treeLocation Hull is available, use it as reference
+    if (treeLocationHull.value) {
+        // buffer the treeLocationsHull by 25 meters, which we assume to be the maximal effect size
+        return buffer(treeLocationHull.value, 25, {units: "meters"})
+    }
+
+    // in any other casse there is no reference area
+    return null
+})
+
 export const referenceArea = computed(() => referenceFeature.value ? area(referenceFeature.value) : 0)
 
 interface TreeTypeStatistics {
