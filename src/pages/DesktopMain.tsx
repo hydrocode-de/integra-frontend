@@ -11,6 +11,7 @@ import { DrawState } from "../appState/treeLine.model"
 import DesktopContentCard from "../layout/desktop/DesktopContentCard"
 import TreeLineNewCard from "../layout/desktop/TreeLineNewCard"
 import TreeLineTooltip from "../components/MainMap/TreeLineTooltip"
+import ReferenceAreaSource from "../components/MainMap/ReferenceAreaSource"
 
 
 const DesktopMain: React.FC = () => {
@@ -60,6 +61,7 @@ const DesktopMain: React.FC = () => {
             <MainMap mapId="desktop">
                 <DrawControl />
                 <TreeLineSource />
+                <ReferenceAreaSource />
                 <TreeLineTooltip />
             </MainMap>
         </Box>
