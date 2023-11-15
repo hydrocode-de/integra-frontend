@@ -5,7 +5,7 @@
  * Right now the projects are just strings, but that will likely change in the future.
  */
 
-import { effect, signal } from "@preact/signals-react";
+import { batch, effect, signal } from "@preact/signals-react";
 import localforage from "localforage";
 import { nanoid } from "nanoid";
 
@@ -78,8 +78,11 @@ export const newProject = (name?: string) => {
         name: name || projectId
     }
 
-    // add to the project list
-    projects.value = [...projects.value, proj]
+    // add to the project to the list and select the new project directly list
+    batch(() => {
+        projects.value = [...projects.value, proj]
+        project.value = proj
+    })
 }
 
 /**
