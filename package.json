@@ -16,6 +16,7 @@
     "@turf/along": "^6.5.0",
     "@turf/area": "^6.5.0",
     "@turf/bbox": "^6.5.0",
+    "@turf/buffer": "^6.5.0",
     "@turf/center": "^6.5.0",
     "@turf/convex": "^6.5.0",
     "@turf/length": "^6.5.0",
