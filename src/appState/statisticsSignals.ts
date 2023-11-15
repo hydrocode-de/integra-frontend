@@ -5,9 +5,8 @@ import { treeLocations } from "./treeLineSignals"
 import area from "@turf/area"
 import convex from "@turf/convex"
 
-export const treeLocationHull = computed(() => convex(treeLocations.value))
-export const treeLineArea = computed(() => treeLocationHull.value ? area(treeLocationHull.value) : 0)
-
+// update a convex hull for all treeLocations, whenever they change
+const treeLocationHull = computed(() => convex(treeLocations.value))
 
 // container for an external reference feature
 // TODO: this needs a setter action, which fills this ie. by the union of all selected Flurstücke
@@ -15,6 +14,7 @@ const externalReferenceFeature = signal<GeoJSON.Feature<GeoJSON.Polygon> | null>
 
 // the referenceFeature is either the externalReferenceFeature or the treeLocationHull
 export const referenceFeature = computed<GeoJSON.Feature<GeoJSON.Polygon> | null>(() => externalReferenceFeature.value || treeLocationHull.value)
+export const referenceArea = computed(() => referenceFeature.value ? area(referenceFeature.value) : 0)
 
 interface TreeTypeStatistics {
     [treeType: string]: {
@@ -37,7 +37,7 @@ export const treeTypeStatistics = computed<TreeTypeStatistics>(() => {
         const count = treeLocations.value.features.filter(tree => tree.properties.treeType === treeType).length
         stats[treeType] = {
             count: count,
-            countPerHectare: count / (treeLineArea.value / 10000),
+            countPerHectare: count / (referenceArea.value / 10000),
         }
     })
     
