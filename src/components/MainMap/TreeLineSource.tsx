@@ -1,11 +1,11 @@
+import { useEffect } from "react"
 import { Source, Layer, useMap, MapLayerMouseEvent } from "react-map-gl"
+import { useNavigate } from "react-router-dom"
+import bbox from "@turf/bbox"
 
 import { treeLines, treeLocations } from "../../appState/treeLineSignals"
-import { useEffect } from "react"
 import { TreeLine, TreeLocation } from "../../appState/treeLine.model"
-import center from "@turf/center"
-import { flyTo } from "./MapObservableStore"
-import { useNavigate } from "react-router-dom"
+import { fitBounds } from "./MapObservableStore"
 
 const TreeLineSource: React.FC = () => {
     // get a reference to the map
@@ -46,12 +46,11 @@ const TreeLineSource: React.FC = () => {
         // get the feature
         const feature = e.features![0] as unknown as TreeLocation["features"][0]
 
-        // we want to fly to the center of the treeLINE
-        const midPoint = center(treeLines.peek().features.find(f => f.properties.id === feature.properties.treeLineId)!)
-        const centerPoint = {lng: midPoint.geometry.coordinates[0], lat: midPoint.geometry.coordinates[1] }
-
-        // now fly to the center
-        flyTo({center: centerPoint, speed: 1.5})
+        // we want to fly to the bounding box of the treeLINE
+        const lineBbox = bbox(treeLines.peek().features.find(f => f.properties.id === feature.properties.treeLineId)!)
+        
+        // now fitBounds to the bounding box
+        fitBounds(lineBbox as [number, number, number, number])
 
         // navigate to the details
         navigate(`/detail/${feature.properties.treeLineId}`)
@@ -63,12 +62,11 @@ const TreeLineSource: React.FC = () => {
         // get the feature
         const feature = e.features![0] as unknown as TreeLine["features"][0]
 
-        // get the center point - mapbox slices LineStrings into multiple features so we need to find the full feature
-        const midPoint = center(treeLines.peek().features.find(f => f.properties.id === feature.properties.id)!)
-        const centerPoint = {lng: midPoint.geometry.coordinates[0], lat: midPoint.geometry.coordinates[1] }
+        // get the bounding box - mapbox slices LineStrings into multiple features so we need to find the full feature
+        const lineBbox = bbox(treeLines.peek().features.find(f => f.properties.id === feature.properties.id)!)
 
-        // now fly to the center
-        flyTo({center: centerPoint, speed: 1.5})
+        // now fitBounds to the bounding box
+        fitBounds(lineBbox as [number, number, number, number])
 
         // navigate to the details
         navigate(`/detail/${feature.properties.id}`)
