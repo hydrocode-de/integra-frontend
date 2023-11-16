@@ -5,6 +5,9 @@ import { isMobile } from "react-device-detect"
 
 import IntegraThemeProvider from "./context/IntegraThemeContext"
 
+// invoke the backend to start loading data
+import "./appState/backendSignals"
+
 // the two main anchor sites for the two app routes (Mobile / Desktop)
 import DesktopNavigation from "./layout/DesktopNavigation"
 import MobileNavigation from "./layout/MobileNavigation"
