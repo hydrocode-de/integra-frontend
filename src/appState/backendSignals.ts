@@ -40,7 +40,7 @@ export const app = initializeApp(firebaseConfig)
 // BACKEND DATA
 
 // all model data about a tree at a specific age
-interface TreeDataPoint {
+export interface TreeDataPoint {
     age: number,
     bhd: number,
     height: number,
@@ -71,6 +71,34 @@ export const treeSpecies = computed<TreeSpecies[]>(() => treeData.value.map(tree
     const { data, ...others } = tree
     return others
 }))
+
+/**
+ * Load the data-point for a specific tree species at a specific age.
+ * If the exact age is not a valid TreeDataPoint in the state, the age data point
+ * that the tree has already passed is returned.
+ * example: treeAge: 14 , dataPoints: [10, 25, 20] -> 10
+ * 
+ * @param type the type of the tree
+ * @param age the age of the tree
+ * @returns the data point
+ */
+export const loadClosestDataPoint = (type: string, age: number): Partial<TreeDataPoint> => {
+    // search for the correct tree type
+    const treeSpecies = treeData.peek().find(tree => tree.type === type)
+
+    // check if the species exists
+    if (!treeSpecies) return {}
+
+    // find the closes data point
+    let maxPossiblePoint = {}
+    treeSpecies.data.forEach(dataPoint => {
+        if (dataPoint.age <= age) {
+            maxPossiblePoint = dataPoint
+        }
+    })
+
+    return maxPossiblePoint
+}
 
 
 
