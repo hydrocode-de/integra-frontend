@@ -28,6 +28,9 @@ export const project = signal<Project>({ id: "anonymous", name: "anonymous" });
 // store the current project after some time
 let dirtyTimeout: NodeJS.Timeout | null = null
 effect(() => {
+    // if the current project is anonymous, we do not save anything
+    if (project.value.id === "anonymous") return
+
     // get the project data as it changes
     const rawData = readOnlyRawTreeLineFeatures.value
     
