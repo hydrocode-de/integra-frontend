@@ -68,14 +68,17 @@ const ProjectSelect: React.FC = () => {
     else {
         return <>
             <Box display="flex" alignItems="center" mr={2}>
-                { editState.value === ProjectEditState.DIRTY && project.value.id === 'anonymous' ? (
-                    <Error color="error" sx={{fontSize: '100%', mr: 0.5}} />
-                ) : (
+                { project.value.id !== 'anonymous' || editState.value === ProjectEditState.SAVED ? (<>
                     <CheckCircle color="success" sx={{fontSize: '100%', mr: 0.5}} />
-                )}
-                <Typography variant="caption" color={editState.value === ProjectEditState.DIRTY && project.value.id === 'anonymous'  ? "error" : "success"}>
-                    {editState.value === ProjectEditState.DIRTY && project.value.id === 'anonymous' ? "nicht gespeichert" : "gespeichert"}
-                </Typography>
+                    <Typography variant="caption" color="success">
+                        gespeichert
+                    </Typography>
+                </>) : (<>
+                    <Error color="error" sx={{fontSize: '100%', mr: 0.5}} />
+                    <Typography variant="caption" color="error">
+                        nicht gespeichert
+                    </Typography>
+                </>)}
             </Box>
             <FormControl variant="outlined" size="small">
                 <Select size="small"  value={project.value.id} onChange={e => switchProject(e.target.value)} startAdornment={
