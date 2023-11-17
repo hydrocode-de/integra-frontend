@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useCallback, useEffect } from "react"
 import { Source, Layer, useMap, MapLayerMouseEvent } from "react-map-gl"
 import { useNavigate } from "react-router-dom"
 import bbox from "@turf/bbox"
@@ -40,7 +40,7 @@ const TreeLineSource: React.FC = () => {
     }
 
     // we use two different click handlers as it will get too complex otherwise
-    const handleTreeClick = (e: MapLayerMouseEvent) => {
+    const handleTreeClick = useCallback((e: MapLayerMouseEvent) => {
         if (e.features!.length === 0) return
         
         // get the feature
@@ -54,9 +54,9 @@ const TreeLineSource: React.FC = () => {
 
         // navigate to the details
         navigate(`/detail/${feature.properties.treeLineId}`)
-    }
+    }, [navigate])
 
-    const handleLineClick = (e: MapLayerMouseEvent) => {
+    const handleLineClick = useCallback((e: MapLayerMouseEvent) => {
         if (e.features!.length === 0) return
 
         // get the feature
@@ -70,7 +70,7 @@ const TreeLineSource: React.FC = () => {
 
         // navigate to the details
         navigate(`/detail/${feature.properties.id}`)
-    }
+    }, [navigate])
 
 
     // effect to subscribe to the map mousemove event
@@ -92,9 +92,9 @@ const TreeLineSource: React.FC = () => {
             map.current!.off('mouseleave', 'tree-lines', handleMouseLeaveLine)
             map.current!.off('mouseleave', 'tree-locations', handleMouseLeaveTree)
             map.current!.off('click', 'tree-lines', handleLineClick)
-            map.current!.off('click', 'tree-locations', handleTreeClick)
+            map.current!.off('click', 'tree-locations', handleTreeClick)  // eslint-disable-line
         }
-    }, [map.current])
+    }, [])  // eslint-disable-line react-hooks/exhaustive-deps
 
     return <>
         <Source id="tree-lines" type="geojson" data={treeLines.value} generateId>

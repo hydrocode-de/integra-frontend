@@ -6,8 +6,8 @@
  * mobile version.
  */
 
-import { Box, CardActionArea, Typography } from "@mui/material"
-import { Expand, ExpandLess } from "@mui/icons-material"
+import { Box, Typography } from "@mui/material"
+import { ExpandLess } from "@mui/icons-material"
 import { useSignal } from "@preact/signals-react"
 import { PropsWithChildren } from "react"
 import { Outlet } from "react-router-dom"
