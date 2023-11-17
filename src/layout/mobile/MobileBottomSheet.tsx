@@ -37,7 +37,7 @@ const MobileBottomSheet: React.FC<PropsWithChildren<{noOutlet?: boolean}>> = ({ 
             height={height.value}
             flexDirection="column"
             onTouchMove={handleMove}
-            sx={{borderRadius: '25px 25px 25px 25px'}}
+            sx={{borderRadius: '25px 25px 25px 25px', touchAction: 'none'}}
         >
             { height.value !== 60 ? (
             <Box 
@@ -48,7 +48,7 @@ const MobileBottomSheet: React.FC<PropsWithChildren<{noOutlet?: boolean}>> = ({ 
                 my="8px"
                 mx="auto"
                 borderRadius="3px"
-                sx={{backgroundColor: height.value === 60 ? null : 'grey'}}
+                sx={{backgroundColor: height.value === 60 ? null : 'grey', touchAction: 'none'}}
             />
             ) : null }
             
