@@ -25,6 +25,7 @@ export const drawState = signal<DrawState>(DrawState.OFF)
 
 // main signal to hold the treeLine data
 const rawTreeLineFeatures = signal<TreeLine["features"]>([])
+export const readOnlyRawTreeLineFeatures = computed(() => rawTreeLineFeatures.value)
 
 // we need the treeLineFeatues twice, as some of the attributes depend on the treeLocation
 // which is a circular dependency that cannot be resolved otherwise
@@ -202,3 +203,10 @@ export const updateEditSettings = (treeId: string, settings: Partial<TreeEditSet
         ...settings
     }
 }
+
+/**
+ * This function is used to directly manipulate the rawTreeLineFeatures.
+ * USE THIS WITH CAUTION - this does not invoke addTreeLine and the caller
+ * needs to make sure, that the rawTreeLineFeatures are valid.
+ */
+export const emitValidatedRawTreeLines = (lines: TreeLine["features"]) => rawTreeLineFeatures.value = lines
