@@ -39,7 +39,6 @@
     "react-scripts": "5.0.1",
     "rxjs": "^7.8.1",
     "typescript": "^4.9.5",
-    "uuid": "^9.0.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -70,7 +69,6 @@
   "devDependencies": {
     "@types/lodash.clonedeep": "^4.5.8",
     "@types/mapbox__mapbox-gl-draw": "^1.4.5",
-    "@types/mapbox-gl": "^2.7.17",
-    "@types/uuid": "^9.0.6"
+    "@types/mapbox-gl": "^2.7.17"
   }
 }

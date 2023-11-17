@@ -1,5 +1,5 @@
 import { signal, computed, batch } from "@preact/signals-react"
-import { v4 } from "uuid"
+import { nanoid } from "nanoid"
 
 // some GIS functions
 import bbox from "@turf/bbox"
@@ -113,7 +113,7 @@ export const addTreeLine = () => {
     // new treeLines
     const newTreeLine: TreeLine["features"] = drawBuffer.peek().map(line => {
         // generate a id
-        const lineId = String(line.id) || v4()
+        const lineId = String(line.id) || nanoid(12)
 
         return {
             ...line,
