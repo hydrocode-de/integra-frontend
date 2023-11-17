@@ -5,7 +5,7 @@
  * Right now the projects are just strings, but that will likely change in the future.
  */
 
-import { batch, effect, signal } from "@preact/signals-react";
+import { batch, computed, effect, signal } from "@preact/signals-react";
 import localforage from "localforage";
 import { nanoid } from "nanoid";
 
@@ -21,23 +21,41 @@ export interface Project {
     name: string
 }
 
+export enum ProjectEditState {
+    SAVED = 0,
+    DIRTY = 1,
+    SAVING = 2
+}
+
+// project signals
 export const projects = signal<Project[]>([]);
 export const project = signal<Project>({ id: "anonymous", name: "anonymous" });
+
+// edit state - internal can't be changed outside, so export only the calculated version
+const internalEditState = signal<ProjectEditState>(ProjectEditState.SAVED)
+export const editState = computed<ProjectEditState>(() => internalEditState.value)
 
 
 // store the current project after some time
 let dirtyTimeout: NodeJS.Timeout | null = null
 effect(() => {
-    // if the current project is anonymous, we do not save anything
-    if (project.value.id === "anonymous") return
-
     // get the project data as it changes
     const rawData = readOnlyRawTreeLineFeatures.value
+
+    if (rawData.length > 0) {
+        internalEditState.value = ProjectEditState.DIRTY
+    } else {
+        internalEditState.value = ProjectEditState.SAVED
+    }
+
+    // if the current project is anonymous, we do not save anything
+    if (project.value.id === "anonymous") return
     
     // whenever the rawFeatures change, we wait a second and the save to localstorage
     if (dirtyTimeout) clearTimeout(dirtyTimeout)
     dirtyTimeout = setTimeout(() => {
-        localforage.setItem(project.peek().id, rawData)
+        localforage.setItem(project.peek().id, readOnlyRawTreeLineFeatures.peek())
+        .then(() => internalEditState.value = ProjectEditState.SAVED)
         // for development you can uncomment this line to see when saving is finished
         //.then(() =>  console.log(`saved ${rawData.length} features to ${project.peek().id}`))
     }, DIRTY_TIMEOUT)
