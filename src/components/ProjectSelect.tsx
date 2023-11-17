@@ -68,13 +68,13 @@ const ProjectSelect: React.FC = () => {
     else {
         return <>
             <Box display="flex" alignItems="center" mr={2}>
-                { editState.value === ProjectEditState.DIRTY ? (
+                { editState.value === ProjectEditState.DIRTY && project.value.id === 'anonymous' ? (
                     <Error color="error" sx={{fontSize: '100%', mr: 0.5}} />
                 ) : (
                     <CheckCircle color="success" sx={{fontSize: '100%', mr: 0.5}} />
                 )}
-                <Typography variant="caption" color={editState.value === ProjectEditState.DIRTY ? "error" : "success"}>
-                    {editState.value === ProjectEditState.DIRTY ? "nicht gespeichert" : "gespeichert"}
+                <Typography variant="caption" color={editState.value === ProjectEditState.DIRTY && project.value.id === 'anonymous'  ? "error" : "success"}>
+                    {editState.value === ProjectEditState.DIRTY && project.value.id === 'anonymous' ? "nicht gespeichert" : "gespeichert"}
                 </Typography>
             </Box>
             <FormControl variant="outlined" size="small">
