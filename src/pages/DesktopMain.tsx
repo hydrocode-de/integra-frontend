@@ -45,7 +45,7 @@ const DesktopMain: React.FC = () => {
             </AppBar>
         </Box>
 
-        <Box width="100vw" height="calc(100vh - 64px)" m="0" p="0" display="flex">
+        <Box width="100vw" height="calc(100vh - 64px - 20px)" m="0" p="0" display="flex">
 
             {/* 
               * Navigation children can be placed on top of the map this way 
@@ -63,6 +63,11 @@ const DesktopMain: React.FC = () => {
                 <TreeLineSource />
                 <TreeLineTooltip />
             </MainMap>
+        </Box>
+
+        <Box width="100%" height="20px" display="flex" flexDirection="row" justifyContent="center" alignItems="center">
+            <a>Impressum</a>
+            <a style={{marginLeft: '2rem'}}>Datenschutzerklärung</a>
         </Box>
     </>
 }
