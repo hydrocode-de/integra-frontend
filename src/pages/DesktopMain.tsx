@@ -12,6 +12,8 @@ import DesktopContentCard from "../layout/desktop/DesktopContentCard"
 import TreeLineNewCard from "../layout/desktop/TreeLineNewCard"
 import TreeLineTooltip from "../components/MainMap/TreeLineTooltip"
 import ReferenceAreaSource from "../components/MainMap/ReferenceAreaSource"
+import ProjectSelect from "../components/ProjectSelect"
+
 
 
 const DesktopMain: React.FC = () => {
@@ -37,7 +39,7 @@ const DesktopMain: React.FC = () => {
                         Lng: {center.lng} Lat: {center.lat} Zoom: {zoom}
                     </Typography> */}
 
-                    <Button color="inherit">Button</Button>
+                    <ProjectSelect />
                     <IconButton size="medium" edge="start" color="inherit" aria-label="switch color mode" sx={{ml: 2}} onClick={modeToggler}>
                         { theme.palette.mode === 'dark' ? <LightMode /> : <DarkMode />}
                     </IconButton>

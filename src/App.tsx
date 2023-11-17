@@ -3,6 +3,9 @@ import { CssBaseline } from "@mui/material"
 import { MapProvider } from "react-map-gl"
 import { isMobile } from "react-device-detect"
 
+// import the signals to start pre-loading the projects
+import "./appState/projectSignals"
+
 import IntegraThemeProvider from "./context/IntegraThemeContext"
 
 // the two main anchor sites for the two app routes (Mobile / Desktop)
