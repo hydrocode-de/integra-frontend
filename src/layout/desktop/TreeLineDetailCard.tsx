@@ -1,4 +1,4 @@
-import { useParams, Link } from "react-router-dom"
+import { useParams, Link, Navigate } from "react-router-dom"
 import { ArrowBack } from "@mui/icons-material"
 
 
@@ -32,7 +32,10 @@ const TreeLineDetailCard: React.FC = () => {
             <Box display="flex" justifyContent="center" alignItems="center" minHeight="120px">
                 <CircularProgress />
             </Box>
-        ) }
+            <TreeLineDetails treeLine={treeLines.value.features.find(f => f.properties.id === treeId)!} />
+        </>) : (<>
+            <Navigate to="/" replace />
+        </>) }
     </>
 }
 
