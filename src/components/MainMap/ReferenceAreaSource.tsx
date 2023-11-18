@@ -9,7 +9,7 @@ const ReferenceAreaSource: React.FC = () => {
     const theme = useIntegraTheme()
 
     return <>
-        <Source id="reference-area" type="geojson" data={referenceFeature.value ? referenceFeature.value : undefined} generateId>
+        <Source id="reference-area" type="geojson" data={referenceFeature.value ? referenceFeature.value : {type: "FeatureCollection", features: []}} generateId>
             <Layer 
                 id="reference-area-layer"
                 source="reference-area"
