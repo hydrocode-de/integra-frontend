@@ -7,6 +7,7 @@ const TreeLineOverview: React.FC = () => {
     const currentState = useSignal<string>('count')
     
     return <>
+        { Object.keys(treeTypeStatistics.value).length === 0 ? null : (
         <Box display="flex" justifyContent="space-between" flexDirection="row" alignItems="center" mt={3} mb={1}>
             <Typography variant="h6">Überlick</Typography>
             <FormControl variant="standard">
@@ -16,6 +17,7 @@ const TreeLineOverview: React.FC = () => {
             </Select>
             </FormControl>
         </Box>
+        )}
         { Object.entries(treeTypeStatistics.value).map(([treeType, stats]) => {
             return <Box key={treeType} display="flex" justifyContent="space-between">
                 <Typography variant="body1">{ treeType }</Typography>
