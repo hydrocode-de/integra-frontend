@@ -8,12 +8,12 @@ import { treeLines } from "../../appState/treeLineSignals"
 const TreeLineList: React.FC = () => {
     return <>
         {/* Generate one Accordion for each treeLine feature */}
-        { treeLines.value.features.map(((treeLine, idx) => (
+        { treeLines.value.features.map((treeLine => (
             <Card key={treeLine.properties.id}>
                 
                 <CardActionArea component={Link} to={`/detail/${treeLine.properties.id}`}>
                     <CardHeader 
-                        title={`Pflanzreihe ${ idx + 1}`} 
+                        title={ treeLine.properties.name } 
                         subheader={`${treeLine.properties.treeCount} Bäume (${treeLine.properties.length?.toFixed(0)}m)`}
                         action={<ArrowRight />}
                     />

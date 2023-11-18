@@ -1,13 +1,9 @@
-import { AccordionActions, AccordionDetails, Box, Button, ButtonGroup, Checkbox, FormControl, FormControlLabel, InputLabel, MenuItem, Select, Slider, Typography } from "@mui/material"
-import { VisibilityOutlined, EditOutlined, DeleteOutline } from "@mui/icons-material"
-import center from "@turf/center"
+import { Box, Checkbox, FormControl, FormControlLabel, InputLabel, MenuItem, Select, Slider, Typography } from "@mui/material"
 
-import { flyTo } from "../MainMap/MapObservableStore"
 import { TreeLine } from "../../appState/treeLine.model"
-import { updateEditSettings, removeTreeLine, moveTreeLineToDrawBuffer } from "../../appState/treeLineSignals"
+import { updateEditSettings } from "../../appState/treeLineSignals"
 import { useSignal, useSignalEffect } from "@preact/signals-react"
-import { useNavigate } from "react-router-dom"
-import { treeSpecies, treeTypes } from "../../appState/backendSignals"
+import { treeSpecies } from "../../appState/backendSignals"
 
 
 interface TreeLineDetailsProps {
@@ -15,9 +11,6 @@ interface TreeLineDetailsProps {
 }
 
 const TreeLineDetails: React.FC<TreeLineDetailsProps> = ({ treeLine }) => {
-    // instatiante a navigator
-    const navigate = useNavigate()
-
     // set component state to change the treeLine on the fly
     const spacing = useSignal<number>(treeLine.properties.editSettings.spacing)
     const width = useSignal<number>(treeLine.properties.editSettings.width)
@@ -40,40 +33,8 @@ const TreeLineDetails: React.FC<TreeLineDetailsProps> = ({ treeLine }) => {
     // effect to update the treeLine Properties, when treeType changes
     useSignalEffect(() => updateEditSettings(treeId, {treeType: treeType.value}))
 
-    // define a functtion to flyTo the selected treeLine
-    const onView = () => {
-        // get the center of the feature
-        const centerPoint = center(treeLine)
-        flyTo({
-            center: {lng: centerPoint.geometry.coordinates[0], lat: centerPoint.geometry.coordinates[1]},
-            speed: 0.8
-        })
-    }
-
-    // define the event handler to remove the treeLine entirely
-    const onRemove = () => {
-        // remove the raw treeLine feature
-        removeTreeLine(treeId)
-
-        // navigate to the treeLines overview
-        navigate("/")
-    }
-
-    // define the event handler to edit the treeLine
-    const onEdit = () => {
-        moveTreeLineToDrawBuffer(treeId)
-    }
-
     return <>
-        <AccordionActions>
-            <ButtonGroup>
-                <Button size="small" startIcon={<VisibilityOutlined />} onClick={onView}>Anzeigen</Button>
-                <Button size="small" startIcon={<EditOutlined />} onClick={onEdit}>Bearbeiten</Button>
-                <Button size="small" startIcon={<DeleteOutline />} onClick={onRemove}>Löschen</Button>
-            </ButtonGroup>
-        </AccordionActions>
-        <AccordionDetails>
-
+        <Box p={2}>
             <Box sx={{flexGrow: 1}} display="flex" justifyContent="space-between">
                 <Typography variant="body1">Länge</Typography>
                 <Typography variant="body1">{treeLine.properties.length?.toFixed(0)}m</Typography>
@@ -134,10 +95,7 @@ const TreeLineDetails: React.FC<TreeLineDetailsProps> = ({ treeLine }) => {
                 </Typography>
                 <FormControlLabel control={<Checkbox checked={centered.value} onChange={(e, checked) => centered.value = checked} />} label="gleichmäßig Ausrichten"/>
             </Box>
-
-            {/* <pre><code>{ JSON.stringify(treeLine, null, 4) }</code></pre> */}
-
-        </AccordionDetails>
+        </Box>
     </>
 }
 
