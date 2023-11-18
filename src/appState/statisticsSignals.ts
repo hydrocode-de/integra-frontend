@@ -5,7 +5,6 @@ import { treeLocations } from "./treeLineSignals"
 import area from "@turf/area"
 import convex from "@turf/convex"
 import buffer from "@turf/buffer"
-import { layerVisibility } from "./mapSignals"
 
 // update a convex hull for all treeLocations, whenever they change
 const treeLocationHull = computed(() => convex(treeLocations.value))
