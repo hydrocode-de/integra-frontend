@@ -110,16 +110,23 @@ export const treeLocations = computed<TreeLocation>(() => {
  * all needed properties are created sufficiently
  */
 export const addTreeLine = () => {
+    // get the number of current treeLines
+    const numTreeLines = rawTreeLineFeatures.peek().length
+
     // new treeLines
-    const newTreeLine: TreeLine["features"] = drawBuffer.peek().map(line => {
+    const newTreeLine: TreeLine["features"] = drawBuffer.peek().map((line, index) => {
         // generate a id
         const lineId = String(line.id) || nanoid(12)
+
+        // the next name:
+        const name = `Pflanzreihe ${numTreeLines + index + 1}`
 
         return {
             ...line,
             id: lineId,
             properties: {
                 id: lineId,
+                name,
                 treeCount: 0,
                 editSettings: {...lastEditSettings.peek()}
             }
