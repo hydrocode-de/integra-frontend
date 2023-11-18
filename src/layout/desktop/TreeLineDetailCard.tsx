@@ -26,12 +26,7 @@ const TreeLineDetailCard: React.FC = () => {
             <Typography variant="h6">{ treeLine.value?.properties.name }</Typography>
             <TreeLineActionsButtonGroup treeLine={treeLine.value} />
         </Box>
-        { treeLines.value.features.map(f => f.properties.id).includes(treeId!) ? (
-            <TreeLineDetails treeLine={treeLines.value.features.find(f => f.properties.id === treeId)!} />
-        ) : (
-            <Box display="flex" justifyContent="center" alignItems="center" minHeight="120px">
-                <CircularProgress />
-            </Box>
+        { treeLines.value.features.map(f => f.properties.id).includes(treeId!) ? (<>
             <TreeLineDetails treeLine={treeLines.value.features.find(f => f.properties.id === treeId)!} />
         </>) : (<>
             <Navigate to="/" replace />
