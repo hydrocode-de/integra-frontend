@@ -58,7 +58,7 @@ export const treeLines = computed<TreeLine>(() => {
 
 
 // create the treeLocations as a computed signal
-const treeLocationFeatures = computed<TreeLocation["features"]>(() => {
+const allTreeLocationFeatures = computed<TreeLocation["features"]>(() => {
     // map all features in treeLineFeatures to an array of treeLocations
     return rawTreeLineFeatures.value.flatMap(treeLine => {
         // get the current edit settings for this treeLine
@@ -93,6 +93,10 @@ const treeLocationFeatures = computed<TreeLocation["features"]>(() => {
     })
 })
 
+// sort into the treeLocationFeatures that currently exist and the ones that will be tere in the future
+const treeLocationFeatures = computed<TreeLocation["features"]>(() => allTreeLocationFeatures.value.filter(tree => tree.properties.age! > 0))
+const futureLocationFeatures = computed<TreeLocation["features"]>(() => allTreeLocationFeatures.value.filter(tree => tree.properties.age! <= 0))
+
 // export the treeLocations as a valid geoJSON
 export const treeLocations = computed<TreeLocation>(() => {
     // calculate the bounding box of all trees
@@ -102,6 +106,14 @@ export const treeLocations = computed<TreeLocation>(() => {
         type: "FeatureCollection",
         features: treeLocationFeatures.value,
         //bbox: treeBbox
+    }
+})
+
+// export the futureLocations as a valid geoJSON
+export const futureTreeLocations = computed<TreeLocation>(() => {
+    return {
+        type: "FeatureCollection",
+        features: futureLocationFeatures.value
     }
 })
 
