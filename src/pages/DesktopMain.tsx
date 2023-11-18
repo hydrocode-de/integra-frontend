@@ -14,6 +14,7 @@ import TreeLineTooltip from "../components/MainMap/TreeLineTooltip"
 import ReferenceAreaSource from "../components/MainMap/ReferenceAreaSource"
 import ProjectSelect from "../components/ProjectSelect"
 import { useSignal } from "@preact/signals-react"
+import MapLayerSwitchButton from "../components/MainMap/MapLayerSwitchButton"
 
 
 
@@ -88,6 +89,7 @@ const DesktopMain: React.FC = () => {
                 <DrawControl />
                 <TreeLineSource />
                 <ReferenceAreaSource />
+                <MapLayerSwitchButton />
                 <TreeLineTooltip />
             </MainMap>
         </Box>

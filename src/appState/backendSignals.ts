@@ -2,9 +2,9 @@
  * The backend signals are used to communicate with the backend and reflect the current state of the backend.
  * To ease things a bit, I put all the firebase stuff in here as well.
  */
-import { computed, effect, signal } from "@preact/signals-react";
+import { computed, signal } from "@preact/signals-react";
 import { initializeApp } from "firebase/app"
-import { getAuth, User, signInAnonymously  } from "firebase/auth"
+//import { getAuth, User, signInAnonymously  } from "firebase/auth"
 import { parse } from "papaparse"
 
 // Your web app's Firebase configuration
