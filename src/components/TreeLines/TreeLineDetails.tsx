@@ -3,6 +3,7 @@ import { Box, Checkbox, FormControl, FormControlLabel, InputLabel, MenuItem, Sel
 import { TreeLine } from "../../appState/treeLine.model"
 import { updateEditSettings } from "../../appState/treeLineSignals"
 import { useSignal, useSignalEffect } from "@preact/signals-react"
+import { treeSpecies } from "../../appState/backendSignals"
 
 
 interface TreeLineDetailsProps {
@@ -44,9 +45,8 @@ const TreeLineDetails: React.FC<TreeLineDetailsProps> = ({ treeLine }) => {
                 <FormControl variant="standard" fullWidth>
                     <InputLabel id="tree-type-select">Baumart</InputLabel>
                     <Select labelId="tree-type-select" value={treeType.value} onChange={e => treeType.value = e.target.value}>
-                        <MenuItem value="birch">Birke</MenuItem>
-                        <MenuItem value="oak">Eiche</MenuItem>
-                        <MenuItem value="poplar">Pappel</MenuItem>
+                        { treeSpecies.value.map(species => <MenuItem key={species.type} value={species.type}>{species.type} ({species.latin})</MenuItem>) }
+                        <MenuItem value="generic">unbekannte Art</MenuItem>
                     </Select>
                 </FormControl>
             </Box>

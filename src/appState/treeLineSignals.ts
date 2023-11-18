@@ -7,14 +7,15 @@ import length from "@turf/length"
 import along from "@turf/along"
 
 import { DrawBuffer, DrawState, TreeEditSettings, TreeLine, TreeLocation } from "./treeLine.model"
+import { loadClosestDataPoint } from "./backendSignals"
 
 // make the last edit settings publicly available
 export const lastEditSettings = signal<TreeEditSettings>({
     spacing: 12,
-    treeType: "birch",
+    treeType: "Vogelkirsche",
     width: 5,
     centerOnLine: true,
-    height: 1
+    age: 1
 })
 
 // main signal to hold the drawBuffer
@@ -82,7 +83,9 @@ const treeLocationFeatures = computed<TreeLocation["features"]>(() => {
                     id: i,
                     treeLineId: treeLine.properties.id,
                     treeType: settings.treeType,
-                    height: settings.height
+
+                    // load the closest TreeDataPoint according to the type and age that the line currently holds
+                    ...loadClosestDataPoint(settings.treeType, settings.age)
                 }
             })
         }
