@@ -27,6 +27,7 @@ export const drawState = signal<DrawState>(DrawState.OFF)
 // main signal to hold the treeLine data
 const rawTreeLineFeatures = signal<TreeLine["features"]>([])
 export const readOnlyRawTreeLineFeatures = computed(() => rawTreeLineFeatures.value)
+export const hasData = computed<boolean>(() => rawTreeLineFeatures.value.length > 0)
 
 // we need the treeLineFeatues twice, as some of the attributes depend on the treeLocation
 // which is a circular dependency that cannot be resolved otherwise
@@ -196,6 +197,14 @@ export const moveTreeLineToDrawBuffer = (treeId: string) => {
     })
 }
 
+/**
+ * Update the edit settings of an individual tree line.
+ * This does also update the last edit settings as this was an edit incident.
+ * Alternatively, the updateAllLinesAges can be used, which is applied to all tree lines
+ * and bypasses the lastEditSettings, as this is an simulation incident.
+ * @param treeId - The ID of the tree line to be updated.
+ * @param settings - The settings to be updated.
+ */
 export const updateEditSettings = (treeId: string, settings: Partial<TreeEditSettings>) => {
     // find the correct treeLine
     
@@ -224,6 +233,25 @@ export const updateEditSettings = (treeId: string, settings: Partial<TreeEditSet
         ...lastEditSettings.peek(),
         ...settings
     }
+}
+
+export const updateAllLineAges = (ageChange: number) => {
+    // new rawTreeLineFeatures
+    const newRawFeatures = rawTreeLineFeatures.peek().map(line => {
+        return {
+            ...line,
+            properties: {
+                ...line.properties,
+                editSettings: {
+                    ...line.properties.editSettings,
+                    age: line.properties.editSettings.age + ageChange
+                }
+            }
+        }
+    })
+
+    // update
+    rawTreeLineFeatures.value = newRawFeatures
 }
 
 /**
