@@ -27,6 +27,17 @@ export const simulationStep = computed<SimulationStep>(() => {
 })
 
 // public handler to set the simulation duration directly
+/**
+ * Sets the current step of the simulation.
+ *
+ * @param newStep - The new step of the simulation.
+ *
+ * This function performs the following steps:
+ * 1. Validates the new step to ensure it is an integer between 0 and 100. If the new step is not within this range, it is clamped to the nearest valid value.
+ * 2. Retrieves the current step of the simulation.
+ * 3. If the validated new step is the same as the current step, the function returns immediately.
+ * 4. In a batch operation, it updates the current step to the validated new step and sets the previous step to the current step.
+ */
 export const setSimulationStep = (newStep: number) => {
     // TODO: I implement some hard-coded rules here
     // it is an INTEGER between 0 100
@@ -48,5 +59,5 @@ effect(() => {
     const ageChange = simulationStep.value.current - simulationStep.value.previous
 
     // update all treeLines accordingly
-    const newTreeLines = updateAllLineAges(ageChange)
+    updateAllLineAges(ageChange)
 })

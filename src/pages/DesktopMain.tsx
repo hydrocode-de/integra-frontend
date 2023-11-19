@@ -1,4 +1,4 @@
-import { AppBar, Box, Card, CardContent, Drawer, IconButton, MenuItem, MenuList, Toolbar, Typography } from "@mui/material"
+import { AppBar, Box, Card, Drawer, IconButton, MenuItem, MenuList, Toolbar, Typography } from "@mui/material"
 import { DarkMode, LightMode, Menu, ArrowBack } from "@mui/icons-material"
 import { Outlet } from "react-router-dom"
 
@@ -91,9 +91,7 @@ const DesktopMain: React.FC = () => {
                 {/* add the simulation slider */}
                 <Box minWidth="250px" width="40vw" maxWidth="450px" position="fixed" bottom="25px" left="0" right="0" mx="auto" zIndex="99">
                     <Card>
-                        {/* <CardContent> */}
-                            <SimulationStepSlider />
-                        {/* </CardContent> */}
+                        <SimulationStepSlider />
                     </Card>
                 </Box>
 

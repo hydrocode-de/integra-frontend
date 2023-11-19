@@ -235,6 +235,17 @@ export const updateEditSettings = (treeId: string, settings: Partial<TreeEditSet
     }
 }
 
+/**
+ * Updates the age of all tree lines by a specified amount.
+ *
+ * @param ageChange - The change in age to be applied to all tree lines.
+ *
+ * This function performs the following steps:
+ * 1. Retrieves the current state of the rawTreeLineFeatures.
+ * 2. Maps over each tree line in the rawTreeLineFeatures.
+ * 3. For each tree line, it creates a new object that is a copy of the original tree line, but with the `age` property of the `editSettings` updated by the specified `ageChange`.
+ * 4. The result is a new array of tree lines with updated ages, which is then used to update the state of the rawTreeLineFeatures.
+ */
 export const updateAllLineAges = (ageChange: number) => {
     // new rawTreeLineFeatures
     const newRawFeatures = rawTreeLineFeatures.peek().map(line => {
