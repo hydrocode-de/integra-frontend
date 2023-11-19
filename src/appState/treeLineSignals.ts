@@ -75,8 +75,12 @@ const allTreeLocationFeatures = computed<TreeLocation["features"]>(() => {
         // build the new locations
         const trees: TreeLocation["features"] = []
         for (let i = 0; i <= numTrees; i++) {
+            // calculate a new point
             const newPoint = along(treeLine, (i * settings.spacing) + offset, {units: "meters"})
 
+            // load the closes TreeDataPoint. We need to spread this into a new object to not overwrite the
+            // actual tree age by the 'age' marking the TreeDataPoint
+            const {age, ...data} = loadClosestDataPoint(settings.treeType, settings.age)
             // add to the new tree locations
             trees.push({
                 ...newPoint,
@@ -85,8 +89,9 @@ const allTreeLocationFeatures = computed<TreeLocation["features"]>(() => {
                     treeLineId: treeLine.properties.id,
                     treeType: settings.treeType,
 
-                    // load the closest TreeDataPoint according to the type and age that the line currently holds
-                    ...loadClosestDataPoint(settings.treeType, settings.age)
+                    // spread everything here, but use the age from the !settings!
+                    ...data,
+                    age: settings.age
                 }
             })
         }
