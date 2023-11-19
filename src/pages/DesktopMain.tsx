@@ -16,6 +16,7 @@ import ProjectSelect from "../components/ProjectSelect"
 import { useSignal } from "@preact/signals-react"
 import MapLayerSwitchButton from "../components/MainMap/MapLayerSwitchButton"
 import SimulationStepSlider from "../components/Simulation/SimulationStepSlider"
+import SimulationResultDetailCard from "../components/Simulation/SimulationResultDetailCard"
 
 
 
@@ -93,6 +94,13 @@ const DesktopMain: React.FC = () => {
                         <CardContent>
                             <SimulationStepSlider />
                         </CardContent>
+                    </Card>
+                </Box>
+
+                {/* add the statistics card */}
+                <Box minWidth="250px" maxWidth="350px" width="100%" position="fixed" top="70px" right="10px" zIndex="99">
+                    <Card>
+                        <SimulationResultDetailCard defaultMetric="carbon" />
                     </Card>
                 </Box>
             </>) : null }
