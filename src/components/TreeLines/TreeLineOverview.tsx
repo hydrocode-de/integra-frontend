@@ -23,7 +23,7 @@ const TreeLineOverview: React.FC = () => {
                 <Typography variant="body1">{ treeType }</Typography>
                 { currentState.value === 'carbon' ? (
                     <Typography variant="body1">
-                        { `${((stats.totalCarbon || 0) / 1000).toFixed(2)} t  (${(stats.countPerHectare || 0).toFixed(1)} kg / ha)` }
+                        { `${((stats.totalCarbon || 0) / 1000).toFixed(2)} t  (${((stats.carbonPerHectare || 0) / 1000).toFixed(1)} t / ha)` }
                     </Typography>
                 ) : null }
                 { currentState.value === 'count' ? (
