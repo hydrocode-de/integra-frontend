@@ -36,18 +36,16 @@ const SimulationResultDetailCard: React.FC<{defaultMetric: StatMetric}> = ({ def
         {/* Header to make the Card lager or smaller */}
         <CardActionArea onClick={() => open.value = !open.peek()}>
             <Box display="flex" flexDirection="row" justifyContent="space-between">
-                <Box sx={{flexGrow: 1, px: 1}}>
-                    <Typography variant="body2">{ open.value ? <>&nbsp;</>  : metric.value.title }</Typography>
-                    <Box display="flex" flexDirection="row" alignItems="center">
-                        <Box flexGrow={1}>
-                            <LinearProgress 
-                                variant="determinate"
-                                value={Math.min((totalValue.value / metric.peek().reference) * 100, 100)}
-                                color={(totalValue.value / metric.peek().reference) * 100 > 50 ? 'success' : 'primary'}
-                            />
-                        </Box>
-                    <Typography variant="body2" ml={1}>{metric.peek().unit}</Typography>
+                <Box display="flex" flexDirection="row" alignItems="center" flexGrow={1} pl={1}>
+                <Typography variant="body2" mr={1}>{ open.value ? <>&nbsp;</>  : metric.value.title }</Typography>
+                    <Box flexGrow={1}>
+                        <LinearProgress 
+                            variant="determinate"
+                            value={Math.min((totalValue.value / metric.peek().reference) * 100, 100)}
+                            color={(totalValue.value / metric.peek().reference) * 100 > 50 ? 'success' : 'primary'}
+                        />
                     </Box>
+                <Typography variant="body2" ml={1}>{metric.peek().unit}</Typography>
                 </Box>
                 
                 <IconButton size="small" edge="end" disableRipple>
