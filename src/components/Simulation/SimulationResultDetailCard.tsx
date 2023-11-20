@@ -5,6 +5,7 @@ import { StatMetric, TreeTypeStatistics, totalStatistics } from "../../appState/
 import CarbonResultDetailContent from "./CarbonResultDetailContent"
 import CountResultDetailContent from "./CountResultDetailContent"
 import AGBResultDetailContent from "./AGBResultDetailContent"
+import HeightResultDetailContent from "./HeightResultDetailContent"
 
 // global Names for the title
 export interface Metric {
@@ -19,6 +20,7 @@ export const NAME_LOOKUP: {[key: string]: Metric} = {
     count: {name: 'count', title: 'Baumanzahl', totalIdentifier: 'countPerHectare', reference: 100, unit: '100 Bäume / ha'},
     carbon: {name: 'carbon', title: 'Kohlenstoffgehalt', totalIdentifier: 'carbonPerHectare', reference: 10000, unit: '10 t / ha'},
     agb: {name: 'agb', title: 'Oberirdische Biomasse', totalIdentifier: 'agbPerHectare', reference: 10000, unit: '10 t / ha'},
+    height: {name: 'height', title: 'Baumhöhen', totalIdentifier: 'meanHeight', reference: 20, unit: '20 m'}
 }
 
 const SimulationResultDetailCard: React.FC<{defaultMetric: StatMetric}> = ({ defaultMetric }) => {
@@ -70,7 +72,7 @@ const SimulationResultDetailCard: React.FC<{defaultMetric: StatMetric}> = ({ def
                 { metric.value.name === 'carbon' ? <CarbonResultDetailContent onSwitch={changeMetric} /> : null }
                 { metric.value.name === 'count' ? <CountResultDetailContent onSwitch={changeMetric} /> : null }
                 { metric.value.name === 'agb' ? <AGBResultDetailContent onSwitch={changeMetric} /> : null }
-                
+                { metric.value.name === 'height' ? <HeightResultDetailContent onSwitch={changeMetric} /> : null }
             </Box>
         </Collapse>
     </>

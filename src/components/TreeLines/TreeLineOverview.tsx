@@ -14,6 +14,7 @@ const TreeLineOverview: React.FC = () => {
             <Select size="small" value={currentState.value} onChange={e => currentState.value = e.target.value}>
                 <MenuItem value="count">Anzahl</MenuItem>
                 <MenuItem value="carbon">Kohlenstoff</MenuItem>
+                <MenuItem value="height">Baumhöhe</MenuItem>
             </Select>
             </FormControl>
         </Box>
@@ -31,6 +32,11 @@ const TreeLineOverview: React.FC = () => {
                         { `${stats.count} Bäume  (${Math.floor(stats.countPerHectare)} / ha)` }
                     </Typography>
                 ) : null }
+                { currentState.value === 'height' ? (
+                    <Typography variant="body1">
+                        { `${stats.meanHeight?.toFixed(1)} m  (${stats.meanTruncHeight?.toFixed(1)} m Stamm)` }
+                    </Typography>
+                ) : null}
             </Box>
         })}
     </>
