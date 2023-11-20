@@ -44,10 +44,13 @@ const MobileBottomSheet: React.FC<PropsWithChildren<{noOutlet?: boolean}>> = ({ 
         if (newHeight < 110) {
             newHeight = 60
             isDown.value = false
+
+            // here we need another resize AFTER the drawer is rendered at the new location
+            setTimeout(() => window.dispatchEvent(new Event('resize')), 100)
         }
         height.value = newHeight
 
-        // throw a window resize event to force the map to resize
+        // throw a window resize event to force the map to resize immediately
         window.dispatchEvent(new Event('resize'));
     }
 
@@ -58,6 +61,7 @@ const MobileBottomSheet: React.FC<PropsWithChildren<{noOutlet?: boolean}>> = ({ 
 
     return <>
         <Box component="div" height={height.value}>
+        { height.value !== 60 ? (<>
             <Box
                 component="div" 
                 display="flex"
@@ -67,11 +71,8 @@ const MobileBottomSheet: React.FC<PropsWithChildren<{noOutlet?: boolean}>> = ({ 
                 onTouchMove={handleMove}
                 onMouseDown={onMouseDown}
                 onMouseUp={onMouseUp}
-                //onMouseMove={onMouseMove}
-                
                 sx={{touchAction: 'none', cursor: isDown.value ? 'grabbing' : 'grab'}}
             >
-                { height.value !== 60 ? (
                 <Box 
                     component="div"
                     onTouchMove={handleMove}
@@ -82,10 +83,10 @@ const MobileBottomSheet: React.FC<PropsWithChildren<{noOutlet?: boolean}>> = ({ 
                     my="8px"
                     mx="auto"
                     borderRadius="3px"
-                    sx={{backgroundColor: height.value === 60 ? null : 'grey', touchAction: 'none', cursor: isDown.value ? 'grabbing' : 'grab'}}
+                    sx={{backgroundColor: isDown.value ? '#A9A9A9' : '#808080', touchAction: 'none', cursor: isDown.value ? 'grabbing' : 'grab'}}
                 />
-                ) : null }
             </Box>
+            </>) : null }
             <Box p={1}>
                 { height.value === 60 ? (
                     <Box onClick={() => height.value = 250} display="flex" justifyContent="center" alignItems="center" sx={{color: 'text.secondary'}}>
