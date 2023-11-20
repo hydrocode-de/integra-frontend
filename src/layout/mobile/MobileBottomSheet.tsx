@@ -72,7 +72,7 @@ const MobileBottomSheet: React.FC<PropsWithChildren<{noOutlet?: boolean}>> = ({ 
     }, [])
 
     return <>
-        <Box component="div" height={height.value} sx={{overflowY: 'scroll'}}>
+        <Box component="div" height={height.value} sx={{overflowY: 'scroll', touchAction: 'none'}}>
         { height.value !== COLLAPSE_HEIGHT ? (<>
             <Box
                 component="div" 
