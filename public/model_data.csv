@@ -1,6 +1,6 @@
 Baumart;LateinischerName;Kürzel;Alter;Baumhöhe;BHD;Kronenbreite;Kronenansatzhöhe;AGB;Kohlenstoffgehalt
-Bergahorn;Acer pseudoplatanus L.;Ac ps;1;0.06;0.6;1.16;0.48;0.02;0.01
-Bergahorn;Acer pseudoplatanus L.;Ac ps;2;0.28;1.65;1.98;0.5;0.22;0.11
+Bergahorn;Acer pseudoplatanus L.;Ac ps;1;0.06;0.6;1.16;0.03;0.02;0.01
+Bergahorn;Acer pseudoplatanus L.;Ac ps;2;0.28;1.65;1.98;0.16;0.22;0.11
 Bergahorn;Acer pseudoplatanus L.;Ac ps;3;0.89;2.69;2.56;0.53;0.76;0.37
 Bergahorn;Acer pseudoplatanus L.;Ac ps;4;1.48;3.72;3.04;0.55;1.73;0.85
 Bergahorn;Acer pseudoplatanus L.;Ac ps;5;2.06;4.74;3.46;0.58;3.18;1.56
@@ -28,8 +28,8 @@ Bergahorn;Acer pseudoplatanus L.;Ac ps;90;22.05;56.9;12.86;1.84;1667.4;816.19
 Bergahorn;Acer pseudoplatanus L.;Ac ps;95;22.37;58.1;13;1.87;1757.4;860.25
 Bergahorn;Acer pseudoplatanus L.;Ac ps;100;22.68;59.1;13.12;1.89;1834.59;898.03
 Schwarzerle;Alnus glutinosa (L.) Gaertn.;Al gl;1;0.13;2.4;1.5;0.09;1.13;0.59
-Schwarzerle;Alnus glutinosa (L.) Gaertn.;Al gl;2;0.32;2.91;1.7;0.48;1.76;0.91
-Schwarzerle;Alnus glutinosa (L.) Gaertn.;Al gl;3;0.92;3.42;1.89;0.72;2.54;1.32
+Schwarzerle;Alnus glutinosa (L.) Gaertn.;Al gl;2;0.32;2.91;1.7;0.16;1.76;0.91
+Schwarzerle;Alnus glutinosa (L.) Gaertn.;Al gl;3;0.92;3.42;1.89;0.5;2.54;1.32
 Schwarzerle;Alnus glutinosa (L.) Gaertn.;Al gl;4;1.5;3.93;2.07;0.88;3.48;1.81
 Schwarzerle;Alnus glutinosa (L.) Gaertn.;Al gl;5;2.06;4.44;2.24;1.01;4.59;2.39
 Schwarzerle;Alnus glutinosa (L.) Gaertn.;Al gl;6;2.61;4.94;2.4;1.11;5.87;3.05
@@ -252,10 +252,10 @@ Linde;Tilia spp.;Ti spp.;85;15;39.72;9.25;2.02;576.73;286.35
 Linde;Tilia spp.;Ti spp.;90;15.46;41.87;9.4;2.04;656.17;325.79
 Linde;Tilia spp.;Ti spp.;95;15.9;43.99;9.54;2.06;740.72;367.77
 Linde;Tilia spp.;Ti spp.;100;16.32;46.08;9.67;2.08;830.29;412.24
-Gemeine Esche;Fraxinus excelsior;Fr ex;1;0;0.31;0.56;1.08;0;0
-Gemeine Esche;Fraxinus excelsior;Fr ex;2;0.07;0.94;1.1;1.09;0.07;0.04
-Gemeine Esche;Fraxinus excelsior;Fr ex;3;0.65;1.56;1.51;1.11;0.26;0.13
-Gemeine Esche;Fraxinus excelsior;Fr ex;4;1.21;2.18;1.86;1.12;0.59;0.29
+Gemeine Esche;Fraxinus excelsior;Fr ex;1;0.02;0.31;0.56;0.01;0;0
+Gemeine Esche;Fraxinus excelsior;Fr ex;2;0.07;0.94;1.1;0.035;0.07;0.04
+Gemeine Esche;Fraxinus excelsior;Fr ex;3;0.65;1.56;1.51;0.32;0.26;0.13
+Gemeine Esche;Fraxinus excelsior;Fr ex;4;1.21;2.18;1.86;0.65;0.59;0.29
 Gemeine Esche;Fraxinus excelsior;Fr ex;5;1.77;2.8;2.17;1.14;1.1;0.54
 Gemeine Esche;Fraxinus excelsior;Fr ex;6;2.32;3.41;2.45;1.15;1.81;0.88
 Gemeine Esche;Fraxinus excelsior;Fr ex;7;2.85;4.02;2.71;1.17;2.73;1.33
