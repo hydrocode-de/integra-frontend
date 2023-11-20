@@ -2,6 +2,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom"
 import MobileMain from "../pages/MobileMain"
 import MobileBottomSheet from "./mobile/MobileBottomSheet"
 import MobileTreeLineList from "./mobile/MobileTreeLineList"
+import MobileTreeDetails from "./mobile/MobileTreeDetails"
 
 // create the routes used on the Mobile version of the app
 const router = createBrowserRouter([
@@ -13,7 +14,7 @@ const router = createBrowserRouter([
                 element: <MobileBottomSheet />,
                 children: [
                     {index: true, element: <MobileTreeLineList />},
-                    {path: 'detail/:treeId', element: <h1>DETAIL</h1>},
+                    {path: 'detail/:treeId', element: <MobileTreeDetails />},
                 ]
             }
         ]
