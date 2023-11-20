@@ -20,6 +20,7 @@ const MainMap: React.FC<React.PropsWithChildren<{mapId: string}>> = ({ mapId, ch
         <ReactMap
             id={mapId}
             reuseMaps
+            preserveDrawingBuffer
             initialViewState={{
                 longitude: 7.83,
                 latitude: 48.0,
