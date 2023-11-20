@@ -14,7 +14,7 @@ const MobileMain: React.FC = () => {
     return <>
         <Box height="100vh" overflow="hidden">
 
-            <Box width="100vw" height="100vh" m="0" p="0" display="flex" flexDirection="column">
+            <Box width="100vw" height="calc(100vh - 60px)" m="0" mt="60px" p="0" display="flex" flexDirection="column">
 
 
                 <Box flexGrow={1}>
