@@ -3,11 +3,16 @@ import * as ReactDOM from "react-dom/client"
 import { App } from "./App"
 import reportWebVitals from "./reportWebVitals"
 import * as serviceWorker from "./serviceWorker"
+// not sure where to initialize Hotjar 
+// right now, we init it here - so it can track basically everything that is done
+// on the other hand, we can't let the user decide when to start tracking
+import './hotjar'
 
 
 const container = document.getElementById("root")
 if (!container) throw new Error('Failed to find the root element');
 const root = ReactDOM.createRoot(container)
+
 
 root.render(
   <React.StrictMode>
