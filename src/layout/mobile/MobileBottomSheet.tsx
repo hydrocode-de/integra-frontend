@@ -12,6 +12,8 @@ import { useSignal } from "@preact/signals-react"
 import { PropsWithChildren, useEffect } from "react"
 import { Outlet } from "react-router-dom"
 
+// fix collapse height
+const COLLAPSE_HEIGHT = 50
 
 const MobileBottomSheet: React.FC<PropsWithChildren<{noOutlet?: boolean}>> = ({ noOutlet, children }) => {
     // use a signal to hold the sheet height
@@ -24,7 +26,7 @@ const MobileBottomSheet: React.FC<PropsWithChildren<{noOutlet?: boolean}>> = ({ 
     const handleMove = (e: React.TouchEvent<HTMLDivElement>) => {
         let newHeight = window.innerHeight - e.changedTouches[0].clientY
         if (newHeight < 110) {
-            newHeight= 60
+            newHeight= COLLAPSE_HEIGHT
         }
         height.value = newHeight
         
@@ -42,7 +44,7 @@ const MobileBottomSheet: React.FC<PropsWithChildren<{noOutlet?: boolean}>> = ({ 
         if (!isDown.peek()) return
         let newHeight = window.innerHeight - e.clientY
         if (newHeight < 110) {
-            newHeight = 60
+            newHeight = COLLAPSE_HEIGHT
             isDown.value = false
 
             // here we need another resize AFTER the drawer is rendered at the new location
@@ -60,8 +62,8 @@ const MobileBottomSheet: React.FC<PropsWithChildren<{noOutlet?: boolean}>> = ({ 
     }, [])
 
     return <>
-        <Box component="div" height={height.value}>
-        { height.value !== 60 ? (<>
+        <Box component="div" height={height.value} sx={{overflowY: 'scroll'}}>
+        { height.value !== COLLAPSE_HEIGHT ? (<>
             <Box
                 component="div" 
                 display="flex"
@@ -88,17 +90,17 @@ const MobileBottomSheet: React.FC<PropsWithChildren<{noOutlet?: boolean}>> = ({ 
             </Box>
             </>) : null }
             <Box p={1}>
-                { height.value === 60 ? (
+                <>
                     <Box onClick={() => height.value = 250} display="flex" justifyContent="center" alignItems="center" sx={{color: 'text.secondary'}}>
                         <ExpandLess />
                         <Typography variant="body1" component="div" sx={{cursor: 'pointer'}}>
                             Tippen um Details zu zeigen
                         </Typography>
-                    </Box>
-                ) 
-                    :  !!noOutlet ? children : <Outlet />
-                }
-                
+                    </Box> 
+                </>
+                <Box mt={height.value === COLLAPSE_HEIGHT ? 10 : 0}>
+                  {!!noOutlet ? children : <Outlet />}
+                </Box>
             </Box>
         </Box>
     </>
