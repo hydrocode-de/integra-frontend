@@ -27,6 +27,7 @@ export const drawState = signal<DrawState>(DrawState.OFF)
 // main signal to hold the treeLine data
 const rawTreeLineFeatures = signal<TreeLine["features"]>([])
 export const readOnlyRawTreeLineFeatures = computed(() => rawTreeLineFeatures.value)
+export const hasData = computed<boolean>(() => rawTreeLineFeatures.value.length > 0)
 
 // we need the treeLineFeatues twice, as some of the attributes depend on the treeLocation
 // which is a circular dependency that cannot be resolved otherwise
@@ -58,7 +59,7 @@ export const treeLines = computed<TreeLine>(() => {
 
 
 // create the treeLocations as a computed signal
-const treeLocationFeatures = computed<TreeLocation["features"]>(() => {
+const allTreeLocationFeatures = computed<TreeLocation["features"]>(() => {
     // map all features in treeLineFeatures to an array of treeLocations
     return rawTreeLineFeatures.value.flatMap(treeLine => {
         // get the current edit settings for this treeLine
@@ -74,8 +75,12 @@ const treeLocationFeatures = computed<TreeLocation["features"]>(() => {
         // build the new locations
         const trees: TreeLocation["features"] = []
         for (let i = 0; i <= numTrees; i++) {
+            // calculate a new point
             const newPoint = along(treeLine, (i * settings.spacing) + offset, {units: "meters"})
 
+            // load the closes TreeDataPoint. We need to spread this into a new object to not overwrite the
+            // actual tree age by the 'age' marking the TreeDataPoint
+            const {age, ...data} = loadClosestDataPoint(settings.treeType, settings.age)
             // add to the new tree locations
             trees.push({
                 ...newPoint,
@@ -84,14 +89,19 @@ const treeLocationFeatures = computed<TreeLocation["features"]>(() => {
                     treeLineId: treeLine.properties.id,
                     treeType: settings.treeType,
 
-                    // load the closest TreeDataPoint according to the type and age that the line currently holds
-                    ...loadClosestDataPoint(settings.treeType, settings.age)
+                    // spread everything here, but use the age from the !settings!
+                    ...data,
+                    age: settings.age
                 }
             })
         }
         return trees
     })
 })
+
+// sort into the treeLocationFeatures that currently exist and the ones that will be tere in the future
+const treeLocationFeatures = computed<TreeLocation["features"]>(() => allTreeLocationFeatures.value.filter(tree => tree.properties.age! > 0))
+const futureLocationFeatures = computed<TreeLocation["features"]>(() => allTreeLocationFeatures.value.filter(tree => tree.properties.age! <= 0))
 
 // export the treeLocations as a valid geoJSON
 export const treeLocations = computed<TreeLocation>(() => {
@@ -102,6 +112,14 @@ export const treeLocations = computed<TreeLocation>(() => {
         type: "FeatureCollection",
         features: treeLocationFeatures.value,
         //bbox: treeBbox
+    }
+})
+
+// export the futureLocations as a valid geoJSON
+export const futureTreeLocations = computed<TreeLocation>(() => {
+    return {
+        type: "FeatureCollection",
+        features: futureLocationFeatures.value
     }
 })
 
@@ -184,6 +202,14 @@ export const moveTreeLineToDrawBuffer = (treeId: string) => {
     })
 }
 
+/**
+ * Update the edit settings of an individual tree line.
+ * This does also update the last edit settings as this was an edit incident.
+ * Alternatively, the updateAllLinesAges can be used, which is applied to all tree lines
+ * and bypasses the lastEditSettings, as this is an simulation incident.
+ * @param treeId - The ID of the tree line to be updated.
+ * @param settings - The settings to be updated.
+ */
 export const updateEditSettings = (treeId: string, settings: Partial<TreeEditSettings>) => {
     // find the correct treeLine
     
@@ -212,6 +238,36 @@ export const updateEditSettings = (treeId: string, settings: Partial<TreeEditSet
         ...lastEditSettings.peek(),
         ...settings
     }
+}
+
+/**
+ * Updates the age of all tree lines by a specified amount.
+ *
+ * @param ageChange - The change in age to be applied to all tree lines.
+ *
+ * This function performs the following steps:
+ * 1. Retrieves the current state of the rawTreeLineFeatures.
+ * 2. Maps over each tree line in the rawTreeLineFeatures.
+ * 3. For each tree line, it creates a new object that is a copy of the original tree line, but with the `age` property of the `editSettings` updated by the specified `ageChange`.
+ * 4. The result is a new array of tree lines with updated ages, which is then used to update the state of the rawTreeLineFeatures.
+ */
+export const updateAllLineAges = (ageChange: number) => {
+    // new rawTreeLineFeatures
+    const newRawFeatures = rawTreeLineFeatures.peek().map(line => {
+        return {
+            ...line,
+            properties: {
+                ...line.properties,
+                editSettings: {
+                    ...line.properties.editSettings,
+                    age: line.properties.editSettings.age + ageChange
+                }
+            }
+        }
+    })
+
+    // update
+    rawTreeLineFeatures.value = newRawFeatures
 }
 
 /**

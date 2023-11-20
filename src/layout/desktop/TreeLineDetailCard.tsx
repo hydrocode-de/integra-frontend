@@ -3,7 +3,7 @@ import { ArrowBack } from "@mui/icons-material"
 
 
 import TreeLineDetails from "../../components/TreeLines/TreeLineDetails"
-import { Box, CircularProgress, IconButton, Typography } from "@mui/material"
+import { Box, IconButton, Typography } from "@mui/material"
 import { treeLines } from "../../appState/treeLineSignals"
 import { useSignal } from "@preact/signals-react"
 import TreeLineActionsButtonGroup from "../../components/TreeLines/TreeLineActionsButtonGroup"

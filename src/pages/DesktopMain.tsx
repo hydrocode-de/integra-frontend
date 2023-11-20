@@ -1,4 +1,4 @@
-import { AppBar, Box, Drawer, IconButton, MenuItem, MenuList, Toolbar, Typography } from "@mui/material"
+import { AppBar, Box, Card, Drawer, IconButton, MenuItem, MenuList, Toolbar, Typography } from "@mui/material"
 import { DarkMode, LightMode, Menu, ArrowBack } from "@mui/icons-material"
 import { Outlet } from "react-router-dom"
 
@@ -6,7 +6,7 @@ import { useIntegraTheme, useModeToggler } from "../context/IntegraThemeContext"
 import MainMap from "../components/MainMap/MainMap"
 import DrawControl from "../components/MainMap/DrawControl"
 import TreeLineSource from "../components/MainMap/TreeLineSource"
-import { drawState } from "../appState/treeLineSignals"
+import { drawState, hasData } from "../appState/treeLineSignals"
 import { DrawState } from "../appState/treeLine.model"
 import DesktopContentCard from "../layout/desktop/DesktopContentCard"
 import TreeLineNewCard from "../layout/desktop/TreeLineNewCard"
@@ -15,6 +15,8 @@ import ReferenceAreaSource from "../components/MainMap/ReferenceAreaSource"
 import ProjectSelect from "../components/ProjectSelect"
 import { useSignal } from "@preact/signals-react"
 import MapLayerSwitchButton from "../components/MainMap/MapLayerSwitchButton"
+import SimulationStepSlider from "../components/Simulation/SimulationStepSlider"
+import SimulationResultDetailCard from "../components/Simulation/SimulationResultDetailCard"
 
 
 
@@ -84,6 +86,22 @@ const DesktopMain: React.FC = () => {
                 </DesktopContentCard>
             ) : <Outlet /> }
 
+            {/* Only render the simulation cards if there is data and no editing */}
+            { hasData.value && drawState.value === DrawState.OFF ? (<>
+                {/* add the simulation slider */}
+                <Box minWidth="250px" width="40vw" maxWidth="450px" position="fixed" bottom="25px" left="0" right="0" mx="auto" zIndex="99">
+                    <Card>
+                        <SimulationStepSlider />
+                    </Card>
+                </Box>
+
+                {/* add the statistics card */}
+                <Box minWidth="250px" maxWidth="350px" width="100%" position="fixed" top="70px" right="10px" zIndex="99">
+                    <Card>
+                        <SimulationResultDetailCard defaultMetric="carbon" />
+                    </Card>
+                </Box>
+            </>) : null }
 
             <MainMap mapId="desktop">
                 <DrawControl />

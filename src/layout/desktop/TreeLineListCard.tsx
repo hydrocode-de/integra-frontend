@@ -17,10 +17,9 @@ const TreeLineListCard: React.FC = () => {
                 <span />
             </Box>
 
-            <Typography variant="h6" mt="2rem">Überlick</Typography>
             <TreeLineOverview />
             
-            <Box display="flex" justifyContent="space-between" mt="2rem">
+            <Box display="flex" justifyContent="space-between" mt="3rem">
                 <Typography variant="h6" component="div">Meine Baumreihen</Typography>
                 <EnabledAddTreeLineButton />
             </Box>
