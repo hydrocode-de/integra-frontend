@@ -20,11 +20,11 @@ const SimulationStepSlider: React.FC = () => {
     return <>
         <Box p={open.value ? 0 : 0}>
             <CardActionArea onClick={() => open.value = !open.peek()}>
-            <Box display="flex" flexDirection="row" justifyContent="space-between" ml={1}>
+            <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" ml={1}>
                 <Typography variant={open.value ? 'h6' : 'body2'} my="auto">simuliere Baumwachstum</Typography>
-                <IconButton size="small">
+                {/* <IconButton size="small"> */}
                     { open.value ? <ExpandMore /> : <ExpandLess /> }
-                </IconButton>
+                {/* </IconButton> */}
             </Box>
             </CardActionArea>
         <Collapse in={open.value}>
