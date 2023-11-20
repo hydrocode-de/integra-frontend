@@ -4,6 +4,7 @@ import { useSignal, useSignalEffect } from "@preact/signals-react"
 import { StatMetric, TreeTypeStatistics, totalStatistics } from "../../appState/statisticsSignals"
 import CarbonResultDetailContent from "./CarbonResultDetailContent"
 import CountResultDetailContent from "./CountResultDetailContent"
+import AGBResultDetailContent from "./AGBResultDetailContent"
 
 // global Names for the title
 export interface Metric {
@@ -17,6 +18,7 @@ export interface Metric {
 export const NAME_LOOKUP: {[key: string]: Metric} = {
     count: {name: 'count', title: 'Baumanzahl', totalIdentifier: 'countPerHectare', reference: 100, unit: '100 Bäume / ha'},
     carbon: {name: 'carbon', title: 'Kohlenstoffgehalt', totalIdentifier: 'carbonPerHectare', reference: 10000, unit: '10 t / ha'},
+    agb: {name: 'agb', title: 'Oberirdische Biomasse', totalIdentifier: 'agbPerHectare', reference: 10000, unit: '10 t / ha'},
 }
 
 const SimulationResultDetailCard: React.FC<{defaultMetric: StatMetric}> = ({ defaultMetric }) => {
@@ -67,6 +69,7 @@ const SimulationResultDetailCard: React.FC<{defaultMetric: StatMetric}> = ({ def
             <Box p={1}>
                 { metric.value.name === 'carbon' ? <CarbonResultDetailContent onSwitch={changeMetric} /> : null }
                 { metric.value.name === 'count' ? <CountResultDetailContent onSwitch={changeMetric} /> : null }
+                { metric.value.name === 'agb' ? <AGBResultDetailContent onSwitch={changeMetric} /> : null }
                 
             </Box>
         </Collapse>
