@@ -37,6 +37,9 @@ interface StatisticsDatapoint {
     carbonPerHectare?: number,
     totalAgb?: number,
     agbPerHectare?: number,
+    meanHeight?: number,
+    meanTruncHeight?: number,
+    meanBhd?: number,
 }
 
 export interface TreeTypeStatistics {
@@ -61,7 +64,14 @@ export const treeTypeStatistics = computed<TreeTypeStatistics>(() => {
         // carbon statistics
         const totalCarbon = individuals.map(tree => tree.properties.carbon || 0).reduce((t1, t2) => t1 + t2, 0)
         const totalAgb = individuals.map(tree => tree.properties.agb || 0).reduce((t1, t2) => t1 + t2, 0)
- 
+
+        // height statistics
+        const meanHeight = individuals.map(tree => tree.properties.height || 0).reduce((t1, t2) => t1 + t2, 0) / individuals.length
+        const meanTruncHeight = individuals.map(tree => (tree.properties.height || 0) - (tree.properties.canopyHeight || 0)).reduce((t1, t2) => t1 + t2, 0) / individuals.length
+        
+        // BHD statistics
+        const meanBhd = individuals.map(tree => tree.properties.bhd || 0).reduce((t1, t2) => t1 + t2, 0) / individuals.length
+
         stats[treeType] = {
             count: individuals.length,
             countPerHectare: individuals.length / (referenceArea.value / 10000),
@@ -69,6 +79,9 @@ export const treeTypeStatistics = computed<TreeTypeStatistics>(() => {
             carbonPerHectare: totalCarbon / (referenceArea.value / 10000),
             totalAgb: totalAgb,
             agbPerHectare: totalAgb / (referenceArea.value / 10000),
+            meanHeight: meanHeight,
+            meanTruncHeight: meanTruncHeight,
+            meanBhd: meanBhd,
         }
     })
     
@@ -85,5 +98,8 @@ export const totalStatistics = computed<StatisticsDatapoint>(() => {
         carbonPerHectare: Object.values(treeTypeStatistics.value).map(t => t.carbonPerHectare || 0).reduce((t1, t2) => t1 + t2, 0),
         totalAgb: Object.values(treeTypeStatistics.value).map(t => t.totalAgb || 0).reduce((t1, t2) => t1 + t2, 0),
         agbPerHectare: Object.values(treeTypeStatistics.value).map(t => t.agbPerHectare || 0).reduce((t1, t2) => t1 + t2, 0),
+        meanHeight: Object.values(treeTypeStatistics.value).map(t => t.meanHeight || 0).reduce((t1, t2) => t1 + t2, 0) / Object.keys(treeTypeStatistics.value).length,
+        meanTruncHeight: Object.values(treeTypeStatistics.value).map(t => t.meanTruncHeight || 0).reduce((t1, t2) => t1 + t2, 0) / Object.keys(treeTypeStatistics.value).length,
+        meanBhd: Object.values(treeTypeStatistics.value).map(t => t.meanBhd || 0).reduce((t1, t2) => t1 + t2, 0) / Object.keys(treeTypeStatistics.value).length,
     }
 })
