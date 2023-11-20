@@ -6,7 +6,11 @@
  */
 
 import { batch, computed, effect, signal } from "@preact/signals-react";
-import { updateAllLineAges } from "./treeLineSignals";
+import { updateAllLineAges, readOnlyRawTreeLineFeatures, treeLocationFeatures } from "./treeLineSignals";
+import { layerVisibility } from "./mapSignals";
+import buffer from "@turf/buffer";
+import area from "@turf/area";
+import { TreeLocationProperties } from "./treeLine.model";
 
 // the iteration is too important, so we make it private to this module
 const step = signal<number>(0)
@@ -60,4 +64,72 @@ effect(() => {
 
     // update all treeLines accordingly
     updateAllLineAges(ageChange)
+})
+
+// Add some simulation effects here
+// These are things that happen as the simulation progresses.
+
+// first we need a new simulation state:
+// if the simulation step is > 0, it is 'touched'
+export const simulationIsTouched = computed<boolean>(() => simulationStep.value.current > 0)
+
+// if the simulation is Touched and there is more than one tree, we enable the option
+// to visualize the canopy instead of a circle layer
+effect(() => {
+    if (simulationIsTouched.value && readOnlyRawTreeLineFeatures.value.length > 0) {
+        // check if is already there
+        if (!Object.keys(layerVisibility.peek()).includes("canopyLayer")) {
+            // enable the open by setting the layer visibility
+            layerVisibility.value = {...layerVisibility.peek(), "canopyLayer": "visible"}
+
+            // TODO: here we could handle the discoverability of this feature
+        }
+    }
+
+    // remove the layer switch possibility if there are no features
+    if (readOnlyRawTreeLineFeatures.value.length === 0 && Object.keys(layerVisibility.peek()).includes("canopyLayer")) {
+        // remove the option
+        const { "canopyLayer": _, ...others } = layerVisibility.peek()
+        layerVisibility.value = others
+    }
+})
+
+// define a model type for canopy
+interface CanopyProperties extends TreeLocationProperties {
+    canopyArea: number,
+    canopyWidth?: number,
+    error?: string
+
+}
+export type Canopy = GeoJSON.FeatureCollection<GeoJSON.Polygon, CanopyProperties>
+
+// now the existence of the 'canopyLayer' can be used to calculate the canopy only conditionally
+export const canopyLayerFeatures = computed<Canopy["features"]>(() => {
+    // if there is no need for a layer, return an empty array
+    if (!Object.keys(layerVisibility.value).includes('canopyLayer')) {
+        return []
+    } else {
+        // otherwise buffer the treeLocations
+        return treeLocationFeatures.value.map(tree => {
+            // tree buffer defaults to 1m 
+            const buffered = buffer(tree, tree.properties.canopyWidth || 1, {units: 'meters'})
+            
+            return {
+                ...buffered,
+                properties: {
+                    ...tree.properties,
+                    canopyArea: area(buffered),
+                    canopyWidth: tree.properties.canopyWidth,
+                    error: !tree.properties.canopyWidth ? `Tree ${tree.properties.id} has no canopy width set` : undefined
+                }
+            }
+        })
+    }
+})
+
+export const canopyLayer = computed<Canopy>(() => {
+    return {
+        type: 'FeatureCollection',
+        features: canopyLayerFeatures.value
+    }
 })
