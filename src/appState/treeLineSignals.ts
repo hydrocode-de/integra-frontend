@@ -100,7 +100,7 @@ const allTreeLocationFeatures = computed<TreeLocation["features"]>(() => {
 })
 
 // sort into the treeLocationFeatures that currently exist and the ones that will be tere in the future
-const treeLocationFeatures = computed<TreeLocation["features"]>(() => allTreeLocationFeatures.value.filter(tree => tree.properties.age! > 0))
+export const treeLocationFeatures = computed<TreeLocation["features"]>(() => allTreeLocationFeatures.value.filter(tree => tree.properties.age! > 0))
 const futureLocationFeatures = computed<TreeLocation["features"]>(() => allTreeLocationFeatures.value.filter(tree => tree.properties.age! <= 0))
 
 // export the treeLocations as a valid geoJSON
