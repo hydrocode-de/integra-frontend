@@ -30,7 +30,7 @@ const DesktopMain: React.FC = () => {
 
     return <>
         <Box sx={{flexGrow: 1}}>
-            <AppBar position="static">
+            <AppBar position="static" variant="elevation" color="default">
                 <Toolbar>
                     <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{mr: 2}} onClick={() => drawerOpen.value = true}>
                         <Menu />
