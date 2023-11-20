@@ -10,12 +10,15 @@ import { Box, Typography } from "@mui/material"
 import { ExpandLess } from "@mui/icons-material"
 import { useSignal } from "@preact/signals-react"
 import { PropsWithChildren, useEffect } from "react"
-import { Outlet } from "react-router-dom"
+import { Outlet, useNavigate } from "react-router-dom"
 
 // fix collapse height
 const COLLAPSE_HEIGHT = 50
 
 const MobileBottomSheet: React.FC<PropsWithChildren<{noOutlet?: boolean}>> = ({ noOutlet, children }) => {
+    // get a navigator
+    const navigate = useNavigate()
+    
     // use a signal to hold the sheet height
     const height = useSignal<number>(window.innerHeight / 3)
 
@@ -26,7 +29,11 @@ const MobileBottomSheet: React.FC<PropsWithChildren<{noOutlet?: boolean}>> = ({ 
     const handleMove = (e: React.TouchEvent<HTMLDivElement>) => {
         let newHeight = window.innerHeight - e.changedTouches[0].clientY
         if (newHeight < 110) {
+            // we collapse the sheet
             newHeight= COLLAPSE_HEIGHT
+
+            // we leave any page
+            navigate('/')
         }
         height.value = newHeight
         
@@ -46,6 +53,9 @@ const MobileBottomSheet: React.FC<PropsWithChildren<{noOutlet?: boolean}>> = ({ 
         if (newHeight < 110) {
             newHeight = COLLAPSE_HEIGHT
             isDown.value = false
+
+            // we leave any page
+            navigate('/')
 
             // here we need another resize AFTER the drawer is rendered at the new location
             setTimeout(() => window.dispatchEvent(new Event('resize')), 100)
@@ -90,14 +100,14 @@ const MobileBottomSheet: React.FC<PropsWithChildren<{noOutlet?: boolean}>> = ({ 
             </Box>
             </>) : null }
             <Box p={1}>
-                <>
+                { height.value === COLLAPSE_HEIGHT ? (<>
                     <Box onClick={() => height.value = 250} display="flex" justifyContent="center" alignItems="center" sx={{color: 'text.secondary'}}>
                         <ExpandLess />
                         <Typography variant="body1" component="div" sx={{cursor: 'pointer'}}>
                             Tippen um Details zu zeigen
                         </Typography>
                     </Box> 
-                </>
+                </>) : null }
                 <Box mt={height.value === COLLAPSE_HEIGHT ? 10 : 0}>
                   {!!noOutlet ? children : <Outlet />}
                 </Box>
