@@ -34,6 +34,9 @@ const MobileBottomSheet: React.FC<PropsWithChildren<{noOutlet?: boolean}>> = ({ 
 
             // we leave any page
             navigate('/')
+
+            // here we need another resize AFTER the drawer is rendered at the new location
+            setTimeout(() => window.dispatchEvent(new Event('resize')), 100)
         }
         height.value = newHeight
         
