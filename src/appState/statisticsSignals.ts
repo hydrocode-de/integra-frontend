@@ -35,6 +35,8 @@ interface StatisticsDatapoint {
     countPerHectare: number,
     totalCarbon?: number,
     carbonPerHectare?: number,
+    totalAgb?: number,
+    agbPerHectare?: number,
 }
 
 export interface TreeTypeStatistics {
@@ -58,12 +60,15 @@ export const treeTypeStatistics = computed<TreeTypeStatistics>(() => {
 
         // carbon statistics
         const totalCarbon = individuals.map(tree => tree.properties.carbon || 0).reduce((t1, t2) => t1 + t2, 0)
+        const totalAgb = individuals.map(tree => tree.properties.agb || 0).reduce((t1, t2) => t1 + t2, 0)
  
         stats[treeType] = {
             count: individuals.length,
             countPerHectare: individuals.length / (referenceArea.value / 10000),
             totalCarbon: totalCarbon,
             carbonPerHectare: totalCarbon / (referenceArea.value / 10000),
+            totalAgb: totalAgb,
+            agbPerHectare: totalAgb / (referenceArea.value / 10000),
         }
     })
     
@@ -78,5 +83,7 @@ export const totalStatistics = computed<StatisticsDatapoint>(() => {
         countPerHectare: Object.values(treeTypeStatistics.value).map(t => t.countPerHectare).reduce((t1, t2) => t1 + t2, 0),
         totalCarbon: Object.values(treeTypeStatistics.value).map(t => t.totalCarbon || 0).reduce((t1, t2) => t1 + t2, 0),
         carbonPerHectare: Object.values(treeTypeStatistics.value).map(t => t.carbonPerHectare || 0).reduce((t1, t2) => t1 + t2, 0),
+        totalAgb: Object.values(treeTypeStatistics.value).map(t => t.totalAgb || 0).reduce((t1, t2) => t1 + t2, 0),
+        agbPerHectare: Object.values(treeTypeStatistics.value).map(t => t.agbPerHectare || 0).reduce((t1, t2) => t1 + t2, 0),
     }
 })
