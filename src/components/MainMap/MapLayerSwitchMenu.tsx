@@ -15,7 +15,10 @@ const MapLayerSwitchMenu: React.FC = () => {
                 <Typography>Referenzfläche einblenden</Typography>
                 <Switch checked={layerVisibility.value.referenceArea === "visible"} />
             </MenuItem>
-            
+            <MenuItem disabled={!layerVisibility.value.canopyLayer} onClick={() => toggleLayer('canopyLayer')}>
+                <Typography>Kronenfläche berechnen</Typography>
+                <Switch checked={layerVisibility.value.canopyLayer === "visible"} />
+            </MenuItem>
         </MenuList>
     </>
 }
