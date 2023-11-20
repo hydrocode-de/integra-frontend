@@ -46,7 +46,7 @@ export interface TreeTypeStatistics {
     [treeType: string]: StatisticsDatapoint
 }
 
-export type StatMetric = "count" | "carbon"
+export type StatMetric = "count" | "carbon" | "agb" | "height"
 
 export const treeTypeStatistics = computed<TreeTypeStatistics>(() => {
     // calculate the current area

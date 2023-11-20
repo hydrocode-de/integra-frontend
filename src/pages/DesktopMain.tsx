@@ -1,4 +1,4 @@
-import { AppBar, Box, Card, Drawer, IconButton, MenuItem, MenuList, Toolbar, Typography } from "@mui/material"
+import { AppBar, Box, Card, Drawer, Grid, IconButton, MenuItem, MenuList, Toolbar, Typography } from "@mui/material"
 import { DarkMode, LightMode, Menu, ArrowBack } from "@mui/icons-material"
 import { Outlet } from "react-router-dom"
 
@@ -96,10 +96,17 @@ const DesktopMain: React.FC = () => {
                 </Box>
 
                 {/* add the statistics card */}
-                <Box minWidth="250px" maxWidth="350px" width="100%" position="fixed" top="70px" right="10px" zIndex="99">
-                    <Card>
-                        <SimulationResultDetailCard defaultMetric="carbon" />
-                    </Card>
+                <Box width="calc(100% - 350px - 10px - 100px)" maxWidth="700px" position="fixed" top="70px" right="0px" zIndex="99" display="flex" flexWrap="wrap" justifyContent="flex-end">
+                    <Box maxWidth="350px" minWidth="280px" flexBasis="33%"  flexGrow={1} mr={1} mb={1}>
+                        <Card>
+                            <SimulationResultDetailCard defaultMetric="carbon" />
+                        </Card>
+                    </Box>
+                    <Box maxWidth="350px" minWidth="280px" flexBasis="33%" flexGrow={1} mr={1} mb={1}>
+                        <Card>
+                            <SimulationResultDetailCard defaultMetric="height" />
+                        </Card>
+                    </Box>
                 </Box>
             </>) : null }
 
