@@ -6,7 +6,7 @@ import * as serviceWorker from "./serviceWorker"
 // not sure where to initialize Hotjar 
 // right now, we init it here - so it can track basically everything that is done
 // on the other hand, we can't let the user decide when to start tracking
-import './hotjar'
+import './tracking'
 
 
 const container = document.getElementById("root")
