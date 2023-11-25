@@ -141,7 +141,7 @@ const TreeLineSource: React.FC = () => {
             <Layer id="tree-locations" source="tree-locations" type="symbol" 
                 layout={{
                     'visibility': canopyIsVisible.value ? 'none' : 'visible',
-                    'icon-image': ['get', 'image'],
+                    'icon-image': ['coalesce', ['get', 'image'], 'default'],
                     'icon-anchor': 'bottom',
                     //'icon-size': ['case', ['boolean', ['feature-state', 'hover'], false], 1.1, 1],
                 }}
