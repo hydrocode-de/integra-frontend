@@ -34,14 +34,10 @@ const TreeLineTooltip: React.FC = () => {
         if (map.current) {
             map.current.on('mousemove', 'tree-locations', onMouseMove)
             map.current.on('mouseleave', 'tree-locations', onMouseLeave)
-            map.current.on('mousemove', 'canopy-layer', onMouseMove)
-            map.current.on('mouseleave', 'canopy-layer', onMouseLeave)
 
             return () => {
                 map.current!.off('mousemove', 'tree-locations', onMouseMove)
                 map.current!.off('mouseleave', 'tree-locations', onMouseLeave)
-                map.current!.off('mousemove', 'canopy-layer', onMouseMove)
-                map.current!.off('mouseleave', 'canopy-layer', onMouseLeave)
             }
         }
     })
