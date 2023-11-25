@@ -7,6 +7,7 @@ import { viewState } from "../../appState/mapSignals"
 import 'mapbox-gl/dist/mapbox-gl.css'
 
 import MapObserver from "./MapObserver"
+import TreeIconLoader from "./TreeIconLoader"
 
 
 const MainMap: React.FC<React.PropsWithChildren<{mapId: string}>> = ({ mapId, children }) => {
@@ -31,9 +32,13 @@ const MainMap: React.FC<React.PropsWithChildren<{mapId: string}>> = ({ mapId, ch
             //mapStyle="mapbox://styles/hydrocode-de/clnzu7dd1000b01pg2eqxcemy"
             mapStyle="mapbox://styles/mapbox/satellite-v9"
             onMove={onMove}
+            onLoad={(e => (window as any).map = e.target)}
         >   
             {/* The Map observer is added here, as it add needed functionality. But maybe it can also be added at MainPage?! */}
             <MapObserver />
+
+            {/* Use the Loader to add treeIcons to the map */}
+            <TreeIconLoader />
             { children }
         </ReactMap>
     </>
