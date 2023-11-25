@@ -15,6 +15,7 @@ const TreeIconLoader: React.FC = () => {
             return
         } else {
             Object.entries(treeIconStore.value).forEach(([iconId, imgInfo]) => {
+                // it is important to check that the image does not exist, because the the effect could run twice
                 if (!map.current?.hasImage(iconId)) {
                     map.current?.addImage(iconId, imgInfo.icon)
                     //console.log(`add ${iconId}`)

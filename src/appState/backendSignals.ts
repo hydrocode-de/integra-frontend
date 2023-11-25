@@ -81,55 +81,14 @@ interface IconImageStore {
 }
 
 // synchronously load the default image, so it will always be there
-//const DEFAULT_IMG = await fetch('/icons/default-tree.png').then(r => r.blob()).then(blob => createImageBitmap(blob).then(image => image))
 const DEFAULT_IMG = await fetch('/icons/default-tree.png').then(r => r.blob()).then(blob => createImageBitmap(blob))
 
-// create the tree icon store
+// create the tree icon store -this one is used to map the iconIdentifier to the filename and the pre-loaded image Blob
+// we need both to identify files that are associated to multiple iconIdentifiers, which are the combination of 
+// the tree type and the age identified by the DataPoint(!)
 export const treeIconStore = signal<IconImageStore>({
     'default': {icon: DEFAULT_IMG, filename: 'default-tree.png'}
 })
-// compute a list of all images that need to be loaded
-// const treeIconLookup = computed<{[iconId: string]: string}>(() => {
-//     const out: {[iconId: string]: string} = {}
-//     const allNames = treeData.value.flatMap(tree => tree.data.map(dataPoint => {
-//         out[`${tree.type}-${dataPoint.age}`] = dataPoint.image
-//     }))
-    
-//     // remove duplicates
-//     return out
-// })
-
-// side-effect to update the store of uploaded images whenever the list of needed images changes
-// effect(() => {
-//     const store = treeIconStore.peek()
-//     console.log(treeIconLookup.value)
-//     const loadPromises: Promise<void>[] = Object.entries(treeIconLookup.value).map(([iconId, name]) => {
-//         // use the name without the file extension
-//         //const name = filename.split('.')[0]
-
-//         // load the image if it is not in the store
-//         // if (!Object.keys(store).includes(name)) {
-//             return fetch(`/icons/${name}`).then(r => r.blob())
-//             .then(blob => createImageBitmap(blob))
-//             .then(image => {
-//                 store[iconId] = image
-//                 return Promise.resolve()
-//             })
-//             .catch(err => {
-//                 console.log(err);
-//                 store[iconId] = DEFAULT_IMG
-//                 return Promise.resolve()
-//             })
-//         // } 
-//         // return Promise.resolve()
-//     })
-
-//     // wait for all loadPromises to finish
-//     Promise.all(loadPromises).then(() => {
-//         console.log('loaded all images')
-//         treeIconStore.value = store
-//     })
-// }) 
 
 /**
  * Load the data-point for a specific tree species at a specific age.
@@ -215,29 +174,37 @@ parse('/model_data.csv', {
     complete: (results) => {        // alternative: step: (row) => {} if stuff gets bigger one day
         // parse the data into the treeData signal
         const data = parseTreeData(results.data)
-        // console.log(data)
 
+        // copy the current store with all pre-defined images (as of now only default)
         const store = treeIconStore.peek()
         
-        // load all icon images
+        // load all icon images as asynchronous promises
         const loadPromises: Promise<void>[] = data.flatMap(tree => tree.data.map(dataPoint => {
             // generate the treeId for this dataPoint
             const iconId = `${tree.type}-${dataPoint.age}`
-            // load the image if it is not in the store
+            
+            // check if the filename! is already is the store
             if (!Object.values(store).map(f => f.filename).includes(dataPoint.image)) {
+                // we need to preload this image
                 return fetch(`icons/${dataPoint.image}`).then(r => r.blob())
                 .then(blob => createImageBitmap(blob))
                 .then(image => {
                     store[iconId] = {icon: image, filename: dataPoint.image}
+
+                    // this is a Promise, to resolve it with void
                     return Promise.resolve()
                 })
             } else {
+                // the image was already loaded, to we just copy over the Blob
                 const preloaded = Object.values(store).find(f => f.filename === dataPoint.image) || {icon: DEFAULT_IMG, filename: dataPoint.image}
                 store[iconId] = {...preloaded}
+
+                // this is a Promise, to resolve it with void
                 return Promise.resolve()
             }
         }))
 
+        // wait until all ImageBitmap promises are resolved
         Promise.all(loadPromises).then(() => {
             // update the data
             const updatedData = data.map(tree => {
@@ -246,26 +213,21 @@ parse('/model_data.csv', {
                     data: tree.data.map(dataPoint => {
                         return {
                             ...dataPoint,
+
+                            // overwrite the filename with the treeIcon Idenfifier for mapbox
                             image: `${tree.type}-${dataPoint.age}`
                         }
                     })
                 }
             })
+            // dev only
             console.log(updatedData)
             
+            // update the treeData and the Icon store in one batch
             batch(() => {
                 treeIconStore.value = store
                 treeData.value = updatedData
             })
         })
-
-//     // wait for all loadPromises to finish
-//     Promise.all(loadPromises).then(() => {
-//         console.log('loaded all images')
-//         treeIconStore.value = store
-//     })
-
-        // inject the data into the signal
-        // treeData.value = data
     }
 })
