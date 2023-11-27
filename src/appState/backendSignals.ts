@@ -2,7 +2,7 @@
  * The backend signals are used to communicate with the backend and reflect the current state of the backend.
  * To ease things a bit, I put all the firebase stuff in here as well.
  */
-import { computed, signal } from "@preact/signals-react";
+import { batch, computed, effect, signal } from "@preact/signals-react";
 import { initializeApp } from "firebase/app"
 //import { getAuth, User, signInAnonymously  } from "firebase/auth"
 import { parse } from "papaparse"
@@ -47,7 +47,8 @@ export interface TreeDataPoint {
     canopyHeight: number,
     canopyWidth: number,
     agb: number,
-    carbon: number
+    carbon: number,
+    image: string,
 }
 
 // first some Baumarten
@@ -71,6 +72,23 @@ export const treeSpecies = computed<TreeSpecies[]>(() => treeData.value.map(tree
     const { data, ...others } = tree
     return others
 }))
+
+interface IconImageStore {
+    [iconId: string]: {
+        icon: ImageBitmap,
+        filename: string
+    }
+}
+
+// synchronously load the default image, so it will always be there
+const DEFAULT_IMG = await fetch('/icons/default-tree.png').then(r => r.blob()).then(blob => createImageBitmap(blob))
+
+// create the tree icon store -this one is used to map the iconIdentifier to the filename and the pre-loaded image Blob
+// we need both to identify files that are associated to multiple iconIdentifiers, which are the combination of 
+// the tree type and the age identified by the DataPoint(!)
+export const treeIconStore = signal<IconImageStore>({
+    'default': {icon: DEFAULT_IMG, filename: 'default-tree.png'}
+})
 
 /**
  * Load the data-point for a specific tree species at a specific age.
@@ -133,7 +151,8 @@ const parseTreeData = (data: unknown[]): TreeData[] => {
                 canopyHeight: row['Kronenansatzhöhe'],
                 canopyWidth: row.Kronenbreite,
                 agb: row.AGB,
-                carbon: row.Kohlenstoffgehalt
+                carbon: row.Kohlenstoffgehalt,
+                image: row.Bild || 'default-tree.png'
             })
         }
     })
@@ -155,9 +174,60 @@ parse('/model_data.csv', {
     complete: (results) => {        // alternative: step: (row) => {} if stuff gets bigger one day
         // parse the data into the treeData signal
         const data = parseTreeData(results.data)
-        console.log(data)
 
-        // inject the data into the signal
-        treeData.value = data
+        // copy the current store with all pre-defined images (as of now only default)
+        const store = treeIconStore.peek()
+        
+        // load all icon images as asynchronous promises
+        const loadPromises: Promise<void>[] = data.flatMap(tree => tree.data.map(dataPoint => {
+            // generate the treeId for this dataPoint
+            const iconId = `${tree.type}-${dataPoint.age}`
+            
+            // check if the filename! is already is the store
+            if (!Object.values(store).map(f => f.filename).includes(dataPoint.image)) {
+                // we need to preload this image
+                return fetch(`icons/${dataPoint.image}`).then(r => r.blob())
+                .then(blob => createImageBitmap(blob))
+                .then(image => {
+                    store[iconId] = {icon: image, filename: dataPoint.image}
+
+                    // this is a Promise, to resolve it with void
+                    return Promise.resolve()
+                })
+            } else {
+                // the image was already loaded, to we just copy over the Blob
+                const preloaded = Object.values(store).find(f => f.filename === dataPoint.image) || {icon: DEFAULT_IMG, filename: dataPoint.image}
+                store[iconId] = {...preloaded}
+
+                // this is a Promise, to resolve it with void
+                return Promise.resolve()
+            }
+        }))
+
+        // wait until all ImageBitmap promises are resolved
+        Promise.all(loadPromises).then(() => {
+            // update the data
+            const updatedData = data.map(tree => {
+                return {
+                    ...tree,
+                    data: tree.data.map(dataPoint => {
+                        return {
+                            ...dataPoint,
+
+                            // overwrite the filename with the treeIcon Idenfifier for mapbox
+                            image: `${tree.type}-${dataPoint.age}`
+                        }
+                    })
+                }
+            })
+            // dev only
+            console.log(updatedData)
+            
+            // update the treeData and the Icon store in one batch
+            batch(() => {
+                treeIconStore.value = store
+                treeData.value = updatedData
+            })
+        })
     }
 })
