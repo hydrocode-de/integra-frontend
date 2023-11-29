@@ -1,4 +1,4 @@
-import { MenuItem, MenuList, Switch, Typography } from "@mui/material"
+import { MenuItem, MenuList, Switch, SxProps, Typography } from "@mui/material"
 import { layerVisibility } from "../../appState/mapSignals"
 
 const MapLayerSwitchMenu: React.FC = () => {
@@ -9,13 +9,19 @@ const MapLayerSwitchMenu: React.FC = () => {
         layerVisibility.value = {...layerVisibility.value, [layerName]: visible ? "none" : "visible"}
     }
 
+    // create a SX object
+    const sx: SxProps = {
+        display: 'flex',
+        justifyContent: 'space-between',
+    }
+
     return <>
         <MenuList sx={{width: '100%'}}>
-            <MenuItem disabled={!layerVisibility.value.referenceArea} onClick={() => toggleLayer('referenceArea')}>
+            <MenuItem sx={sx} disabled={!layerVisibility.value.referenceArea} onClick={() => toggleLayer('referenceArea')}>
                 <Typography>Referenzfläche einblenden</Typography>
                 <Switch checked={layerVisibility.value.referenceArea === "visible"} />
             </MenuItem>
-            <MenuItem disabled={!layerVisibility.value.canopyLayer} onClick={() => toggleLayer('canopyLayer')}>
+            <MenuItem sx={sx} disabled={!layerVisibility.value.canopyLayer} onClick={() => toggleLayer('canopyLayer')}>
                 <Typography>Kronenfläche berechnen</Typography>
                 <Switch checked={layerVisibility.value.canopyLayer === "visible"} />
             </MenuItem>
