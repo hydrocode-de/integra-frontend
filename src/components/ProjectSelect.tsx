@@ -47,7 +47,7 @@ const ProjectSelect: React.FC = () => {
     }
 
     // we are not editing, to we either have a project or not
-    else if (projects.value.length === 0) {
+    else if (projects.value! && projects.value.length === 0) {
         return <>
         <FormControl variant="standard" size="small" sx={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
             { editState.value === ProjectEditState.DIRTY ? (
@@ -86,7 +86,7 @@ const ProjectSelect: React.FC = () => {
                     </InputAdornment>
                 }>
                     <MenuItem value="anonymous">Kein Projekt</MenuItem>
-                    { projects.value.map(p => <MenuItem key={p.id} value={p.id}>{p.name}</MenuItem>) }
+                    { (projects.value || []).map(p => <MenuItem key={p.id} value={p.id}>{p.name}</MenuItem>) }
                 </Select>
             </FormControl>
         </>

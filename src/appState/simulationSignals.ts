@@ -57,6 +57,20 @@ export const setSimulationStep = (newStep: number) => {
     })
 }
 
+/**
+ * Directly reset the simulation step to a preconfigured value.
+ * This is needed if the user loads a project from storage or file.
+ * 
+ * @param newStep - The new step of the simulation.
+ * @param previous - The previous step of the simulation.
+ */
+export const resetSimulationStep = (newStep: number, previous: number) => {
+    batch(() => {
+        step.value = newStep
+        previousStep.value = previous
+    })
+}
+
 // this is one of the tests right now: try to only update the treeLine as an effect of a changing step
 effect(() => {
     // check if we need to decrease or increase the treeAge
