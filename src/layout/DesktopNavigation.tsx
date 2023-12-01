@@ -4,6 +4,7 @@ import DesktopMain from "../pages/DesktopMain"
 import DesktopContentCard from "./desktop/DesktopContentCard"
 import TreeLineListCard from "./desktop/TreeLineListCard"
 import TreeLineDetailCard from "./desktop/TreeLineDetailCard"
+import Desktop3DMain from "../pages/Desktop3DMain"
 
 // create the routes used on the Desktop version of the app
 const router = createBrowserRouter([
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
                 ]
             }
         ]
+    },
+    {
+        path: '/3d',
+        element: <Desktop3DMain />
     }
 ])
 
