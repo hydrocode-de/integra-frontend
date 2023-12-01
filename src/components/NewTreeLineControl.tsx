@@ -55,8 +55,8 @@ const NewTreeLineControl: React.FC = () => {
     // render the correct version of the control
     return <>
         {/* <Slide in={drawState === DrawControlState.LINE || drawState === DrawControlState.EDIT_LINE} direction="right" unmountOnExit> */}
-            <Box>
-                <Box sx={{flexGrow: 1}} display="flex" justifyContent="space-between">
+            <Box component="div">
+                <Box component="div" sx={{flexGrow: 1}} display="flex" justifyContent="space-between">
                     <IconButton size="small" edge="start" color="inherit" aria-label="zurück" sx={{mr: 2}} onClick={onAbort}>
                         <ArrowBack />
                     </IconButton>
@@ -68,11 +68,11 @@ const NewTreeLineControl: React.FC = () => {
                         <Close />
                     </IconButton> */}
                 </Box>
-                <Box sx={{flexGrow: 1}} display="flex" justifyContent="space-around">
+                <Box component="div" sx={{flexGrow: 1}} display="flex" justifyContent="space-around">
                     <span />
-                    <Box position="relative" display="inline-flex">
+                    <Box component="div" position="relative" display="inline-flex">
                         <CircularProgress variant="determinate" value={Math.min((len / maxLen) * 100, 100)} />
-                        <Box top="0" left="0" right="0" bottom="0" position="absolute" display="flex" alignItems="center" justifyContent="center">
+                        <Box component="div" top="0" left="0" right="0" bottom="0" position="absolute" display="flex" alignItems="center" justifyContent="center">
                             <Typography variant="caption" component="div" color="text.secondary">
                                 {len > 1000 ? `${(len / 1000).toFixed(1)}km` : `${len.toFixed(0)}m`}
                             </Typography>

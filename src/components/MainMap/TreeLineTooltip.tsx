@@ -44,7 +44,7 @@ const TreeLineTooltip: React.FC = () => {
 
     return <>
         {location.value ? (
-            <Box position="fixed" top={location.value[1] + 70 + 10} left={location.value[0]} m={0} p={0} zIndex={999}>
+            <Box component="div" position="fixed" top={location.value[1] + 70 + 10} left={location.value[0]} m={0} p={0} zIndex={999}>
             <Card>            
                 { content.value }
             </Card>

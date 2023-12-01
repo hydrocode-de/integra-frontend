@@ -26,7 +26,7 @@ const MapLayerSwitchButton: React.FC = () => {
             transformOrigin={{vertical: 'bottom', horizontal: 'left'}}
             onClose={() => open.value = false}
         >
-            <Box minWidth={150}>
+            <Box component="div" minWidth={150}>
                 <MapLayerSwitchMenu />  
             </Box>
         </Popover>
