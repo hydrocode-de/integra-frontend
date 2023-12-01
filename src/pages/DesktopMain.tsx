@@ -1,6 +1,6 @@
-import { AppBar, Box, Card, Drawer, Grid, IconButton, MenuItem, MenuList, Toolbar, Typography } from "@mui/material"
+import { AppBar, Box, Button, Card, Drawer, Grid, IconButton, MenuItem, MenuList, Toolbar, Typography } from "@mui/material"
 import { DarkMode, LightMode, Menu, ArrowBack } from "@mui/icons-material"
-import { Outlet } from "react-router-dom"
+import { Link, Outlet } from "react-router-dom"
 
 import { useIntegraTheme, useModeToggler } from "../context/IntegraThemeContext"
 import MainMap from "../components/MainMap/MainMap"
@@ -31,7 +31,7 @@ const DesktopMain: React.FC = () => {
     const drawerOpen = useSignal<boolean>(false)
 
     return <>
-        <Box sx={{flexGrow: 1}}>
+        <Box component="div" sx={{flexGrow: 1}}>
             <AppBar position="static" variant="elevation" color="default">
                 <Toolbar>
                     <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{mr: 2}} onClick={() => drawerOpen.value = true}>
@@ -47,6 +47,7 @@ const DesktopMain: React.FC = () => {
                     </Typography> */}
 
                     <ProjectSelect />
+                    
                     <IconButton size="medium" edge="start" color="inherit" aria-label="switch color mode" sx={{ml: 2}} onClick={modeToggler}>
                         { theme.palette.mode === 'dark' ? <LightMode /> : <DarkMode />}
                     </IconButton>
@@ -66,15 +67,18 @@ const DesktopMain: React.FC = () => {
                     </Toolbar>
             </ AppBar>
             <MenuList sx={{width: 250, height: '100%', display: 'flex', justifyContent: 'space-between', flexDirection: 'column'}}>
-                <span />
-                <Box>
+                <Box component="div">
+                    <MenuItem component={Link} to="/3d">3D preview (experimental)</MenuItem>
+                </Box>
+
+                <Box component="div">
                     <MenuItem>Datenschutzerklärung</MenuItem>
                     <MenuItem>Impressum</MenuItem>
                 </Box>
             </MenuList>
         </Drawer>
 
-        <Box width="100vw" height="calc(100vh - 64px)" m="0" p="0" display="flex">
+        <Box component="div" width="100vw" height="calc(100vh - 64px)" m="0" p="0" display="flex">
 
             {/* 
               * Navigation children can be placed on top of the map this way 
@@ -89,20 +93,20 @@ const DesktopMain: React.FC = () => {
             {/* Only render the simulation cards if there is data and no editing */}
             { hasData.value && drawState.value === DrawState.OFF ? (<>
                 {/* add the simulation slider */}
-                <Box minWidth="250px" width="40vw" maxWidth="450px" position="fixed" bottom="25px" left="0" right="0" mx="auto" zIndex="99">
+                <Box component="div" minWidth="250px" width="40vw" maxWidth="450px" position="fixed" bottom="25px" left="0" right="0" mx="auto" zIndex="99">
                     <Card>
                         <SimulationStepSlider />
                     </Card>
                 </Box>
 
                 {/* add the statistics card */}
-                <Box width="calc(100% - 350px - 10px - 100px)" maxWidth="700px" position="fixed" top="70px" right="0px" zIndex="99" display="flex" flexWrap="wrap" justifyContent="flex-end">
-                    <Box maxWidth="350px" minWidth="280px" flexBasis="33%"  flexGrow={1} mr={1} mb={1}>
+                <Box component="div" width="calc(100% - 350px - 10px - 100px)" maxWidth="700px" position="fixed" top="70px" right="0px" zIndex="99" display="flex" flexWrap="wrap" justifyContent="flex-end">
+                    <Box component="div" maxWidth="350px" minWidth="280px" flexBasis="33%"  flexGrow={1} mr={1} mb={1}>
                         <Card>
                             <SimulationResultDetailCard defaultMetric="carbon" />
                         </Card>
                     </Box>
-                    <Box maxWidth="350px" minWidth="280px" flexBasis="33%" flexGrow={1} mr={1} mb={1}>
+                    <Box component="div" maxWidth="350px" minWidth="280px" flexBasis="33%" flexGrow={1} mr={1} mb={1}>
                         <Card>
                             <SimulationResultDetailCard defaultMetric="height" />
                         </Card>
