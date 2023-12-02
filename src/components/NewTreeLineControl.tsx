@@ -36,7 +36,7 @@ const NewTreeLineControl: React.FC = () => {
     // handler to add a new tree line
     const onAdd = () => {
         // figure out the needed age
-        const opts = plantInPast.peek() ? {age: simulationStep.peek().current} : {}
+        const opts = plantInPast.peek() ? {age: simulationStep.peek().current + 1} : {}
 
         addTreeLine(opts)
 
