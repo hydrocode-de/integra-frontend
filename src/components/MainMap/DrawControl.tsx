@@ -63,7 +63,24 @@ const DrawControl: React.FC<DrawControlProps> = ({ position  }) => {
     // can empty and re-fill it on user interaction
     useSignalEffect(() => {
         if (!!mapboxDraw) {
+            // get the buffer values
+            const buffer = drawBuffer.value
+
+            // set the buffer to mapbox draw programatically
             mapboxDraw.set({type: "FeatureCollection", features: drawBuffer.value})
+
+            // if the buffer is not empty, we need to figure out the feature id of the first element present
+            // we cannot use the other side-effect, as the draw state might change slightly before the 
+            // buffer is updated
+            // this is a bit hacky, but I see no other way to do this
+            if (buffer.length > 0) {
+                //console.log(buffer[0].id)
+                // get the feature id
+                const featureId = String(buffer[0].id)
+                // and select it
+                mapboxDraw.changeMode("simple_select", { featureIds: [featureId]})
+            }
+            
         }
     })
 
@@ -79,6 +96,9 @@ const DrawControl: React.FC<DrawControlProps> = ({ position  }) => {
             drawBuffer.value = []
             mapboxDraw.changeMode("simple_select")
         } else if (drawState.value === DrawState.EDIT) {
+            // we unforturnately cannot use mapboxDraw's own buffer here as it might 
+            // not yet be updated
+
             // important here is that we are not OFF, but use the same mapboxDraw mode
             mapboxDraw.changeMode("simple_select")
         }
