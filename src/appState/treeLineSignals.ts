@@ -8,6 +8,9 @@ import along from "@turf/along"
 
 import { DrawBuffer, DrawState, TreeEditSettings, TreeLine, TreeLocation } from "./treeLine.model"
 import { loadClosestDataPoint } from "./backendSignals"
+import lineIntersect from "@turf/line-intersect"
+import buffer from "@turf/buffer"
+import pointsWithinPolygon from "@turf/points-within-polygon"
 
 // make the last edit settings publicly available
 export const lastEditSettings = signal<TreeEditSettings>({
@@ -57,7 +60,6 @@ export const treeLines = computed<TreeLine>(() => {
     }
 })
 
-
 // create the treeLocations as a computed signal
 const allTreeLocationFeatures = computed<TreeLocation["features"]>(() => {
     // map all features in treeLineFeatures to an array of treeLocations
@@ -85,7 +87,7 @@ const allTreeLocationFeatures = computed<TreeLocation["features"]>(() => {
             trees.push({
                 ...newPoint,
                 properties: {
-                    id: i,
+                    id: nanoid(12),
                     treeLineId: treeLine.properties.id,
                     treeType: settings.treeType,
 
@@ -99,9 +101,75 @@ const allTreeLocationFeatures = computed<TreeLocation["features"]>(() => {
     })
 })
 
-// sort into the treeLocationFeatures that currently exist and the ones that will be tere in the future
-export const treeLocationFeatures = computed<TreeLocation["features"]>(() => allTreeLocationFeatures.value.filter(tree => tree.properties.age! > 0))
-const futureLocationFeatures = computed<TreeLocation["features"]>(() => allTreeLocationFeatures.value.filter(tree => tree.properties.age! <= 0))
+// always calculate crossing points if any
+const crossingPoints = computed(() => {
+    return rawTreeLineFeatures.value.flatMap((line1, i) => {
+        // for each index, return the right part from the current index to combine only once
+        return rawTreeLineFeatures.peek().slice(i + 1)
+        // map the lineIntersect across all combinations
+        .map(line2 =>  {
+            // get the intersection collection
+            const collection = lineIntersect(line1, line2)
+
+            // return the features, but preseve the treeLineIds
+            return collection.features.map(f => {
+                return {...f, properties: {...f.properties, treeLineIds: [line1.properties.id, line2.properties.id]}}
+            })
+        // flatMap the FeatureCollection.features into a single array
+        })
+    }).flat()
+})
+    
+
+// combine all calculated potiential tree locations bufferaround the current crossing points 
+// for each treeline. Filter out points within that buffer and keep only the oldest tree
+// to speed things up, we peek all structures, except the crossingPoints
+export const nonOverlappingTreeLocations = computed(() => {
+    // checkout all crossing points 
+    const cross = crossingPoints.value
+    // console.log(cross)
+    
+    // this is wild. But it is actually a pretty complex task to let the crossing points
+    // only affect the trees on the respective lines, while respecting two different spacings
+    const removeTrees = rawTreeLineFeatures.peek().flatMap(line => {
+        // check if any crossing point exists for this line
+        const myCrossings = cross.filter(c => c.properties.treeLineIds.includes(line.properties.id))
+
+        // buffer each crossing point with my spacing and keep the oldest tree
+        const buffers = myCrossings.map(point => {
+            return {
+                ...buffer(point, line.properties.editSettings.spacing / 2, {units: "meters"}),
+                properties: {
+                    treeLineIds: point.properties.treeLineIds
+                }
+
+            }
+        })
+        // console.log(buffers)
+
+        // for each buffer, make sure to find all trees for this line 
+        return buffers.map(buf => {
+            // find all points across all lines in the buffer to determine the oldest tree
+            const allPointsInBuffer = pointsWithinPolygon({type: "FeatureCollection", features: allTreeLocationFeatures.peek()}, buf).features
+            // console.log(allPointsInBuffer)
+            // find the oldest
+            const keepTree = allPointsInBuffer.reduce((prev, curr) => curr.properties.age! > prev.properties.age! ? curr : prev)
+            // console.log(keepTree)
+            // reomve all trees from my line, that are in the buffer and not the oldest
+            return allPointsInBuffer
+                .filter(tree => tree.properties.treeLineId === line.properties.id && tree.properties.id !== keepTree.properties.id)
+                .map(tree => String(tree.properties.id))
+        }).flat()
+    })
+    // console.log(removeTrees)
+    // now we know which trees to remove and can return a peeked filtered version of allTreeLocationFeatures
+    return allTreeLocationFeatures.peek().filter(tree => !removeTrees.includes(String(tree.properties.id)))
+})
+
+// If we want to disable the non-overlap feature, we can build a logic here, that uses allTreeLocationFeatures
+// sort the nonOverlappingTreeLocationFeatures that currently exist and the ones that will be tere in the future
+export const treeLocationFeatures = computed<TreeLocation["features"]>(() => nonOverlappingTreeLocations.value.filter(tree => tree.properties.age! > 0))
+const futureLocationFeatures = computed<TreeLocation["features"]>(() => nonOverlappingTreeLocations.value.filter(tree => tree.properties.age! <= 0))
 
 // export the treeLocations as a valid geoJSON
 export const treeLocations = computed<TreeLocation>(() => {
