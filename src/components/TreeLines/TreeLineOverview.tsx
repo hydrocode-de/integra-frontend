@@ -1,10 +1,13 @@
-import { Box, FormControl, MenuItem, Select, Typography } from "@mui/material"
+import { Box, FormControl, MenuItem, Select, Typography, useTheme } from "@mui/material"
 import { treeTypeStatistics } from "../../appState/statisticsSignals"
 import { useSignal } from "@preact/signals-react"
 
 const TreeLineOverview: React.FC = () => {
+    const theme = useTheme()
+
     // create a signal to switch the current stats value
     const currentState = useSignal<string>('count')
+
     
     return <>
         { Object.keys(treeTypeStatistics.value).length === 0 ? null : (
@@ -20,7 +23,7 @@ const TreeLineOverview: React.FC = () => {
         </Box>
         )}
         { Object.entries(treeTypeStatistics.value).map(([treeType, stats]) => {
-            return <Box key={treeType} display="flex" justifyContent="space-between">
+            return <Box key={treeType} display="flex" justifyContent="space-between" bgcolor={theme.palette.background.paper}>
                 <Typography variant="body1">{ treeType }</Typography>
                 { currentState.value === 'carbon' ? (
                     <Typography variant="body1">

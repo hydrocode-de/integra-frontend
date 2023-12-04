@@ -34,26 +34,28 @@ const TreeLineDetails: React.FC<TreeLineDetailsProps> = ({ treeLine }) => {
     useSignalEffect(() => updateEditSettings(treeId, {treeType: treeType.value}))
 
     return <>
-        <Box p={2}>
-            <Box sx={{flexGrow: 1}} display="flex" justifyContent="space-between">
-                <Typography variant="body1">Länge</Typography>
-                <Typography variant="body1">{treeLine.properties.length?.toFixed(0)}m</Typography>
-            </Box>
+        <Box m={3}>
 
             {/* tree type selection */}
-            <Box sx={{mt: 2}}>
-                <FormControl variant="standard" fullWidth>
+            <Box sx={{mb:2}}>
+                <FormControl fullWidth>
                     <InputLabel id="tree-type-select">Baumart</InputLabel>
-                    <Select labelId="tree-type-select" value={treeType.value} onChange={e => treeType.value = e.target.value}>
+                    <Select sx={{borderRadius:4}} labelId="tree-type-select" value={treeType.value} onChange={e => treeType.value = e.target.value} label='Baumart'>
                         { treeSpecies.value.map(species => <MenuItem key={species.type} value={species.type}>{species.type} ({species.latin})</MenuItem>) }
                         <MenuItem value="generic">unbekannte Art</MenuItem>
                     </Select>
                 </FormControl>
             </Box>
 
+            <Box sx={{flexGrow: 1}} display="flex" justifyContent="space-between">
+                <Typography variant="body2">Länge</Typography>
+                <Typography variant="body1">{treeLine.properties.length?.toFixed(0)}m</Typography>
+            </Box>
+            
+
             {/* Spacing slider */}
             <Box sx={{mt: 2}}>
-                <Typography id="spacing-slider" gutterBottom>
+                <Typography variant="body2" id="spacing-slider" gutterBottom>
                     Abstand
                 </Typography>
                 <Box display="flex">
@@ -71,8 +73,8 @@ const TreeLineDetails: React.FC<TreeLineDetailsProps> = ({ treeLine }) => {
             </Box>
 
             {/* width slider */}
-            <Box sx={{mt: 2}}>
-                <Typography id="width-slider" gutterBottom>
+            <Box sx={{mt: 1}}>
+                <Typography variant="body2" id="width-slider" gutterBottom>
                     Breite
                 </Typography>
                 <Box display="flex">
@@ -89,12 +91,16 @@ const TreeLineDetails: React.FC<TreeLineDetailsProps> = ({ treeLine }) => {
             </Box>
 
             {/* center on line */}
-            <Box sx={{mt: 2}}>
-                <Typography id="width-slider" gutterBottom>
+            <Box sx={{mt: 1}}>
+                {/* <Typography id="width-slider" gutterBottom>
                     Position
-                </Typography>
+                </Typography> */}
                 <FormControlLabel control={<Checkbox checked={centered.value} onChange={(e, checked) => centered.value = checked} />} label="gleichmäßig Ausrichten"/>
             </Box>
+
+
+
+
         </Box>
     </>
 }

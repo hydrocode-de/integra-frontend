@@ -68,7 +68,7 @@ const NewTreeLineControl: React.FC = () => {
     // render the correct version of the control
     return <>
         <Box component="div">
-            <Box component="div" sx={{flexGrow: 1}} display="flex" justifyContent="space-between">
+            <Box component="div" sx={{flexGrow: 1, mt:2}} display="flex" justifyContent="space-between">
                 <IconButton size="small" edge="start" color="inherit" aria-label="zurück" sx={{mr: 2}} onClick={onAbort}>
                     <ArrowBack />
                 </IconButton>
@@ -77,7 +77,7 @@ const NewTreeLineControl: React.FC = () => {
                 </Typography>
                 <span />
             </Box>
-            <Box component="div" sx={{flexGrow: 1}} display="flex" justifyContent="space-around">
+            <Box component="div" sx={{flexGrow: 1, mt:3}} display="flex" justifyContent="space-around">
                 <span />
                 <Box component="div" position="relative" display="inline-flex">
                     <CircularProgress variant="determinate" value={Math.min((len / maxLen) * 100, 100)} />
@@ -93,6 +93,9 @@ const NewTreeLineControl: React.FC = () => {
                 </Fab>
                 <span />
             </Box>
+            <Typography variant="body2" align="center" mt={3}>
+                { drawBuffer.value.length === 0 ? 'Zeichne eine Baumreihe auf der Karte' : 'Klicke auf das Häkchen um die Baumreihe zu speichern' }
+            </Typography>
         </Box>
 
         {/* if the simulation is not at timestep 0 show a warning */}
