@@ -19,7 +19,7 @@ const SimulationStepSlider: React.FC = () => {
 
   return (
     <>
-      <Box sx={{borderRadius:4, m:2}} p={open.value ? 0 : 0}>
+      <Box sx={{ borderRadius: 4, m: 2 }} p={open.value ? 0 : 0}>
         <CardActionArea onClick={() => (open.value = !open.peek())}>
           <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" m={0}>
             <Typography variant={open.value ? "h6" : "body1"} my="auto">
@@ -33,6 +33,7 @@ const SimulationStepSlider: React.FC = () => {
         <Collapse in={open.value}>
           <Box display="flex" mt={1} p={1.5}>
             <Slider
+              sx={{ height: 8 }}
               marks={marks}
               valueLabelDisplay="auto"
               value={simulationStep.value.current}
