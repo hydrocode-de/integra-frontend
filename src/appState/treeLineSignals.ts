@@ -198,7 +198,7 @@ export const futureTreeLocations = computed<TreeLocation>(() => {
  * - this is necessary (instead of treeLine.value.features) to make sure that
  * all needed properties are created sufficiently
  */
-export const addTreeLine = () => {
+export const addTreeLine = (options?: Partial<TreeEditSettings>) => {
     // get the number of current treeLines
     const numTreeLines = rawTreeLineFeatures.peek().length
 
@@ -217,7 +217,10 @@ export const addTreeLine = () => {
                 id: lineId,
                 name,
                 treeCount: 0,
-                editSettings: {...lastEditSettings.peek()}
+                editSettings: {
+                    ...lastEditSettings.peek(),
+                    ...options
+                }
             }
         }
     })
