@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { Alert, Box, CircularProgress, Fab, FormControlLabel, IconButton, Typography, Checkbox  } from "@mui/material"
 import { ArrowBack,  Check } from "@mui/icons-material"
 import length from "@turf/length"
@@ -23,9 +23,21 @@ const NewTreeLineControl: React.FC = () => {
     })
     const plantInPast = useSignal<boolean>(false)
 
+    // define the handler to push the line back to the treeLines if we are in
+    // EDIT mode and an abort or a popstate event is triggered
+    const onAbort = () => {
+        // if we are not in edit mode, return
+        if (drawState.peek() !== DrawState.EDIT) abort()
+
+        // otherwise check if there is a line in the buffer
+        if (drawBuffer.peek().length === 0) abort()
+
+        // otherwise, call onAdd
+        onAdd()
+    }
 
     // handler to abort the editing
-    const onAbort = () => {
+    const abort = () => {
         // empty the buffer
         drawBuffer.value = []
 
@@ -43,6 +55,13 @@ const NewTreeLineControl: React.FC = () => {
         // disable the draw control
         drawState.value = DrawState.OFF
     }
+
+    // handle a browser back event
+    const onPopState = useCallback((event: PopStateEvent) => onAbort(), [])
+    useEffect(() => {
+        window.addEventListener("popstate", onPopState)
+        return () => window.removeEventListener("popstate", onPopState)
+    }, [])
 
     // side-effect to update the current length and update the maximum length
     useSignalEffect(() => {
