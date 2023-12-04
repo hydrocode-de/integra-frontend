@@ -25,7 +25,7 @@ export type TreeLine = FeatureCollection<LineString, TreeLineProperties>
 // define the properties of a single Tree
 // TODO: is there a scenario, where the Data Properties are not partial?
 export interface TreeLocationProperties extends Partial<TreeDataPoint> {
-    id: number,
+    id: string,
     treeLineId?: string,
     treeType: string,
 }
