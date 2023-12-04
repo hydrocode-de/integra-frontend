@@ -17,7 +17,7 @@ const TreeLineDetailCard: React.FC = () => {
     const treeLine = useSignal(treeLines.value.features.find(f => f.properties.id === treeId)!)
 
     return <>
-        <Box display="flex" justifyContent="space-between" p="0.5rem">
+        <Box display="flex" justifyContent="space-between" ml={2} mr={2} mt={3} >
             <Link to="/">
             <IconButton size="small" edge="start" >
                 <ArrowBack />

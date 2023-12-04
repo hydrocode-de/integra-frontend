@@ -11,16 +11,16 @@ import TreeLineOverview from "../../components/TreeLines/TreeLineOverview"
 const TreeLineListCard: React.FC = () => {
     return <>
         <CardContent>
-            <Box display="flex" justifyContent="space-between" m="0">
-                <span />
-                <Typography variant="h5">Mein Agroforstsystem</Typography>
-                <span />
-            </Box>
+            {/* <Box display="flex" justifyContent="space-between" m="0"> */}
+                {/* <span /> */}
+                <Typography mt={2} align='left' variant="h5">Mein Agroforstsystem</Typography>
+                {/* <span /> */}
+            {/* </Box> */}
 
             <TreeLineOverview />
             
-            <Box display="flex" justifyContent="space-between" mt="3rem">
-                <Typography variant="h6" component="div">Meine Baumreihen</Typography>
+            <Box display="flex" justifyContent="space-between" mt="3rem" mb="1rem">
+                <Typography variant="h6" component="div">Baumreihen</Typography>
                 <EnabledAddTreeLineButton />
             </Box>
             
