@@ -70,7 +70,7 @@ const SimulationResultDetailCard: React.FC<{ defaultMetric: StatMetric }> = ({ d
         <Box display="flex" flexDirection="column" m={2}>
           <Box
             display="flex"
-            flexDirection="row"
+            flexDirection="column"
             alignItems={"bottom"}
             justifyContent="space-between"
             pb={1}
