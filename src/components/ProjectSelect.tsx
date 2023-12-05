@@ -24,9 +24,9 @@ const ProjectSelect: React.FC = () => {
     // we render two different component trees depending on the editing state
     if (isEditing.value) {
         return <>
-        <FormControl variant="standard">
+        <FormControl >
                     <TextField
-                        variant="standard"
+                       
                         value={newProjectName.value}
                         onChange={e => newProjectName.value = e.target.value}
                         InputProps={{
