@@ -23,7 +23,7 @@ const SimulationStepSlider: React.FC = () => {
         <CardActionArea onClick={() => (open.value = !open.peek())}>
           <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" m={0}>
             <Typography variant={open.value ? "h6" : "body1"} my="auto">
-              {simulationStep.value.current === 0 ? "Neupflanzung" : "Nach " + simulationStep.value.current + " Jahren"}
+              {simulationStep.value.current === 0 ? "Simulation starten" : "Bäume nach " + simulationStep.value.current + " Jahren"}
             </Typography>
             {/* <IconButton size="small"> */}
             {open.value ? <ExpandMore /> : <ExpandLess />}
