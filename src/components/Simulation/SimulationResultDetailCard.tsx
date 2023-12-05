@@ -68,21 +68,22 @@ const SimulationResultDetailCard: React.FC<{ defaultMetric: StatMetric }> = ({ d
       {/* Header to make the Card lager or smaller */}
       <CardActionArea onClick={() => (open.value = !open.peek())}>
         <Box display="flex" flexDirection="column" m={2}>
-          <Box
-            display="flex"
-            flexDirection="column"
-            alignItems={"bottom"}
-            justifyContent="space-between"
-            pb={1}
-            ml={1}
-            mr={1}
-          >
-            <Typography variant="body2" mr={1}>
-              {open.value ? <>&nbsp;</> : metric.value.title}
-            </Typography>
-            <Typography variant="body1" ml={1} flexGrow={1}>
-              {metric.peek().unit}
-            </Typography>
+          <Box display={"flex"} flexDirection={"row"}>
+            <Box
+              display="flex"
+              flexDirection="column"
+              alignItems={"bottom"}
+              justifyContent="space-between"
+              pb={1}
+              ml={1}
+              mr={1}
+              flexGrow={1}
+            >
+              <Typography variant="body2">{open.value ? <>&nbsp;</> : metric.value.title}</Typography>
+              <Typography variant="h5" flexGrow={1}>
+                {metric.peek().unit}
+              </Typography>
+            </Box>
             {open.value ? <ExpandLess /> : <ExpandMore />}
           </Box>
           <Box flexGrow={1} ml={1} mr={1}>
