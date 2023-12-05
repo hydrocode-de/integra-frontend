@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import { ArrowRight, ArrowUpward } from "@mui/icons-material";
 import { Link } from "react-router-dom";
+import { zoom } from "../../appState/mapSignals";
 
 import { treeLines } from "../../appState/treeLineSignals";
 
@@ -23,35 +24,26 @@ const TreeLineList: React.FC = () => {
       {
         // render emtpy state image if there are no tree lines
         treeLines.value.features.length === 0 && (
-          <Box
-            display="flex"
-            justifyContent="center"
-            flexDirection={"column"}
-            alignItems="center"
-          >
-            <img
-              height={68}
-              src="/empty_state/empty-state-illustration.png"
-              alt="Keine Baumreihen"
-            />
+          <Box display="flex" justifyContent="center" flexDirection={"column"} alignItems="center" sx={{ mt: 4 }}>
+            <img height={96} src="/empty_state/empty-state-illustration.png" alt="Keine Baumreihen" />
             {/* <Box display={'flex'}> */}
             <Typography sx={{ mt: 2 }} variant="body1" align="center">
+              {/* if  */}
               Noch keine Baumreihe vorhanden
             </Typography>
-            <Box
-              display={"flex"}
-              ml={2}
-              mr={2}
-              mt={1}
-              justifyContent={"center"}
-              alignItems={"center"}
-            >
-              <Typography sx={{ mr: 1 }} variant="body2" align="center">
-                Klicken sie auf den Plus Button
+            {zoom.value > 13 ? (
+              <Box display={"flex"} ml={3} mr={3} mt={1} justifyContent={"center"} alignItems={"center"}>
+                <Typography sx={{ mr: 1 }} variant="body2" align="center">
+                  Klicken sie auf den Plus Button
+                </Typography>
+                {/* add and up icon */}
+                <ArrowUpward />
+              </Box>
+            ) : (
+              <Typography ml={3} mr={3} mt={1} variant="body2" align="center">
+                Suchen sie ein passendes Gebiet auf der Karte
               </Typography>
-              {/* add and up icon */}
-              <ArrowUpward />
-            </Box>
+            )}
             {/* </Box> */}
           </Box>
         )
@@ -77,18 +69,12 @@ const TreeLineList: React.FC = () => {
               }
             >
               <ListItemAvatar>
-                <Avatar
-                  sx={{ height: 48 }}
-                  src="/icons/bergahorn-10.png"
-                  title="green iguana"
-                ></Avatar>
+                <Avatar sx={{ height: 48 }} src="/icons/bergahorn-10.png" title="green iguana"></Avatar>
               </ListItemAvatar>
 
               <ListItemText
                 primary={treeLine.properties.name}
-                secondary={`${
-                  treeLine.properties.treeCount
-                } Bäume (${treeLine.properties.length?.toFixed(0)}m)`}
+                secondary={`${treeLine.properties.treeCount} Bäume (${treeLine.properties.length?.toFixed(0)}m)`}
               ></ListItemText>
 
               {/* <ListItemIcon> */}
@@ -96,9 +82,7 @@ const TreeLineList: React.FC = () => {
               {/* </ListItemIcon> */}
               {/* action={<ArrowRight />} */}
             </ListItem>
-            {index !== treeLines.value.features.length - 1 && (
-              <Divider variant="inset" component="li" />
-            )}
+            {index !== treeLines.value.features.length - 1 && <Divider variant="inset" component="li" />}
           </React.Fragment>
         ))}
       </List>
