@@ -79,7 +79,7 @@ const SimulationResultDetailCard: React.FC<{ defaultMetric: StatMetric }> = ({ d
               mr={1}
               flexGrow={1}
             >
-              <Typography variant="body2">{open.value ? <>&nbsp;</> : metric.value.title}</Typography>
+              <Typography variant="subtitle2">{metric.value.title}</Typography>
               <Typography variant="h5" flexGrow={1}>
                 {metric.peek().unit}
               </Typography>
@@ -94,13 +94,10 @@ const SimulationResultDetailCard: React.FC<{ defaultMetric: StatMetric }> = ({ d
               sx={{ borderRadius: 4, height: 8 }}
             />
           </Box>
-
-          {/* <IconButton size="small" edge="end" disableRipple> */}
-          {/* </IconButton> */}
         </Box>
       </CardActionArea>
       <Collapse in={open.value}>
-        <Box p={1}>
+        <Box p={3}>
           {metric.value.name === "carbon" ? <CarbonResultDetailContent onSwitch={changeMetric} /> : null}
           {metric.value.name === "count" ? <CountResultDetailContent onSwitch={changeMetric} /> : null}
           {metric.value.name === "agb" ? <AGBResultDetailContent onSwitch={changeMetric} /> : null}
