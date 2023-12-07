@@ -8,9 +8,6 @@ import * as serviceWorker from "./serviceWorker"
 // on the other hand, we can't let the user decide when to start tracking
 import './tracking'
 
-// import the highlight.io ErrorBoundary
-import { ErrorBoundary } from "@highlight-run/react"
-
 
 const container = document.getElementById("root")
 if (!container) throw new Error('Failed to find the root element');
@@ -19,9 +16,7 @@ const root = ReactDOM.createRoot(container)
 
 root.render(
   <React.StrictMode>
-    <ErrorBoundary>
-      <App />
-    </ErrorBoundary>
+    <App />
   </React.StrictMode>,
 )
 
