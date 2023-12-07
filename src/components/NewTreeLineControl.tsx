@@ -7,7 +7,6 @@ import { drawBuffer, drawState, addTreeLine } from "../appState/treeLineSignals"
 import { DrawState } from "../appState/treeLine.model"
 import { useSignal, useSignalEffect } from "@preact/signals-react"
 import { simulationStep } from "../appState/simulationSignals"
-import { platform } from "os"
 
 
 
@@ -15,6 +14,17 @@ const NewTreeLineControl: React.FC = () => {
     // define a state to show the statistics
     const [len, setLen] = useState<number>(0)
     const [maxLen, setMaxLen] = useState<number>(100)
+
+    // add a local signal to save the current feature, if we are in EDIT mode
+    // this can be send back to the treeLines in case the action is aborted
+    const originalEditFeature = useSignal<GeoJSON.Feature<GeoJSON.LineString> | null>(null)
+
+    // only run the effect once as the Control is instantiated
+    useEffect(() => {
+        if (drawState.peek() === DrawState.EDIT) {
+            originalEditFeature.value = drawBuffer.peek()[0]
+        }
+    }, [])
 
     // define a state to plant in the past
     const step = useSignal(simulationStep.peek().current)
@@ -30,9 +40,14 @@ const NewTreeLineControl: React.FC = () => {
         if (drawState.peek() !== DrawState.EDIT) abort()
 
         // otherwise check if there is a line in the buffer
-        if (drawBuffer.peek().length === 0) abort()
+        if (drawBuffer.peek().length === 0 && !originalEditFeature.peek()) abort()
+        
+        // we are in edit mode, so push the original feature back into the buffer
+        if (originalEditFeature.peek()) {
+            drawBuffer.value = [originalEditFeature.peek()!]
+        }
 
-        // otherwise, call onAdd
+        // now we can add the tree line back to the treeLines
         onAdd()
     }
 
