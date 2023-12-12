@@ -35,7 +35,6 @@ const SimulationStepSlider: React.FC = () => {
         <Collapse in={open.value}>
           <Box display="flex" mt={1} p={1}>
             <Slider
-              sx={{ height: 8 }}
               marks={marks}
               valueLabelDisplay="auto"
               value={simulationStep.value.current}

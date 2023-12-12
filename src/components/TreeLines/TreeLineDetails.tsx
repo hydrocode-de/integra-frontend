@@ -77,7 +77,6 @@ const TreeLineDetails: React.FC<TreeLineDetailsProps> = ({ treeLine }) => {
           </Typography>
           <Box display="flex">
             <Slider
-              sx={{ height: 8 }}
               aria-labelledby="spacing-slider"
               min={1}
               max={Math.min(Math.floor(treeLine.properties.length as number), 50)}
@@ -99,7 +98,6 @@ const TreeLineDetails: React.FC<TreeLineDetailsProps> = ({ treeLine }) => {
           </Typography>
           <Box display="flex">
             <Slider
-              sx={{ height: 8 }}
               aria-labelledby="width-slider"
               min={1}
               max={25}
