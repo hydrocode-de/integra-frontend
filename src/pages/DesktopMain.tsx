@@ -124,7 +124,7 @@ const DesktopMain: React.FC = () => {
               mx="auto"
               zIndex="99"
             >
-              <Card sx={{ borderRadius: 4 }}>
+              <Card sx={{ borderRadius: 2 }}>
                 <SimulationStepSlider />
               </Card>
             </Box>
@@ -141,12 +141,12 @@ const DesktopMain: React.FC = () => {
               justifyContent="flex-end"
             >
               <Box minWidth="256px" flexBasis="33%" mr={1} mb={1}>
-                <Card sx={{ borderRadius: 4, border: 0 }}>
+                <Card sx={{ borderRadius: 2, border: 0 }}>
                   <SimulationResultDetailCard defaultMetric="carbon" />
                 </Card>
               </Box>
               <Box minWidth="256px" flexBasis="33%" mr={1} mb={1}>
-                <Card sx={{ borderRadius: 4, border: 0 }}>
+                <Card sx={{ borderRadius: 2, border: 0 }}>
                   <SimulationResultDetailCard defaultMetric="height" />
                 </Card>
               </Box>

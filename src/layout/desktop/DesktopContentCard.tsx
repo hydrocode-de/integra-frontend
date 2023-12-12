@@ -7,7 +7,7 @@ const DesktopContentCard: React.FC<PropsWithChildren<{noOutlet?: boolean}>> = ({
 
     return <>
         <Box position="fixed" top="96px" left="24px" zIndex={99} maxWidth="384px" width="25vw" minWidth="256px">
-            <Card sx={{backgroundColor: theme.palette.background.paper, p:2, borderRadius:4, border:0}}>
+            <Card sx={{backgroundColor: theme.palette.background.paper, p:2, borderRadius:2, border:0}}>
                 { !!noOutlet ? children : <Outlet /> }
             </Card>
         </Box>

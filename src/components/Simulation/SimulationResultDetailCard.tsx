@@ -91,7 +91,7 @@ const SimulationResultDetailCard: React.FC<{ defaultMetric: StatMetric }> = ({ d
               variant="determinate"
               value={Math.min((totalValue.value / metric.peek().reference) * 100, 100)}
               color={(totalValue.value / metric.peek().reference) * 100 > 50 ? "success" : "primary"}
-              sx={{ borderRadius: 4, height: 8 }}
+              sx={{ borderRadius: 2, height: 8 }}
             />
           </Box>
         </Box>

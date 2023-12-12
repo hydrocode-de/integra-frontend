@@ -18,7 +18,7 @@ const EnabledAddTreeLineButton: React.FC = () => {
   return (
     <>
       <Button
-        sx={{ borderRadius: 4 }}
+        sx={{ borderRadius: 2 }}
         size="medium"
         variant="contained"
         onClick={onAdd}

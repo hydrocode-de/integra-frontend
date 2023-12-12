@@ -49,7 +49,7 @@ const TreeLineDetails: React.FC<TreeLineDetailsProps> = ({ treeLine }) => {
           <FormControl fullWidth>
             <InputLabel id="tree-type-select">Baumart</InputLabel>
             <Select
-              sx={{ borderRadius: 4 }}
+              sx={{ borderRadius: 2 }}
               labelId="tree-type-select"
               value={treeType.value}
               onChange={(e) => (treeType.value = e.target.value)}
