@@ -68,7 +68,7 @@ const NewTreeLineControl: React.FC = () => {
     // render the correct version of the control
     return <>
         <Box component="div">
-            <Box component="div" sx={{flexGrow: 1, mt:2}} display="flex" justifyContent="space-between">
+            <Box component="div" sx={{flexGrow: 1}} display="flex" justifyContent="space-between">
                 <IconButton size="small" edge="start" color="inherit" aria-label="zurück" sx={{mr: 2}} onClick={onAbort}>
                     <ArrowBack />
                 </IconButton>
