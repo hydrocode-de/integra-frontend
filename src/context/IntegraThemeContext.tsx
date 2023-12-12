@@ -38,6 +38,15 @@ const IntegraThemeProvider: React.FC<React.PropsWithChildren> = ({ children }) =
     const initialTheme = createTheme({
         palette: {
             mode: prefersDarkMode ? 'dark' : 'light'
+        },
+        components: {
+            MuiSelect: {
+                styleOverrides: {
+                    root: {
+                        borderRadius: 8
+                    }
+                }
+            }
         }
     })
     
