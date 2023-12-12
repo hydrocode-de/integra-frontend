@@ -118,7 +118,7 @@ const DesktopMain: React.FC = () => {
               width="40vw"
               maxWidth="384px"
               position="fixed"
-              bottom="24px"
+              bottom="16px"
               left="0"
               right="0"
               mx="auto"
@@ -133,19 +133,19 @@ const DesktopMain: React.FC = () => {
             <Box
               // width="calc(100% - 350px - 10px - 100px)"
               position="fixed"
-              top="96px"
-              right="24px"
+              top="80px"
+              right="16px"
               zIndex="99"
               display="flex"
               flexDirection={"column"}
               justifyContent="flex-end"
             >
-              <Box minWidth="256px" flexBasis="33%" mr={1} mb={1}>
+              <Box minWidth="256px" flexBasis="33%" mb={1}>
                 <Card sx={{ borderRadius: 2, border: 0 }}>
                   <SimulationResultDetailCard defaultMetric="carbon" />
                 </Card>
               </Box>
-              <Box minWidth="256px" flexBasis="33%" mr={1} mb={1}>
+              <Box minWidth="256px" flexBasis="33%" mb={1}>
                 <Card sx={{ borderRadius: 2, border: 0 }}>
                   <SimulationResultDetailCard defaultMetric="height" />
                 </Card>

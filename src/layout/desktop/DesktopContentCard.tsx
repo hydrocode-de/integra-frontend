@@ -6,12 +6,14 @@ const DesktopContentCard: React.FC<PropsWithChildren<{noOutlet?: boolean}>> = ({
     const theme = useTheme()
 
     return <>
-        <Box position="fixed" top="96px" left="24px" zIndex={99} maxWidth="384px" width="25vw" minWidth="256px">
+        <Box position="fixed" top="80px" left="16px" zIndex={99} maxWidth="368px" width="25vw" minWidth="329px">
             <Card sx={{backgroundColor: theme.palette.background.paper, p:2, borderRadius:2, border:0}}>
                 { !!noOutlet ? children : <Outlet /> }
             </Card>
         </Box>
     </>
 }
+
+// top = 64px (AppBar) + 16px (margin) = 80px
 
 export default DesktopContentCard
