@@ -14,7 +14,7 @@ const TreeLineListCard: React.FC = () => {
       <CardContent>
         {/* <Box display="flex" justifyContent="space-between" m="0"> */}
         {/* <span /> */}
-        <Typography mt={0} align="left" variant="h5">
+        <Typography align="left" variant="h5">
           Mein Agroforstsystem
         </Typography>
         {/* <span /> */}
