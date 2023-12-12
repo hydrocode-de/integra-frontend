@@ -1,4 +1,4 @@
-import { Box, FormControl, IconButton, InputAdornment, MenuItem, Select, TextField, Typography } from "@mui/material"
+import { Box, Button, FormControl, IconButton, InputAdornment, MenuItem, Select, TextField, Typography } from "@mui/material"
 import { Add, Check, Close, Error, CheckCircle } from "@mui/icons-material"
 
 import { ProjectEditState, editState, newProject, project, projects, switchProject } from "../appState/projectSignals"
@@ -56,10 +56,9 @@ const ProjectSelect: React.FC = () => {
                     <Typography variant="caption" color="error">nicht gespeichert</Typography>
                 </Box>
             ) : null }
-            <Typography variant="caption">Kein Projekt</Typography>
-            <IconButton size="small" edge="end" color="inherit" aria-label="add new Project" onClick={() => isEditing.value = true}>
-                <Add />
-            </IconButton>
+            <Button variant="contained" size="medium" onClick={() => isEditing.value = true} endIcon={<Add />}>
+                Speichern
+            </Button>
         </FormControl>
             
         </>
