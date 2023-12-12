@@ -10,6 +10,7 @@ import {
   ListItemText,
   IconButton,
   Divider,
+  ListItemButton,
 } from "@mui/material";
 import { ArrowRight, ArrowUpward } from "@mui/icons-material";
 import { Link } from "react-router-dom";
@@ -49,39 +50,38 @@ const TreeLineList: React.FC = () => {
         )
       }
 
-      <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
+      <List sx={{ width: "100%", maxWidth: 360, 
+      // bgcolor: "background.paper" 
+      }}>
         {treeLines.value.features.map((treeLine, index) => (
           <React.Fragment key={treeLine.properties.id}>
-            <ListItem
-              key={treeLine.properties.id}
-              sx={{
-                borderRadius: 2,
-                "&:hover": {
-                  backgroundColor: "rgba(0, 0, 0, 0.04)", // Change this to your preferred hover color
-                },
-              }}
-              component={Link}
-              to={`/detail/${treeLine.properties.id}`}
-              secondaryAction={
-                <IconButton edge="end" aria-label="delete">
-                  <ArrowRight />
-                </IconButton>
-              }
-            >
-              <ListItemAvatar>
-                <Avatar sx={{ height: 48 }} src="/icons/bergahorn-10.png" title="green iguana"></Avatar>
-              </ListItemAvatar>
-
-              <ListItemText
-                primary={treeLine.properties.name}
-                secondary={`${treeLine.properties.treeCount} Bäume (${treeLine.properties.length?.toFixed(0)}m)`}
-              ></ListItemText>
-
-              {/* <ListItemIcon> */}
-              {/* <ArrowRight /> */}
-              {/* </ListItemIcon> */}
-              {/* action={<ArrowRight />} */}
-            </ListItem>
+              <ListItem
+                key={treeLine.properties.id}
+                component={Link}
+                to={`/detail/${treeLine.properties.id}`}
+                secondaryAction={
+                  <IconButton edge="end" aria-label="delete">
+                    <ArrowRight />
+                  </IconButton>
+                }
+                disablePadding
+              >
+                <ListItemButton
+                  sx={{
+                    borderRadius: 2,
+                    height: 64
+                  }}
+                >
+                  <ListItemAvatar>
+                    <Avatar sx={{ height: 48 }} src="/icons/bergahorn-10.png" title="green iguana"></Avatar>
+                  </ListItemAvatar>
+                  
+                  <ListItemText
+                    primary={treeLine.properties.name}
+                    secondary={`${treeLine.properties.treeCount} Bäume (${treeLine.properties.length?.toFixed(0)}m)`}
+                  ></ListItemText>
+             </ListItemButton> 
+              </ListItem>
             {index !== treeLines.value.features.length - 1 && <Divider variant="inset" component="li" />}
           </React.Fragment>
         ))}
