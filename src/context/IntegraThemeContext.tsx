@@ -38,7 +38,32 @@ const IntegraThemeProvider: React.FC<React.PropsWithChildren> = ({ children }) =
     const initialTheme = createTheme({
         palette: {
             mode: prefersDarkMode ? 'dark' : 'light'
-        }
+        },
+        components: {
+            MuiSelect: {
+                styleOverrides: {
+                    root: {
+                        borderRadius: 8
+                    }
+                }
+            },
+            MuiSlider: {
+                styleOverrides: {
+                    root: {
+                        borderRadius: 8,
+                        height: 6
+                    }
+                }
+            },
+            MuiButton: {
+                styleOverrides: {
+                    root: {
+                        borderRadius: 8
+                    }
+                }
+            },
+        },
+        
     })
     
     // use the reducer to get the initial state
