@@ -7,11 +7,13 @@ import { drawBuffer, drawState, addTreeLine } from "../appState/treeLineSignals"
 import { DrawState } from "../appState/treeLine.model"
 import { useSignal, useSignalEffect } from "@preact/signals-react"
 import { simulationStep } from "../appState/simulationSignals"
-import { platform } from "os"
-
+import { useNavigate } from "react-router-dom"
 
 
 const NewTreeLineControl: React.FC = () => {
+    // get a navigator 
+    const navigate = useNavigate()
+
     // define a state to show the statistics
     const [len, setLen] = useState<number>(0)
     const [maxLen, setMaxLen] = useState<number>(100)
@@ -38,10 +40,16 @@ const NewTreeLineControl: React.FC = () => {
         // figure out the needed age
         const opts = plantInPast.peek() ? {age: simulationStep.peek().current + 1} : {}
 
-        addTreeLine(opts)
+        // on add, get the id of the newly created line id
+        // This can return many ids, but following our implementation, the user is never able to
+        // actually add more than one id, so we can safely only navigate to the first
+        const [lineId, ...others] = addTreeLine(opts)
 
         // disable the draw control
         drawState.value = DrawState.OFF
+
+        // navigate to the edit site of the new line
+        navigate(`/detail/${lineId}`)
     }
 
     // side-effect to update the current length and update the maximum length
