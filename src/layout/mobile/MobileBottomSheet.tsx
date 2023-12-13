@@ -97,7 +97,7 @@ const MobileBottomSheet: React.FC<PropsWithChildren<{noOutlet?: boolean}>> = ({ 
                     height="6px"
                     my="8px"
                     mx="auto"
-                    borderRadius="3px"
+                    borderRadius={2}
                     sx={{backgroundColor: isDown.value ? '#A9A9A9' : '#808080', touchAction: 'none', cursor: isDown.value ? 'grabbing' : 'grab'}}
                 />
             </Box>

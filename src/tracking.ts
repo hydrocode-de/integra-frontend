@@ -1,8 +1,12 @@
-import Hotjar from "@hotjar/browser"
-import PiwikPro from "@piwikpro/react-piwik-pro"
+import posthog from "posthog-js"
 
-// init
-Hotjar.init(3743041, 6)
-PiwikPro.initialize('0666cc8c-2dbf-4359-8d98-361ff0c56964', 'https://integra-223bf.piwik.pro');
+// initialize posthog
+posthog.init('phc_4EjwMD5UQLhUwSFd1YZvXgIOsHSAoz4WUjfRN8HXNzO', { 
+    api_host: 'https://eu.posthog.com',
+    persistence: 'memory',
+    bootstrap: {
+        // distinctID: 
+    }
+})
 
-export default PiwikPro
+export { posthog }

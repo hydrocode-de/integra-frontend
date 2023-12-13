@@ -15,7 +15,7 @@ import pointsWithinPolygon from "@turf/points-within-polygon"
 // make the last edit settings publicly available
 export const lastEditSettings = signal<TreeEditSettings>({
     spacing: 12,
-    treeType: "Vogelkirsche",
+    treeType: "Bergahorn",
     width: 5,
     centerOnLine: true,
     age: 1
@@ -198,7 +198,7 @@ export const futureTreeLocations = computed<TreeLocation>(() => {
  * - this is necessary (instead of treeLine.value.features) to make sure that
  * all needed properties are created sufficiently
  */
-export const addTreeLine = (options?: Partial<TreeEditSettings>) => {
+export const addTreeLine = (options?: Partial<TreeEditSettings>): String[] => {
     // get the number of current treeLines
     const numTreeLines = rawTreeLineFeatures.peek().length
 
@@ -230,6 +230,9 @@ export const addTreeLine = (options?: Partial<TreeEditSettings>) => {
 
     // add to the rawTreeLineFeatures
     rawTreeLineFeatures.value = [...rawTreeLineFeatures.value, ...newTreeLine]
+
+    // return a list of added treeLines
+        return newTreeLine.map(line => String(line.id))
 }
 
 /**

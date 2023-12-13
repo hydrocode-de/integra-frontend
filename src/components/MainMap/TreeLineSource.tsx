@@ -138,15 +138,16 @@ const TreeLineSource: React.FC = () => {
             />
         </Source>
         <Source id="tree-locations" type="geojson" data={treeLocations.value} generateId>
-            <Layer id="tree-locations" source="tree-locations" type="symbol" 
+            <Layer id="tree-locations" source="tree-locations" type="symbol"
                 layout={{
-                    'visibility': canopyIsVisible.value ? 'none' : 'visible',
+                    'visibility': canopyIsVisible.value ? 'visible' : 'visible',
                     'icon-image': ['coalesce', ['get', 'image'], 'default'],
                     'icon-anchor': 'bottom',
                     //'icon-size': ['case', ['boolean', ['feature-state', 'hover'], false], 1.1, 1],
                 }}
             />
             <Layer id="canopy-center-layer" source="tree-locations" type="circle"
+                beforeId="tree-locations"
                 layout={{'visibility': canopyIsVisible.value ? 'visible' : 'visible'}}
                 paint={{
                     "circle-color": "black",
@@ -164,6 +165,7 @@ const TreeLineSource: React.FC = () => {
                 }}
             />
             <Layer id="canopy-outline-layer" source="canopy" type="line" 
+                beforeId="canopy-center-layer"
                 layout={{'visibility': canopyIsVisible.value ? 'visible' : 'none'}}
                 paint={{
                     "line-color": "darkgreen",

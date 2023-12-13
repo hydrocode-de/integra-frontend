@@ -7,10 +7,13 @@ import { drawBuffer, drawState, addTreeLine } from "../appState/treeLineSignals"
 import { DrawState } from "../appState/treeLine.model"
 import { useSignal, useSignalEffect } from "@preact/signals-react"
 import { simulationStep } from "../appState/simulationSignals"
-
+import { useNavigate } from "react-router-dom"
 
 
 const NewTreeLineControl: React.FC = () => {
+    // get a navigator 
+    const navigate = useNavigate()
+
     // define a state to show the statistics
     const [len, setLen] = useState<number>(0)
     const [maxLen, setMaxLen] = useState<number>(100)
@@ -66,10 +69,16 @@ const NewTreeLineControl: React.FC = () => {
         // either the user wants to have plantInPast, or he is in edit mode
         const opts = plantInPast.peek() || drawState.peek() === DrawState.EDIT ? {age: simulationStep.peek().current + 1} : {}
 
-        addTreeLine(opts)
+        // on add, get the id of the newly created line id
+        // This can return many ids, but following our implementation, the user is never able to
+        // actually add more than one id, so we can safely only navigate to the first
+        const [lineId, ...others] = addTreeLine(opts)
 
         // disable the draw control
         drawState.value = DrawState.OFF
+
+        // navigate to the edit site of the new line
+        navigate(`/detail/${lineId}`)
     }
 
     // handle a browser back event
@@ -112,7 +121,7 @@ const NewTreeLineControl: React.FC = () => {
                 </Typography>
                 <span />
             </Box>
-            <Box component="div" sx={{flexGrow: 1}} display="flex" justifyContent="space-around">
+            <Box component="div" sx={{flexGrow: 1, mt:3}} display="flex" justifyContent="space-around">
                 <span />
                 <Box component="div" position="relative" display="inline-flex">
                     <CircularProgress variant="determinate" value={Math.min((len / maxLen) * 100, 100)} />
@@ -128,6 +137,9 @@ const NewTreeLineControl: React.FC = () => {
                 </Fab>
                 <span />
             </Box>
+            <Typography variant="body2" align="center" mt={3}>
+                { drawBuffer.value.length === 0 ? 'Zeichne eine Baumreihe auf der Karte' : 'Klicke auf das Häkchen um die Baumreihe zu speichern' }
+            </Typography>
         </Box>
 
         {/* if the simulation is not at timestep 0 and we are not in Editing mode show a warning */}
