@@ -63,7 +63,8 @@ const NewTreeLineControl: React.FC = () => {
     // handler to add a new tree line
     const onAdd = () => {
         // figure out the needed age
-        const opts = plantInPast.peek() ? {age: simulationStep.peek().current + 1} : {}
+        // either the user wants to have plantInPast, or he is in edit mode
+        const opts = plantInPast.peek() || drawState.peek() === DrawState.EDIT ? {age: simulationStep.peek().current + 1} : {}
 
         addTreeLine(opts)
 
@@ -129,8 +130,8 @@ const NewTreeLineControl: React.FC = () => {
             </Box>
         </Box>
 
-        {/* if the simulation is not at timestep 0 show a warning */}
-        { step.value !== 0 ? (
+        {/* if the simulation is not at timestep 0 and we are not in Editing mode show a warning */}
+        { step.value !== 0 && drawState.value !== DrawState.EDIT ? (
             <Box component="div" mt={2}>
                 <Alert severity="warning">
                 Die Simulation steht nicht bei 0 Jahren. 
