@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { Alert, Box, CircularProgress, Fab, FormControlLabel, IconButton, Typography, Checkbox  } from "@mui/material"
 import { ArrowBack,  Check } from "@mui/icons-material"
 import length from "@turf/length"
@@ -18,6 +18,17 @@ const NewTreeLineControl: React.FC = () => {
     const [len, setLen] = useState<number>(0)
     const [maxLen, setMaxLen] = useState<number>(100)
 
+    // add a local signal to save the current feature, if we are in EDIT mode
+    // this can be send back to the treeLines in case the action is aborted
+    const originalEditFeature = useSignal<GeoJSON.Feature<GeoJSON.LineString> | null>(null)
+
+    // only run the effect once as the Control is instantiated
+    useEffect(() => {
+        if (drawState.peek() === DrawState.EDIT) {
+            originalEditFeature.value = drawBuffer.peek()[0]
+        }
+    }, [])
+
     // define a state to plant in the past
     const step = useSignal(simulationStep.peek().current)
     useSignalEffect(() => {
@@ -25,9 +36,26 @@ const NewTreeLineControl: React.FC = () => {
     })
     const plantInPast = useSignal<boolean>(false)
 
+    // define the handler to push the line back to the treeLines if we are in
+    // EDIT mode and an abort or a popstate event is triggered
+    const onAbort = () => {
+        // if we are not in edit mode, return
+        if (drawState.peek() !== DrawState.EDIT) abort()
+
+        // otherwise check if there is a line in the buffer
+        if (drawBuffer.peek().length === 0 && !originalEditFeature.peek()) abort()
+        
+        // we are in edit mode, so push the original feature back into the buffer
+        if (originalEditFeature.peek()) {
+            drawBuffer.value = [originalEditFeature.peek()!]
+        }
+
+        // now we can add the tree line back to the treeLines
+        onAdd()
+    }
 
     // handler to abort the editing
-    const onAbort = () => {
+    const abort = () => {
         // empty the buffer
         drawBuffer.value = []
 
@@ -38,7 +66,8 @@ const NewTreeLineControl: React.FC = () => {
     // handler to add a new tree line
     const onAdd = () => {
         // figure out the needed age
-        const opts = plantInPast.peek() ? {age: simulationStep.peek().current + 1} : {}
+        // either the user wants to have plantInPast, or he is in edit mode
+        const opts = plantInPast.peek() || drawState.peek() === DrawState.EDIT ? {age: simulationStep.peek().current + 1} : {}
 
         // on add, get the id of the newly created line id
         // This can return many ids, but following our implementation, the user is never able to
@@ -51,6 +80,13 @@ const NewTreeLineControl: React.FC = () => {
         // navigate to the edit site of the new line
         navigate(`/detail/${lineId}`)
     }
+
+    // handle a browser back event
+    const onPopState = useCallback((event: PopStateEvent) => onAbort(), [])
+    useEffect(() => {
+        window.addEventListener("popstate", onPopState)
+        return () => window.removeEventListener("popstate", onPopState)
+    }, [])
 
     // side-effect to update the current length and update the maximum length
     useSignalEffect(() => {
@@ -106,8 +142,8 @@ const NewTreeLineControl: React.FC = () => {
             </Typography>
         </Box>
 
-        {/* if the simulation is not at timestep 0 show a warning */}
-        { step.value !== 0 ? (
+        {/* if the simulation is not at timestep 0 and we are not in Editing mode show a warning */}
+        { step.value !== 0 && drawState.value !== DrawState.EDIT ? (
             <Box component="div" mt={2}>
                 <Alert severity="warning">
                 Die Simulation steht nicht bei 0 Jahren. 
