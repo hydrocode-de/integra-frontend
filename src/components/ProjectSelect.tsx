@@ -51,7 +51,7 @@ const ProjectSelect: React.FC = () => {
         return <>
         <FormControl variant="standard" size="small" sx={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
             { editState.value === ProjectEditState.DIRTY ? (
-                <Box display="flex" alignItems="center" mr={2}>
+                <Box component="div" display="flex" alignItems="center" mr={2}>
                     <Error color="error" sx={{fontSize: '100%', mr: 0.5}} />
                     <Typography variant="caption" color="error">nicht gespeichert</Typography>
                 </Box>
@@ -67,7 +67,7 @@ const ProjectSelect: React.FC = () => {
 
     else {
         return <>
-            <Box display="flex" alignItems="center" mr={2}>
+            <Box component="div" display="flex" alignItems="center" mr={2}>
                 { editState.value === ProjectEditState.DIRTY ? (
                     <Error color="error" sx={{fontSize: '100%', mr: 0.5}} />
                 ) : (
