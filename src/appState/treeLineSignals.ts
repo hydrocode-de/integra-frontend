@@ -5,6 +5,8 @@ import { nanoid } from "nanoid"
 import bbox from "@turf/bbox"
 import length from "@turf/length"
 import along from "@turf/along"
+import proj4  from "proj4"
+
 
 import { DrawBuffer, DrawState, TreeEditSettings, TreeLine, TreeLocation } from "./treeLine.model"
 import { loadClosestDataPoint } from "./backendSignals"
@@ -170,6 +172,76 @@ export const nonOverlappingTreeLocations = computed(() => {
 // sort the nonOverlappingTreeLocationFeatures that currently exist and the ones that will be tere in the future
 export const treeLocationFeatures = computed<TreeLocation["features"]>(() => nonOverlappingTreeLocations.value.filter(tree => tree.properties.age! > 0))
 const futureLocationFeatures = computed<TreeLocation["features"]>(() => nonOverlappingTreeLocations.value.filter(tree => tree.properties.age! <= 0))
+
+// derive a signal for the treeLocations of georeferenced and scaled tree icons as raster images
+export interface TreeRaster {
+    type: 'image',
+    url: string,
+    coordinates: [
+        [number, number],
+        [number, number],
+        [number, number],
+        [number, number]
+    ]
+}
+export const treeRaster = computed<TreeRaster[]>(() => {
+    // create the empty container
+    const raster: TreeRaster[] = []
+
+    // for each treeLocation, get the coordinate and transform to a meter based raster (UTM?)
+    // then use the current height and canopy width to calculate the bounding box and transform
+    // that one back to WGS84
+    treeLocationFeatures.value.forEach(tree => {
+        // spread the tree properties
+        const { geometry, properties: {height, canopyWidth, image} } = tree
+
+        // if height or canopyWidth are not defined, we cannot calculate the raster
+        if (height && canopyWidth && image) {
+            // reproject to Mercator
+            const utm = '+proj=utm +zone=32 +ellps=GRS80 +units=m +no_defs +type=crs'
+            const converter = proj4('EPSG:4326', utm)
+
+            // reproejct to UTM Z32N to calculate the bounding box of the image
+            const ll = converter.forward({
+                x: geometry.coordinates[0],
+                y: geometry.coordinates[1]
+            })
+            const ur = converter.forward({
+                x: geometry.coordinates[0],
+                y: geometry.coordinates[1]
+            })
+
+            // calculate the lower left and the upper right corner of the bounding box
+            // with the coordinate at the center of the lower bound
+            const lowerLeft = converter.inverse({
+                x: ll.x - canopyWidth / 2,
+                y: ll.y
+            })
+            const upperRight = converter.inverse({
+                x: ll.x + canopyWidth / 2,
+                y: ll.y + height
+            })
+
+            // build the bounding box from that
+            const bbox: TreeRaster["coordinates"] = [
+                [upperRight.x, upperRight.y],
+                [lowerLeft.x, upperRight.y],
+                [lowerLeft.x, lowerLeft.y],
+                [upperRight.x, lowerLeft.y]
+                
+            ]
+
+            // push the new raster
+            raster.push({
+                type: 'image',
+                url: `${window.location.protocol}//${window.location.host}/icons/${image.toLocaleLowerCase()}.png`,
+                coordinates: bbox
+            })
+        }
+    })
+    return raster
+})
+
 
 // export the treeLocations as a valid geoJSON
 export const treeLocations = computed<TreeLocation>(() => {
