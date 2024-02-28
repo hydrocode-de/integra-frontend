@@ -3,12 +3,13 @@ import { Source, Layer, useMap, MapLayerMouseEvent } from "react-map-gl"
 import { useNavigate } from "react-router-dom"
 import bbox from "@turf/bbox"
 
-import { treeLines, treeLocations } from "../../appState/treeLineSignals"
+import { TreeRaster, treeLines, treeLocations, treeRaster } from "../../appState/treeLineSignals"
 import { TreeLine, TreeLocation } from "../../appState/treeLine.model"
 import { fitBounds } from "./MapObservableStore"
 import { canopyLayer } from "../../appState/simulationSignals"
 import { useSignal, useSignalEffect } from "@preact/signals-react"
 import { layerVisibility } from "../../appState/mapSignals"
+import cloneDeep from "lodash.clonedeep"
 
 const TreeLineSource: React.FC = () => {
     // get a reference to the map
@@ -16,6 +17,9 @@ const TreeLineSource: React.FC = () => {
 
     // get a navigator
     const navigate = useNavigate()
+
+    // create a local signal for the treeRaster
+    const trees = useSignal<TreeRaster[]>([]);
 
     // handle canopyvisibility
     const canopyIsVisible = useSignal<boolean>(false)
@@ -97,9 +101,18 @@ const TreeLineSource: React.FC = () => {
         navigate(`/detail/${feature.properties.id}`)
     }, [navigate])
 
+    useSignalEffect(() => {
+        console.log(treeRaster.value)
+        trees.value = cloneDeep(treeRaster.value)
+
+        if (map.current) {
+            map.current.getMap()
+        }
+    })
 
     // effect to subscribe to the map mousemove event
     useEffect(() => {
+
         // subscribe to mousemove event on the layers
         if (map.current) {
             map.current.on('mousemove', 'tree-lines', handleMouseMoveLine)
@@ -137,17 +150,28 @@ const TreeLineSource: React.FC = () => {
                 }}
             />
         </Source>
+        { treeRaster.value.map((raster, idx) => {
+            return (
+                <Source key={idx} id={`tree-raster-${idx}`} type="image" url={raster.url} coordinates={raster.coordinates}>
+                    <Layer 
+                        id={`tree-raster-${idx}`}
+                        source={`tree-raster-${idx}`}
+                        type="raster"
+                    />
+                </Source>
+            )
+        }) }
         <Source id="tree-locations" type="geojson" data={treeLocations.value} generateId>
-            <Layer id="tree-locations" source="tree-locations" type="symbol"
+            {/* <Layer id="tree-locations" source="tree-locations" type="symbol"
                 layout={{
                     'visibility': canopyIsVisible.value ? 'visible' : 'visible',
                     'icon-image': ['coalesce', ['get', 'image'], 'default'],
                     'icon-anchor': 'bottom',
                     //'icon-size': ['case', ['boolean', ['feature-state', 'hover'], false], 1.1, 1],
                 }}
-            />
+            /> */}
             <Layer id="canopy-center-layer" source="tree-locations" type="circle"
-                beforeId="tree-locations"
+                // beforeId="tree-locations"
                 layout={{'visibility': canopyIsVisible.value ? 'visible' : 'visible'}}
                 paint={{
                     "circle-color": "black",
@@ -158,14 +182,14 @@ const TreeLineSource: React.FC = () => {
         <Source id="canopy" type="geojson" data={canopyLayer.value} generateId>
             <Layer id="canopy-layer" source="canopy" type="fill" 
                 layout={{'visibility': canopyIsVisible.value ? 'visible' : 'none'}}
-                beforeId="canopy-center-layer"
+                // beforeId="canopy-center-layer"
                 paint={{
                     "fill-color": "darkgreen",
                     "fill-opacity": 0.7
                 }}
             />
             <Layer id="canopy-outline-layer" source="canopy" type="line" 
-                beforeId="canopy-center-layer"
+                // beforeId="canopy-center-layer"
                 layout={{'visibility': canopyIsVisible.value ? 'visible' : 'none'}}
                 paint={{
                     "line-color": "darkgreen",
