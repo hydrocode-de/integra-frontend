@@ -25,6 +25,7 @@
     "@turf/line-intersect": "^6.5.0",
     "@turf/nearest-point": "^6.5.0",
     "@turf/points-within-polygon": "^6.5.0",
+    "@turf/projection": "^6.5.0",
     "@types/jest": "^28.1.8",
     "@types/node": "^12.20.55",
     "@types/react": "^18.2.31",
@@ -38,6 +39,7 @@
     "observable-hooks": "^4.2.3",
     "papaparse": "^5.4.1",
     "posthog-js": "^1.93.6",
+    "proj4": "^2.10.0",
     "react": "^18.2.0",
     "react-device-detect": "^2.2.3",
     "react-dom": "^18.2.0",
@@ -79,6 +81,7 @@
     "@types/mapbox__mapbox-gl-draw": "^1.4.5",
     "@types/mapbox-gl": "^2.7.17",
     "@types/papaparse": "^5.3.11",
+    "@types/proj4": "^2.5.5",
     "@types/uuid": "^9.0.6",
     "@wixc3/react-board": "^2.3.0"
   }
