@@ -49,6 +49,7 @@ export interface TreeDataPoint {
   agb: number;
   carbon: number;
   image: string;
+  filename: string;
 }
 
 // first some Baumarten
@@ -161,6 +162,7 @@ const parseTreeData = (data: unknown[]): TreeData[] => {
         agb: row.AGB,
         carbon: row.Kohlenstoffgehalt,
         image: row.image || "default-tree.png",
+        filename: row.image || "default-tree.png",
       });
     }
   });
