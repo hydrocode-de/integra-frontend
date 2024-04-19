@@ -17,6 +17,7 @@ import { useSignal } from "@preact/signals-react";
 import MapLayerSwitchButton from "../components/MainMap/MapLayerSwitchButton";
 import SimulationStepSlider from "../components/Simulation/SimulationStepSlider";
 import SimulationResultDetailCard from "../components/Simulation/SimulationResultDetailCard";
+import DraggableElements from "../layout/desktop/DraggableElements";
 
 const DesktopMain: React.FC = () => {
   // get the current theme
@@ -97,17 +98,18 @@ const DesktopMain: React.FC = () => {
       </Drawer>
 
       <Box width="100vw" height="calc(100vh - 64px)" m="0" p="0" display="flex">
+        {/* DEV ONLY  uncomment the old navigation logic. The components are still there, but we do not use them */}
         {/*
          * Navigation children can be placed on top of the map this way
          * Only show if the draw Mode is OFF. This feels a bit hacky...
          */}
-        {drawState.value !== DrawState.OFF ? (
+        {/* {drawState.value !== DrawState.OFF ? (
           <DesktopContentCard noOutlet>
             <TreeLineNewCard />
           </DesktopContentCard>
         ) : (
           <Outlet />
-        )}
+        )} */}
 
         {/* Only render the simulation cards if there is data and no editing */}
         {hasData.value && drawState.value === DrawState.OFF ? (
@@ -154,13 +156,24 @@ const DesktopMain: React.FC = () => {
           </>
         ) : null}
 
-        <MainMap mapId="desktop">
-          <DrawControl />
-          <TreeLineSource />
-          <ReferenceAreaSource />
-          <MapLayerSwitchButton />
-          <TreeLineTooltip />
-        </MainMap>
+        
+          <MainMap mapId="desktop">
+            
+            <DrawControl />
+            <TreeLineSource />
+            <ReferenceAreaSource />
+            <MapLayerSwitchButton />
+            <TreeLineTooltip />
+
+            {/* DEV ONLY - put components here that need the map context!! */}
+            <DesktopContentCard noOutlet>
+              {/* Some navigation or state logic will be needed around this */}
+              <DraggableElements />
+            </DesktopContentCard>
+
+          </MainMap>
+          
+
       </Box>
     </>
   );

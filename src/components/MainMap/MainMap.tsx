@@ -1,4 +1,7 @@
-import ReactMap, { ViewStateChangeEvent } from "react-map-gl"
+import ReactMap, { ViewStateChangeEvent, MapRef } from "react-map-gl"
+import { useRef } from "react"
+import { useDrop } from "react-dnd"
+import mapboxgl from "mapbox-gl"
 
 // load the map signals to update the viewState
 import { viewState } from "../../appState/mapSignals"
@@ -8,17 +11,51 @@ import 'mapbox-gl/dist/mapbox-gl.css'
 
 import MapObserver from "./MapObserver"
 import TreeIconLoader from "./TreeIconLoader"
+import { addNewTree } from "../../appState/treeLocationSignals"
+import { TreeDropProperties } from "../TreeLines/DraggableTree"
 
 
 const MainMap: React.FC<React.PropsWithChildren<{mapId: string}>> = ({ mapId, children }) => {
+    // use a react ref as anything else (state, hook, signal, window) is not working!!!
+    const mapRef = useRef<MapRef | null>(null)
+
     // define the event listener for a map move
     const onMove = (event: ViewStateChangeEvent) => {
         // update the viewState signal
         viewState.value = {...viewState.value, ...event.viewState}
     }
 
+    const onLoad = (e: mapboxgl.MapboxEvent) => {
+        // save a map reference to the window instance
+        (window as any).map = e.target
+    }
+
+    const [, drop] = useDrop(() => ({
+        accept: 'tree',
+        drop: (item: TreeDropProperties, monitor) => {
+            const clientOffset = monitor.getClientOffset()
+            
+            // get the current bounding box of the map as client pixels
+            const clientRect = mapRef.current!.getMap().getContainer().getBoundingClientRect()
+            const x = clientOffset!.x - clientRect.left
+            const y = clientOffset!.y - clientRect.top
+            const latlng = mapRef.current?.unproject([x, y])
+
+            // build the payload of the new item
+            const payload = {
+                location: latlng!,
+                ...item,
+            }
+            // add the tree to the map
+            //console.log(payload)
+            addNewTree(payload)
+        }
+    }))
+
     return <>
+        <div ref={drop} style={{width: '100%', height: '100%'}}>
         <ReactMap
+            ref={mapRef}
             id={mapId}
             reuseMaps
             preserveDrawingBuffer
@@ -32,7 +69,7 @@ const MainMap: React.FC<React.PropsWithChildren<{mapId: string}>> = ({ mapId, ch
             //mapStyle="mapbox://styles/hydrocode-de/clnzu7dd1000b01pg2eqxcemy"
             mapStyle="mapbox://styles/mapbox/satellite-v9"
             onMove={onMove}
-            onLoad={(e => (window as any).map = e.target)}
+            onLoad={onLoad}
         >   
             {/* The Map observer is added here, as it add needed functionality. But maybe it can also be added at MainPage?! */}
             <MapObserver />
@@ -41,6 +78,7 @@ const MainMap: React.FC<React.PropsWithChildren<{mapId: string}>> = ({ mapId, ch
             <TreeIconLoader />
             { children }
         </ReactMap>
+        </div>
     </>
 }
 
