@@ -10,15 +10,15 @@ const router = createBrowserRouter([
     {
         path: '/',
         element: <DesktopMain />,
-        children: [
-            { 
-                element: <DesktopContentCard />,
-                children: [
-                    {index: true, element: <TreeLineListCard />},
-                    {path: 'detail/:treeId', element: <TreeLineDetailCard />},
-                ]
-            }
-        ]
+        // children: [
+        //     { 
+        //         element: <DesktopContentCard />,
+        //         children: [
+        //             {index: true, element: <TreeLineListCard />},
+        //             {path: 'detail/:treeId', element: <TreeLineDetailCard />},
+        //         ]
+        //     }
+        // ]
     }
 ])
 
