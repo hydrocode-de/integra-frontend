@@ -15,6 +15,7 @@ interface RawTreeLocation {
     treeType: string,
     treeLineId: string,
     age: number,
+    harvestAge?: number
 }
 // new main signal to store rawTreeLocation data which is the single source of truth
 // to where trees are located.
@@ -48,7 +49,7 @@ export const rawTreeFeatures = computed<TreeLocation["features"]>(() => {
             }
         } as TreeLocation["features"][0]
     })
-    console.log(features)
+//    console.log(features)
     return features
 })
 
@@ -62,7 +63,7 @@ export const treeFeatures = computed<TreeLocation["features"]>(() => {
         tree => tree.properties.age! > 0 && 
         (!tree.properties.harvestAge || (tree.properties.harvestAge && tree.properties.age! < tree.properties.harvestAge))
     )
-    console.log(newTrees)
+//    console.log(newTrees)
     return newTrees
 })
 
@@ -80,7 +81,20 @@ export const harvestedTreeFeatures = computed<TreeLocation["features"]>(() => {
     )
 })
 
+// create signals to compute the current edit Settings
+export const editAge = signal<number>(1)
+export const editHarvestAge = signal<number | undefined>(undefined)
+export const editTreeLineId = signal<string>('0')
+
 // add a new tree after the user dropped it on the map
-export const addNewTree = (tree: RawTreeLocation) => {
-    rawTreeLocationSeedData.value = [...rawTreeLocationSeedData.value, {...tree}]
+export const addNewTree = (tree: {location: {lat: number, lng: number}, treeType: string}) => {
+    rawTreeLocationSeedData.value = [
+        ...rawTreeLocationSeedData.value, 
+        {
+            ...tree,
+            age: editAge.peek(),
+            harvestAge: editHarvestAge.peek(),
+            treeLineId: editTreeLineId.peek()
+        }
+    ]
 }

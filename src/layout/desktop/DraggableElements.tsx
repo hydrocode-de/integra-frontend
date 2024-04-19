@@ -2,24 +2,14 @@ import { useEffect, useState } from "react"
 import { Box, Slider, Typography } from "@mui/material"
 
 import DraggableTree  from "../../components/TreeLines/DraggableTree"
-import { loadClosestDataPoint } from "../../appState/backendSignals"
-
+import { editAge } from "../../appState/treeLocationSignals"
 
 const DraggableElements: React.FC = () => {
-    // the intial age can be adjusted?
-    const [age, setAge] = useState<number>(1)
-
-    // debug, to test which data is available as the slider changes
-    useEffect(() => {
-        // load the associated data from memory, whenever age changes and log to console
-        console.log(loadClosestDataPoint('Bergahorn', age))
-    }, [age])
-
     return <>
         {/* Draggable components box */}
         <Box component="div">
             
-            <DraggableTree src="icons/bergahorn-1.png" treeType="Bergahorn" treeLineId="0" age={age} />
+            <DraggableTree treeType="Bergahorn"  age={editAge.value} />
         </Box>
 
         {/* Controls */}
@@ -31,11 +21,11 @@ const DraggableElements: React.FC = () => {
                     min={1}
                     max={100}
                     marks={true}
-                    value={age}
-                    onChange={(e, value) => setAge(value as number)}
+                    value={editAge.value}
+                    onChange={(e, value) => editAge.value = value as number}
                 />
             </Box>
-            <Typography sx={{ml: 1}} variant="body1">{age} years</Typography>
+            <Typography sx={{ml: 1}} variant="body1">{editAge.value} years</Typography>
         </Box>
     </>
 }

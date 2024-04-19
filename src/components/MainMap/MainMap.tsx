@@ -44,10 +44,11 @@ const MainMap: React.FC<React.PropsWithChildren<{mapId: string}>> = ({ mapId, ch
             // build the payload of the new item
             const payload = {
                 location: latlng!,
-                ...item,
+                treeType: item.treeType,
             }
             // add the tree to the map
-            //console.log(payload)
+//            console.log(item)
+//            console.log(payload)
             addNewTree(payload)
         }
     }))
