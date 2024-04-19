@@ -41,6 +41,7 @@ export const app = initializeApp(firebaseConfig);
 // all model data about a tree at a specific age
 export interface TreeDataPoint {
   age: number;
+  harvestAge?: number;
   bhd: number;
   height: number;
   canopyHeight: number;
