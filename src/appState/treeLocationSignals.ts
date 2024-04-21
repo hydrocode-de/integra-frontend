@@ -86,6 +86,7 @@ export const editAge = signal<number>(1)
 export const editHarvestAge = signal<number | undefined>(undefined)
 export const editTreeLineId = signal<string>('0')
 
+
 /**
  *  tree location signal functions
  */
