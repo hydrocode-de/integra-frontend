@@ -31,7 +31,6 @@ export const drawState = signal<DrawState>(DrawState.OFF)
 // main signal to hold the treeLine data
 const rawTreeLineFeatures = signal<TreeLine["features"]>([])
 export const readOnlyRawTreeLineFeatures = computed(() => rawTreeLineFeatures.value)
-export const hasData = computed<boolean>(() => rawTreeLineFeatures.value.length > 0)
 
 // we need the treeLineFeatues twice, as some of the attributes depend on the treeLocation
 // which is a circular dependency that cannot be resolved otherwise
@@ -201,6 +200,11 @@ export const futureTreeLocations = computed<TreeLocation>(() => {
             ...futureTreeFeatures.value
         ]
     }
+})
+
+// Compile information about existing tree locations. They can result from a tree line or be single trees
+export const hasData = computed<boolean>(() => {
+    return treeLocationFeatures.value.length > 0
 })
 
 // add some actions
