@@ -86,6 +86,11 @@ export const editAge = signal<number>(1)
 export const editHarvestAge = signal<number | undefined>(undefined)
 export const editTreeLineId = signal<string>('0')
 
+/**
+ *  tree location signal functions
+ */
+
+
 // add a new tree after the user dropped it on the map
 export const addNewTree = (tree: {location: {lat: number, lng: number}, treeType: string}) => {
     rawTreeLocationSeedData.value = [
@@ -97,4 +102,17 @@ export const addNewTree = (tree: {location: {lat: number, lng: number}, treeType
             treeLineId: editTreeLineId.peek()
         }
     ]
+}
+
+export const updateAllTreeAges = (ageChange: number) => {
+    // build the neww array
+    const newTreeLocations = rawTreeLocationSeedData.peek().map(tree => {
+        return {
+            ...tree,
+            age: tree.age + ageChange
+        }
+    })
+
+    // upade the signal
+    rawTreeLocationSeedData.value = newTreeLocations
 }

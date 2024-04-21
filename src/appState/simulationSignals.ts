@@ -11,6 +11,7 @@ import { layerVisibility } from "./mapSignals";
 import buffer from "@turf/buffer";
 import area from "@turf/area";
 import { TreeLocationProperties } from "./treeLine.model";
+import { updateAllTreeAges } from "./treeLocationSignals";
 
 // the iteration is too important, so we make it private to this module
 const step = signal<number>(0)
@@ -78,6 +79,9 @@ effect(() => {
 
     // update all treeLines accordingly
     updateAllLineAges(ageChange)
+
+    // update all single trees accordingly
+    updateAllTreeAges(ageChange)
 })
 
 // Add some simulation effects here
