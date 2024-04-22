@@ -11,6 +11,7 @@ import { loadClosestDataPoint } from "./backendSignals"
  */
 
 interface RawTreeLocation {
+    id: string,
     location: {lat: number, lng: number},
     treeType: string,
     treeLineId: string,
@@ -33,7 +34,7 @@ export const activeTreeLineIds = computed<string[]>(() => {
 // turn the raw tree locations into a GeoJSON Features
 export const rawTreeFeatures = computed<TreeLocation["features"]>(() => {
     // new container for the features
-    const features = rawTreeLocationSeedData.value.map((tree, index) => {
+    const features = rawTreeLocationSeedData.value.map(tree => {
         return {
             type: 'Feature',
             geometry: {
@@ -41,12 +42,13 @@ export const rawTreeFeatures = computed<TreeLocation["features"]>(() => {
                 coordinates: [tree.location.lng, tree.location.lat]
             },
             properties: {
-                id: index.toString(),
                 treeType: tree.treeType,
                 treeLineId: tree.treeLineId,
+                ...loadClosestDataPoint(tree.treeType, tree.age),
                 age: tree.age,
-                ...loadClosestDataPoint(tree.treeType, tree.age)    
-            }
+                id: tree.id
+            },
+            id: tree.id
         } as TreeLocation["features"][0]
     })
 //    console.log(features)
@@ -94,10 +96,14 @@ export const editTreeLineId = signal<string>('0')
 
 // add a new tree after the user dropped it on the map
 export const addNewTree = (tree: {location: {lat: number, lng: number}, treeType: string}) => {
+    // get the next id
+    const nextId = `s${rawTreeLocationSeedData.peek().length + 1}`
+
     rawTreeLocationSeedData.value = [
-        ...rawTreeLocationSeedData.value, 
+        ...rawTreeLocationSeedData.value,
         {
             ...tree,
+            id: nextId,
             age: editAge.peek(),
             harvestAge: editHarvestAge.peek(),
             treeLineId: editTreeLineId.peek()
@@ -105,6 +111,7 @@ export const addNewTree = (tree: {location: {lat: number, lng: number}, treeType
     ]
 }
 
+// change all tree ages at once
 export const updateAllTreeAges = (ageChange: number) => {
     // build the neww array
     const newTreeLocations = rawTreeLocationSeedData.peek().map(tree => {
@@ -116,4 +123,32 @@ export const updateAllTreeAges = (ageChange: number) => {
 
     // upade the signal
     rawTreeLocationSeedData.value = newTreeLocations
+}
+
+// update tree location position
+export const updateTreePosition = (treeId: string, position: {lon: number, lat: number}) => {
+    // find the tree
+    const tree = rawTreeLocationSeedData.peek().find(t => t.id === treeId)
+
+    // this should never be undefined
+    if (!tree) {
+        console.log(`updateTreePosition(${treeId}): this treeId is not in rawTreeLocationSeedData`)
+        return
+    }
+
+    // create the new state array
+    const newTreeLocationSeeds = rawTreeLocationSeedData.peek().map(t => {
+        if (t.id === treeId) {
+            return {
+                ...t,
+                location: {lat: position.lat, lng: position.lon}
+            }
+        }
+        return {...t}
+    })
+    
+    // console.log(newTreeLocationSeeds)
+
+    // update the signal
+    rawTreeLocationSeedData.value = newTreeLocationSeeds
 }
