@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react"
-import { Box, CardActionArea, Collapse, Slider, Typography } from "@mui/material"
+import { Box, Button, Card, CardActionArea, Collapse, Slider, Typography } from "@mui/material"
 
 import DraggableTree  from "../../components/TreeLines/DraggableTree"
-import { editAge } from "../../appState/treeLocationSignals"
+import { editAge, editTreeLineId } from "../../appState/treeLocationSignals"
 import { useSignal } from "@preact/signals-react"
 import { ExpandLess, ExpandMore } from "@mui/icons-material"
+import { nanoid } from "nanoid"
 
 const DragBox: React.FC<React.PropsWithChildren> = ({children}) => (
     <Box
@@ -19,12 +20,12 @@ const DragBox: React.FC<React.PropsWithChildren> = ({children}) => (
         { children }
     </Box>
 )
-const DraggableElements: React.FC = () => {
+const DraggableElementsCard: React.FC = () => {
     // state to handle card state
     const open = useSignal<boolean>(true)
 
     return <>
-    <Box sx={{mx: 1, m: open.value ? 1 : 0, mb: 0.5}}>
+    <Card sx={{mx: 1, p: open.value ? 2 : 1}}>
         {/* Draggable components box */}
         <CardActionArea onClick={() => (open.value = !open.peek())}>
             <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" m={0}>
@@ -62,9 +63,13 @@ const DraggableElements: React.FC = () => {
                 </Box>
                 <Typography sx={{ml: 1}} variant="body1">{editAge.value} years</Typography>
             </Box>
+
+            <Box sx={{mt: 1, p: 1}}>
+                <Button variant="contained" onClick={() => editTreeLineId.value = nanoid(8)}>Neue Baumline</Button>
+            </Box>
         </Collapse>
-    </Box>
+    </Card>
     </>
 }
 
-export default DraggableElements
+export default DraggableElementsCard
