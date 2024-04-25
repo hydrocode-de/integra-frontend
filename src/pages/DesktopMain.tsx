@@ -1,6 +1,5 @@
 import { AppBar, Box, Card, Drawer, IconButton, MenuItem, MenuList, Toolbar, Typography } from "@mui/material";
 import { DarkMode, LightMode, Menu, ArrowBack } from "@mui/icons-material";
-import { Outlet } from "react-router-dom";
 
 import { useIntegraTheme, useModeToggler } from "../context/IntegraThemeContext";
 import MainMap from "../components/MainMap/MainMap";
@@ -8,8 +7,6 @@ import DrawControl from "../components/MainMap/DrawControl";
 import TreeLineSource from "../components/MainMap/TreeLineSource";
 import { drawState, hasData } from "../appState/treeLineSignals";
 import { DrawState } from "../appState/treeLine.model";
-import DesktopContentCard from "../layout/desktop/DesktopContentCard";
-import TreeLineNewCard from "../layout/desktop/TreeLineNewCard";
 import TreeLineTooltip from "../components/MainMap/TreeLineTooltip";
 import ReferenceAreaSource from "../components/MainMap/ReferenceAreaSource";
 import ProjectSelect from "../components/ProjectSelect";
@@ -17,7 +14,8 @@ import { useSignal } from "@preact/signals-react";
 import MapLayerSwitchButton from "../components/MainMap/MapLayerSwitchButton";
 import SimulationStepSlider from "../components/Simulation/SimulationStepSlider";
 import SimulationResultDetailCard from "../components/Simulation/SimulationResultDetailCard";
-import DraggableElements from "../layout/desktop/DraggableElements";
+import DraggableElementsCard from "../layout/desktop/DraggableElementsCard";
+import SideContent from "../layout/desktop/SideContent";
 
 const DesktopMain: React.FC = () => {
   // get the current theme
@@ -166,10 +164,10 @@ const DesktopMain: React.FC = () => {
             <TreeLineTooltip />
 
             {/* DEV ONLY - put components here that need the map context!! */}
-            <DesktopContentCard noOutlet>
+            <SideContent>
               {/* Some navigation or state logic will be needed around this */}
-              <DraggableElements />
-            </DesktopContentCard>
+              <DraggableElementsCard />
+            </SideContent>
 
           </MainMap>
           

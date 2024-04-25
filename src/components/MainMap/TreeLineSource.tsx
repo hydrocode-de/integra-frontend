@@ -9,7 +9,7 @@ import { fitBounds } from "./MapObservableStore"
 import { canopyLayer } from "../../appState/simulationSignals"
 import { useSignal, useSignalEffect } from "@preact/signals-react"
 import { layerVisibility } from "../../appState/mapSignals"
-import { updateTreePosition } from "../../appState/treeLocationSignals"
+import { calculatedTreeLines, updateTreePosition } from "../../appState/treeLocationSignals"
 
 const TreeLineSource: React.FC = () => {
     // add a state to track if a tree location is currently dragged
@@ -182,6 +182,16 @@ const TreeLineSource: React.FC = () => {
                 paint={{
                     'line-color': 'lime',
                     'line-width': 5,
+                }}
+            />
+        </Source>
+        <Source id="calculated-tree-line" type="geojson" data={calculatedTreeLines.value}>
+            <Layer id="calculated-tree-line" source="calculated-tree-lines" type="line" 
+                paint={{
+                    'line-color': 'lime',
+                    'line-width': 5,
+                    'line-dasharray': [2, 2]
+                    
                 }}
             />
         </Source>
