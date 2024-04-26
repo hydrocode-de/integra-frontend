@@ -10,6 +10,7 @@ import { canopyLayer } from "../../appState/simulationSignals"
 import { useSignal, useSignalEffect } from "@preact/signals-react"
 import { layerVisibility } from "../../appState/mapSignals"
 import { calculatedTreeLines, updateTreePosition } from "../../appState/treeLocationSignals"
+import { setDetailId } from "../../appState/sideContentSignals"
 
 const TreeLineSource: React.FC = () => {
     // add a state to track if a tree location is currently dragged
@@ -73,21 +74,30 @@ const TreeLineSource: React.FC = () => {
     }
 
     // we use two different click handlers as it will get too complex otherwise
-    const handleTreeClick = useCallback((e: MapLayerMouseEvent) => {
-        if (e.features!.length === 0) return
+    // const handleTreeClick = useCallback((e: MapLayerMouseEvent) => {
+    //     if (e.features!.length === 0) return
         
+    //     // get the feature
+    //     const feature = e.features![0] as unknown as TreeLocation["features"][0]
+
+    //     // we want to fly to the bounding box of the treeLINE
+    //     const lineBbox = bbox(treeLines.peek().features.find(f => f.properties.id === feature.properties.treeLineId)!)
+        
+    //     // now fitBounds to the bounding box
+    //     fitBounds(lineBbox as [number, number, number, number])
+
+    //     // navigate to the details
+    //     navigate(`/detail/${feature.properties.treeLineId}`)
+    // }, [navigate])
+    const handleTreeClick = (e: MapLayerMouseEvent) => {
+        if (e.features!.length === 0) return
+
         // get the feature
         const feature = e.features![0] as unknown as TreeLocation["features"][0]
 
-        // we want to fly to the bounding box of the treeLINE
-        const lineBbox = bbox(treeLines.peek().features.find(f => f.properties.id === feature.properties.treeLineId)!)
-        
-        // now fitBounds to the bounding box
-        fitBounds(lineBbox as [number, number, number, number])
-
-        // navigate to the details
-        navigate(`/detail/${feature.properties.treeLineId}`)
-    }, [navigate])
+        // set the detail Id of this tree to make the side content to adjust accordingly
+        setDetailId({treeId: feature.properties.id })
+    }
 
     const handleLineClick = useCallback((e: MapLayerMouseEvent) => {
         if (e.features!.length === 0) return
@@ -151,8 +161,8 @@ const TreeLineSource: React.FC = () => {
             map.current.on('mouseleave', 'tree-locations', handleMouseLeaveTree)
             map.current.on('mouseleave', 'canopy-layer', handleMouseLeaveCanopy)
             // map.current.on('click', 'tree-lines', handleLineClick)
-            // map.current.on('click', 'tree-locations', handleTreeClick)
-            // map.current.on('click', 'canopy-layer', handleTreeClick)
+            map.current.on('click', 'tree-locations', handleTreeClick)
+            map.current.on('click', 'canopy-layer', handleTreeClick)
             map.current.on('mousedown', 'tree-locations', handleDragStart)
             map.current.on('mouseup', handleDragEnd)
             map.current.on('mousemove', handleDragMove)
@@ -167,8 +177,8 @@ const TreeLineSource: React.FC = () => {
             map.current!.off('mouseleave', 'tree-locations', handleMouseLeaveTree)
             map.current!.off('mouseleave', 'canopy-layer', handleMouseLeaveCanopy)
             // map.current!.off('click', 'tree-lines', handleLineClick)
-            // map.current!.off('click', 'tree-locations', handleTreeClick)  // eslint-disable-line
-            // map.current!.off('click', 'canopy-layer', handleTreeClick)
+            map.current!.off('click', 'tree-locations', handleTreeClick)  // eslint-disable-line
+            map.current!.off('click', 'canopy-layer', handleTreeClick)
             map.current!.off('mousedown', 'tree-locations', handleDragStart)
             map.current!.off('mouseup', handleDragEnd)
             map.current!.off('mousemove', handleDragMove)

@@ -16,6 +16,7 @@ import SimulationStepSlider from "../components/Simulation/SimulationStepSlider"
 import SimulationResultDetailCard from "../components/Simulation/SimulationResultDetailCard";
 import DraggableElementsCard from "../layout/desktop/DraggableElementsCard";
 import SideContent from "../layout/desktop/SideContent";
+import SideTreeDetailCard from "../components/TreeLines/SideTreeDetailCard";
 
 const DesktopMain: React.FC = () => {
   // get the current theme
@@ -167,6 +168,8 @@ const DesktopMain: React.FC = () => {
             <SideContent>
               {/* Some navigation or state logic will be needed around this */}
               <DraggableElementsCard />
+
+              <SideTreeDetailCard />
             </SideContent>
 
           </MainMap>

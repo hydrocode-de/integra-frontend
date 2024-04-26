@@ -52,6 +52,7 @@ export const rawTreeFeatures = computed<TreeLocation["features"]>(() => {
                 treeLineId: tree.treeLineId,
                 ...loadClosestDataPoint(tree.treeType, tree.age),
                 age: tree.age,
+                harvestAge: tree.harvestAge,
                 id: tree.id
             },
             id: tree.id
@@ -91,7 +92,7 @@ export const harvestedTreeFeatures = computed<TreeLocation["features"]>(() => {
 
 // create signals to compute the current edit Settings
 export const editAge = signal<number>(1)
-export const editHarvestAge = signal<number | undefined>(undefined)
+export const editHarvestAge = signal<number>(100)
 export const editTreeLineId = signal<string>(nanoid(8))
 
 
@@ -133,10 +134,10 @@ interface TreeLineProperties {
 
 interface CalculatedTreeLineProperties extends TreeLineProperties {
     treeCount?: number,
-    length?: number,
+    lineLength?: number,
 }
 
-type CalculatedTreeLine = GeoJSON.FeatureCollection<GeoJSON.LineString, CalculatedTreeLineProperties>
+export type CalculatedTreeLine = GeoJSON.FeatureCollection<GeoJSON.LineString, CalculatedTreeLineProperties>
 
 const calculatedTreeLineProps = signal<TreeLineProperties[]>([])
 
@@ -200,12 +201,12 @@ export const calculatedTreeLineFeatures = computed<CalculatedTreeLine["features"
             properties: {
                 ...calculatedTreeLineProps.value.filter(line => line.id === lineId)[0],
                 treeCount: trees.length,
-                length: length(line, {units: 'meters'})
+                lineLength: length(line, {units: 'meters'})
             }
         })
     })
 
-    return treeLines
+    return [...treeLines]
 })
 
 export const calculatedTreeLines = computed<CalculatedTreeLine>(() => {
@@ -233,6 +234,31 @@ export const updateAllTreeAges = (ageChange: number) => {
 
     // upade the signal
     rawTreeLocationSeedData.value = newTreeLocations
+}
+
+export const updateSingleTreeSeed = (treeId: string, opts: Partial<RawTreeLocation>) => {
+    // fing the tree in question
+    const tree = rawTreeLocationSeedData.peek().find(t => t.id === treeId)
+
+    // this should never be undefined
+    if (!tree) {
+        console.log(`updateSingleTreeSeed(${treeId}): this treeId is not in rawTreeLocationSeedData`)
+        return
+    }
+
+    // create the new seed array
+    const newTreeLocationSeeds = rawTreeLocationSeedData.peek().map(t => {
+        if (t.id === treeId) {
+            return {
+                ...t,
+                ...opts
+            }
+        }
+        return {...t}
+    })
+
+    // update the signal
+    rawTreeLocationSeedData.value = newTreeLocationSeeds
 }
 
 // update tree location position

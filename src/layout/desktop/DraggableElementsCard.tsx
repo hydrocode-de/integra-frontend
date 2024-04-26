@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react"
-import { Box, Button, Card, CardActionArea, Collapse, Slider, Typography } from "@mui/material"
+import { Box, Button, Card, CardActionArea, Collapse, List, ListItem, Slider, Typography } from "@mui/material"
 
 import DraggableTree  from "../../components/TreeLines/DraggableTree"
-import { editAge, editTreeLineId } from "../../appState/treeLocationSignals"
-import { useSignal } from "@preact/signals-react"
+import { CalculatedTreeLine, calculatedTreeLineFeatures, editAge, editTreeLineId } from "../../appState/treeLocationSignals"
+import { useSignal, useSignalEffect } from "@preact/signals-react"
 import { ExpandLess, ExpandMore } from "@mui/icons-material"
 import { nanoid } from "nanoid"
+import { treeLocationFeatures } from "../../appState/treeLineSignals"
+import TreeLinesOverview from "../../components/TreeLines/TreeLinesOverview"
 
 const DragBox: React.FC<React.PropsWithChildren> = ({children}) => (
     <Box
@@ -49,7 +51,7 @@ const DraggableElementsCard: React.FC = () => {
             </Box>
 
             {/* Controls */}
-            <Box sx={{mt: 1, p: 1}}>
+            {/* <Box sx={{mt: 1, p: 1}}>
                 <Typography variant="body2" id="age-slider">Alter</Typography>
                 <Box display="flex">
                     <Slider 
@@ -62,11 +64,21 @@ const DraggableElementsCard: React.FC = () => {
                     />
                 </Box>
                 <Typography sx={{ml: 1}} variant="body1">{editAge.value} years</Typography>
-            </Box>
+            </Box> */}
 
-            <Box sx={{mt: 1, p: 1}}>
-                <Button variant="contained" onClick={() => editTreeLineId.value = nanoid(8)}>Neue Baumline</Button>
-            </Box>
+            <Typography sx={{mt: 2}} variant="h6">Übersicht</Typography>
+
+
+            {/* { calculatedTreeLineFeatures.value.length > 0 ? (<> */}
+                <Typography sx={{mt: 2}} variant="h6">Baureihen</Typography>
+
+                <TreeLinesOverview /> 
+    
+                <Box sx={{mt: 1, p: 1}}>
+                    <Button variant="contained" onClick={() => editTreeLineId.value = nanoid(8)}>Neue Baumline</Button>
+                </Box>
+                {/* </>) : null} */}
+
         </Collapse>
     </Card>
     </>
