@@ -174,9 +174,12 @@ export const calculatedTreeLineFeatures = computed<CalculatedTreeLine["features"
     // container for the line features
     const treeLines: CalculatedTreeLine["features"] = []
 
+    const allTrees = treeLocationFeatures.value
+    const allLineProperties = calculatedTreeLineProps.value
+
     // for each activeTreeLineId and filter all trees that belong to this line
-    activeTreeLineIds.value.forEach(lineId => {
-        const trees = treeLocationFeatures.value.filter(tree => tree.properties.treeLineId === lineId)
+    activeTreeLineIds.peek().forEach(lineId => {
+        const trees = allTrees.filter(tree => tree.properties.treeLineId === lineId)
 
         if (trees.length < 2) return
         // construct the line from these features
@@ -199,7 +202,7 @@ export const calculatedTreeLineFeatures = computed<CalculatedTreeLine["features"
         treeLines.push({
             ...line,
             properties: {
-                ...calculatedTreeLineProps.value.filter(line => line.id === lineId)[0],
+                ...allLineProperties.find(line => line.id === lineId)!,
                 treeCount: trees.length,
                 lineLength: length(line, {units: 'meters'})
             }
