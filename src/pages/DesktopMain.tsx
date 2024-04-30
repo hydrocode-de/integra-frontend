@@ -155,6 +155,10 @@ const DesktopMain: React.FC = () => {
           </>
         ) : null}
 
+          <SideContent>
+            <DraggableElementsCard />
+            <SideTreeDetailCard />
+          </SideContent>
         
           <MainMap mapId="desktop">
             
@@ -164,16 +168,7 @@ const DesktopMain: React.FC = () => {
             <MapLayerSwitchButton />
             <TreeLineTooltip />
 
-            {/* DEV ONLY - put components here that need the map context!! */}
-            <SideContent>
-              {/* Some navigation or state logic will be needed around this */}
-              <DraggableElementsCard />
-
-              <SideTreeDetailCard />
-            </SideContent>
-
           </MainMap>
-          
 
       </Box>
     </>
