@@ -5,6 +5,7 @@ import { TreeLocation } from "../../appState/treeLine.model";
 import { Box, Card, CardActionArea, Collapse, IconButton, Slider, Typography } from "@mui/material";
 import { Close, ExpandLess, ExpandMore, VisibilityOutlined } from "@mui/icons-material";
 import { flyTo } from "../MainMap/MapObservableStore";
+import StarRating from "../StarRating";
 
 const SideTreeDetailCard: React.FC = () => {
     // state to track if the card is open
@@ -81,6 +82,17 @@ const SideTreeDetailCard: React.FC = () => {
                             wird in {tree.value.properties.harvestAge! - tree.value.properties.age!} Jahren geerntet&nbsp;
                             (mit {tree.value.properties.harvestAge!} Jahren)
                         </Typography>
+
+                        <Typography variant="h6" mt="2">
+                            Schatten
+                        </Typography>
+                        <StarRating value={4} />
+
+                        <Typography variant="h6" mt="2">
+                            Blühangebot
+                        </Typography>
+                        <StarRating value={2.5} />
+
                     </Box>
 
                     {/* <pre><code>{ JSON.stringify(tree, null, 2)}</code></pre> */}
