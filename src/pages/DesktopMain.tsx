@@ -17,6 +17,7 @@ import SimulationResultDetailCard from "../components/Simulation/SimulationResul
 import DraggableElementsCard from "../layout/desktop/DraggableElementsCard";
 import SideContent from "../layout/desktop/SideContent";
 import SideTreeDetailCard from "../components/TreeLines/SideTreeDetailCard";
+import TreeSpeciesSelectionModal from "../components/TreeSpeciesSelectionModal";
 
 const DesktopMain: React.FC = () => {
   // get the current theme
@@ -155,21 +156,20 @@ const DesktopMain: React.FC = () => {
           </>
         ) : null}
 
-          <SideContent>
-            <DraggableElementsCard />
-            <SideTreeDetailCard />
-          </SideContent>
-        
-          <MainMap mapId="desktop">
-            
-            <DrawControl />
-            <TreeLineSource />
-            <ReferenceAreaSource />
-            <MapLayerSwitchButton />
-            <TreeLineTooltip />
+        <SideContent>
+          <DraggableElementsCard />
+          <SideTreeDetailCard />
+        </SideContent>
 
-          </MainMap>
+        <MainMap mapId="desktop">
+          <TreeSpeciesSelectionModal />
 
+          <DrawControl />
+          <TreeLineSource />
+          <ReferenceAreaSource />
+          <MapLayerSwitchButton />
+          <TreeLineTooltip />
+        </MainMap>
       </Box>
     </>
   );
