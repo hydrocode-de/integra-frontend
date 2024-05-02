@@ -1,5 +1,5 @@
-import { useCallback, useEffect } from "react"
-import { Source, Layer, useMap, MapLayerMouseEvent } from "react-map-gl"
+import { useCallback, useEffect, useState } from "react"
+import { Source, Layer, useMap, MapLayerMouseEvent, MapMouseEvent } from "react-map-gl"
 import { useNavigate } from "react-router-dom"
 import bbox from "@turf/bbox"
 
@@ -9,8 +9,13 @@ import { fitBounds } from "./MapObservableStore"
 import { canopyLayer } from "../../appState/simulationSignals"
 import { useSignal, useSignalEffect } from "@preact/signals-react"
 import { layerVisibility } from "../../appState/mapSignals"
+import { calculatedTreeLines, updateTreePosition } from "../../appState/treeLocationSignals"
+import { setDetailId } from "../../appState/sideContentSignals"
 
 const TreeLineSource: React.FC = () => {
+    // add a state to track if a tree location is currently dragged
+    const [draggedTree, setDraggedTree] = useState<string | null>(null)
+
     // get a reference to the map
     const map = useMap()
 
@@ -26,7 +31,8 @@ const TreeLineSource: React.FC = () => {
 
     // define the layer handler functions
     const handleMouseMoveTree = (e: MapLayerMouseEvent) => {
-        map.current!.getCanvas().style.cursor = 'pointer'
+        // map.current!.getCanvas().style.cursor = 'pointer'
+        // map.current!.getCanvas().style.cursor = 'move'
 
         // update the feature state
         if (e.features!.length > 0) {
@@ -58,28 +64,40 @@ const TreeLineSource: React.FC = () => {
         map.current!.getCanvas().style.cursor = ''
 
         canopyLayer.peek().features.forEach(f => map.current!.setFeatureState({source: 'canopy', id: f.properties.id}, {hover: false}))
+        treeLocations.peek().features.forEach(f => map.current!.setFeatureState({source: 'tree-locations', id: f.properties.id}, {hover: false}))
     }
 
     const handleMouseLeaveLine = (e: MapLayerMouseEvent) => {
         map.current!.getCanvas().style.cursor = ''
+
+        treeLocations.peek().features.forEach(f => map.current!.setFeatureState({source: 'tree-locations', id: f.properties.id}, {hover: false}))
     }
 
     // we use two different click handlers as it will get too complex otherwise
-    const handleTreeClick = useCallback((e: MapLayerMouseEvent) => {
-        if (e.features!.length === 0) return
+    // const handleTreeClick = useCallback((e: MapLayerMouseEvent) => {
+    //     if (e.features!.length === 0) return
         
+    //     // get the feature
+    //     const feature = e.features![0] as unknown as TreeLocation["features"][0]
+
+    //     // we want to fly to the bounding box of the treeLINE
+    //     const lineBbox = bbox(treeLines.peek().features.find(f => f.properties.id === feature.properties.treeLineId)!)
+        
+    //     // now fitBounds to the bounding box
+    //     fitBounds(lineBbox as [number, number, number, number])
+
+    //     // navigate to the details
+    //     navigate(`/detail/${feature.properties.treeLineId}`)
+    // }, [navigate])
+    const handleTreeClick = (e: MapLayerMouseEvent) => {
+        if (e.features!.length === 0) return
+
         // get the feature
         const feature = e.features![0] as unknown as TreeLocation["features"][0]
 
-        // we want to fly to the bounding box of the treeLINE
-        const lineBbox = bbox(treeLines.peek().features.find(f => f.properties.id === feature.properties.treeLineId)!)
-        
-        // now fitBounds to the bounding box
-        fitBounds(lineBbox as [number, number, number, number])
-
-        // navigate to the details
-        navigate(`/detail/${feature.properties.treeLineId}`)
-    }, [navigate])
+        // set the detail Id of this tree to make the side content to adjust accordingly
+        setDetailId({treeId: feature.properties.id })
+    }
 
     const handleLineClick = useCallback((e: MapLayerMouseEvent) => {
         if (e.features!.length === 0) return
@@ -98,6 +116,40 @@ const TreeLineSource: React.FC = () => {
     }, [navigate])
 
 
+    // dragging functionality
+    const handleDragStart = (e: MapLayerMouseEvent) => {
+        // check that there is a feature being dragged
+        if (e.features!.length === 0) return
+
+        // get the feature to store its id
+        const feature = e.features![0] as unknown as TreeLocation["features"][0]
+        (window as any).dragged = feature.properties.id
+        setDraggedTree(feature.properties.id)
+        map.current!.getMap().dragPan.disable()
+
+        // set the cursor to grabbing
+        map.current!.getCanvas().style.cursor = 'grabbing'
+    }
+
+    const handleDragEnd = () => {
+        (window as any).dragged = null
+        setDraggedTree(null)
+        map.current!.getCanvas().style.cursor = ''
+        map.current!.getMap().dragPan.enable()
+    }
+
+    const handleDragMove = useCallback((e: MapMouseEvent) => {
+        if (!(window as any).dragged) return
+        // if (!draggedTree) return
+        e.preventDefault()
+        // move the tree location which is marked as active dragging
+        updateTreePosition((window as any).dragged, { lon: e.lngLat.lng, lat: e.lngLat.lat })
+    }, [draggedTree])
+
+    // dev only
+    useEffect(() => console.log(`draggedTree: ${draggedTree}`), [draggedTree])
+
+
     // effect to subscribe to the map mousemove event
     useEffect(() => {
         // subscribe to mousemove event on the layers
@@ -108,9 +160,12 @@ const TreeLineSource: React.FC = () => {
             map.current.on('mouseleave', 'tree-lines', handleMouseLeaveLine)
             map.current.on('mouseleave', 'tree-locations', handleMouseLeaveTree)
             map.current.on('mouseleave', 'canopy-layer', handleMouseLeaveCanopy)
-            map.current.on('click', 'tree-lines', handleLineClick)
+            // map.current.on('click', 'tree-lines', handleLineClick)
             map.current.on('click', 'tree-locations', handleTreeClick)
             map.current.on('click', 'canopy-layer', handleTreeClick)
+            map.current.on('mousedown', 'tree-locations', handleDragStart)
+            map.current.on('mouseup', handleDragEnd)
+            map.current.on('mousemove', handleDragMove)
         }
 
         // unsubscribe from events
@@ -121,9 +176,12 @@ const TreeLineSource: React.FC = () => {
             map.current!.off('mouseleave', 'tree-lines', handleMouseLeaveLine)
             map.current!.off('mouseleave', 'tree-locations', handleMouseLeaveTree)
             map.current!.off('mouseleave', 'canopy-layer', handleMouseLeaveCanopy)
-            map.current!.off('click', 'tree-lines', handleLineClick)
+            // map.current!.off('click', 'tree-lines', handleLineClick)
             map.current!.off('click', 'tree-locations', handleTreeClick)  // eslint-disable-line
             map.current!.off('click', 'canopy-layer', handleTreeClick)
+            map.current!.off('mousedown', 'tree-locations', handleDragStart)
+            map.current!.off('mouseup', handleDragEnd)
+            map.current!.off('mousemove', handleDragMove)
         }
     }, [])  // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -134,6 +192,16 @@ const TreeLineSource: React.FC = () => {
                 paint={{
                     'line-color': 'lime',
                     'line-width': 5,
+                }}
+            />
+        </Source>
+        <Source id="calculated-tree-line" type="geojson" data={calculatedTreeLines.value}>
+            <Layer id="calculated-tree-line" source="calculated-tree-lines" type="line" 
+                paint={{
+                    'line-color': 'lime',
+                    'line-width': 5,
+                    'line-dasharray': [2, 2]
+                    
                 }}
             />
         </Source>
@@ -151,7 +219,8 @@ const TreeLineSource: React.FC = () => {
                 layout={{'visibility': canopyIsVisible.value ? 'visible' : 'visible'}}
                 paint={{
                     "circle-color": "black",
-                    "circle-radius": 5
+                    //"circle-radius": ['case', ['boolean', ['feature-state', 'hover'], false], 12, 5],
+                    "circle-radius": ['case', ['boolean', ['feature-state', 'hover'], false], 6, 5]
                 }}
             />
         </Source>

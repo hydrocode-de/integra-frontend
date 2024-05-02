@@ -1,6 +1,5 @@
 import { AppBar, Box, Card, Drawer, IconButton, MenuItem, MenuList, Toolbar, Typography } from "@mui/material";
 import { DarkMode, LightMode, Menu, ArrowBack } from "@mui/icons-material";
-import { Outlet } from "react-router-dom";
 
 import { useIntegraTheme, useModeToggler } from "../context/IntegraThemeContext";
 import MainMap from "../components/MainMap/MainMap";
@@ -8,8 +7,6 @@ import DrawControl from "../components/MainMap/DrawControl";
 import TreeLineSource from "../components/MainMap/TreeLineSource";
 import { drawState, hasData } from "../appState/treeLineSignals";
 import { DrawState } from "../appState/treeLine.model";
-import DesktopContentCard from "../layout/desktop/DesktopContentCard";
-import TreeLineNewCard from "../layout/desktop/TreeLineNewCard";
 import TreeLineTooltip from "../components/MainMap/TreeLineTooltip";
 import ReferenceAreaSource from "../components/MainMap/ReferenceAreaSource";
 import ProjectSelect from "../components/ProjectSelect";
@@ -17,6 +14,9 @@ import { useSignal } from "@preact/signals-react";
 import MapLayerSwitchButton from "../components/MainMap/MapLayerSwitchButton";
 import SimulationStepSlider from "../components/Simulation/SimulationStepSlider";
 import SimulationResultDetailCard from "../components/Simulation/SimulationResultDetailCard";
+import DraggableElementsCard from "../layout/desktop/DraggableElementsCard";
+import SideContent from "../layout/desktop/SideContent";
+import SideTreeDetailCard from "../components/TreeLines/SideTreeDetailCard";
 
 const DesktopMain: React.FC = () => {
   // get the current theme
@@ -97,17 +97,18 @@ const DesktopMain: React.FC = () => {
       </Drawer>
 
       <Box width="100vw" height="calc(100vh - 64px)" m="0" p="0" display="flex">
+        {/* DEV ONLY  uncomment the old navigation logic. The components are still there, but we do not use them */}
         {/*
          * Navigation children can be placed on top of the map this way
          * Only show if the draw Mode is OFF. This feels a bit hacky...
          */}
-        {drawState.value !== DrawState.OFF ? (
+        {/* {drawState.value !== DrawState.OFF ? (
           <DesktopContentCard noOutlet>
             <TreeLineNewCard />
           </DesktopContentCard>
         ) : (
           <Outlet />
-        )}
+        )} */}
 
         {/* Only render the simulation cards if there is data and no editing */}
         {hasData.value && drawState.value === DrawState.OFF ? (
@@ -154,13 +155,21 @@ const DesktopMain: React.FC = () => {
           </>
         ) : null}
 
-        <MainMap mapId="desktop">
-          <DrawControl />
-          <TreeLineSource />
-          <ReferenceAreaSource />
-          <MapLayerSwitchButton />
-          <TreeLineTooltip />
-        </MainMap>
+          <SideContent>
+            <DraggableElementsCard />
+            <SideTreeDetailCard />
+          </SideContent>
+        
+          <MainMap mapId="desktop">
+            
+            <DrawControl />
+            <TreeLineSource />
+            <ReferenceAreaSource />
+            <MapLayerSwitchButton />
+            <TreeLineTooltip />
+
+          </MainMap>
+
       </Box>
     </>
   );

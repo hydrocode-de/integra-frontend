@@ -11,6 +11,7 @@ import { loadClosestDataPoint } from "./backendSignals"
 import lineIntersect from "@turf/line-intersect"
 import buffer from "@turf/buffer"
 import pointsWithinPolygon from "@turf/points-within-polygon"
+import { futureTreeFeatures, treeFeatures } from "./treeLocationSignals"
 
 // make the last edit settings publicly available
 export const lastEditSettings = signal<TreeEditSettings>({
@@ -30,7 +31,6 @@ export const drawState = signal<DrawState>(DrawState.OFF)
 // main signal to hold the treeLine data
 const rawTreeLineFeatures = signal<TreeLine["features"]>([])
 export const readOnlyRawTreeLineFeatures = computed(() => rawTreeLineFeatures.value)
-export const hasData = computed<boolean>(() => rawTreeLineFeatures.value.length > 0)
 
 // we need the treeLineFeatues twice, as some of the attributes depend on the treeLocation
 // which is a circular dependency that cannot be resolved otherwise
@@ -168,8 +168,16 @@ export const nonOverlappingTreeLocations = computed(() => {
 
 // If we want to disable the non-overlap feature, we can build a logic here, that uses allTreeLocationFeatures
 // sort the nonOverlappingTreeLocationFeatures that currently exist and the ones that will be tere in the future
-export const treeLocationFeatures = computed<TreeLocation["features"]>(() => nonOverlappingTreeLocations.value.filter(tree => tree.properties.age! > 0))
+const lineTreeLocationFeatures = computed<TreeLocation["features"]>(() => nonOverlappingTreeLocations.value.filter(tree => tree.properties.age! > 0))
 const futureLocationFeatures = computed<TreeLocation["features"]>(() => nonOverlappingTreeLocations.value.filter(tree => tree.properties.age! <= 0))
+
+// merge together with the single trees
+export const treeLocationFeatures = computed<TreeLocation["features"]>(() => {
+    return [
+        ...lineTreeLocationFeatures.value,
+        ...treeFeatures.value
+    ]
+})
 
 // export the treeLocations as a valid geoJSON
 export const treeLocations = computed<TreeLocation>(() => {
@@ -187,8 +195,16 @@ export const treeLocations = computed<TreeLocation>(() => {
 export const futureTreeLocations = computed<TreeLocation>(() => {
     return {
         type: "FeatureCollection",
-        features: futureLocationFeatures.value
+        features: [
+            ...futureLocationFeatures.value,
+            ...futureTreeFeatures.value
+        ]
     }
+})
+
+// Compile information about existing tree locations. They can result from a tree line or be single trees
+export const hasData = computed<boolean>(() => {
+    return treeLocationFeatures.value.length > 0
 })
 
 // add some actions

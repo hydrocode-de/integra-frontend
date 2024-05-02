@@ -41,6 +41,7 @@ export const app = initializeApp(firebaseConfig);
 // all model data about a tree at a specific age
 export interface TreeDataPoint {
   age: number;
+  harvestAge?: number;
   bhd: number;
   height: number;
   canopyHeight: number;
@@ -48,6 +49,7 @@ export interface TreeDataPoint {
   agb: number;
   carbon: number;
   image: string;
+  filename: string;
 }
 
 // first some Baumarten
@@ -160,6 +162,7 @@ const parseTreeData = (data: unknown[]): TreeData[] => {
         agb: row.AGB,
         carbon: row.Kohlenstoffgehalt,
         image: row.image || "default-tree.png",
+        filename: row.image || "default-tree.png",
       });
     }
   });

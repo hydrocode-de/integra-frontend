@@ -6,11 +6,12 @@
  */
 
 import { batch, computed, effect, signal } from "@preact/signals-react";
-import { updateAllLineAges, readOnlyRawTreeLineFeatures, treeLocationFeatures } from "./treeLineSignals";
+import { updateAllLineAges, treeLocationFeatures } from "./treeLineSignals";
 import { layerVisibility } from "./mapSignals";
 import buffer from "@turf/buffer";
 import area from "@turf/area";
 import { TreeLocationProperties } from "./treeLine.model";
+import { updateAllTreeAges } from "./treeLocationSignals";
 
 // the iteration is too important, so we make it private to this module
 const step = signal<number>(0)
@@ -78,6 +79,9 @@ effect(() => {
 
     // update all treeLines accordingly
     updateAllLineAges(ageChange)
+
+    // update all single trees accordingly
+    updateAllTreeAges(ageChange)
 })
 
 // Add some simulation effects here
@@ -90,7 +94,7 @@ export const simulationIsTouched = computed<boolean>(() => simulationStep.value.
 // if the simulation is Touched and there is more than one tree, we enable the option
 // to visualize the canopy instead of a circle layer
 effect(() => {
-    if (simulationIsTouched.value && readOnlyRawTreeLineFeatures.value.length > 0) {
+    if (simulationIsTouched.value && treeLocationFeatures.value.length > 0) {
         // check if is already there
         if (!Object.keys(layerVisibility.peek()).includes("canopyLayer")) {
             // enable the open by setting the layer visibility
@@ -101,7 +105,7 @@ effect(() => {
     }
 
     // remove the layer switch possibility if there are no features
-    if (readOnlyRawTreeLineFeatures.value.length === 0 && Object.keys(layerVisibility.peek()).includes("canopyLayer")) {
+    if (treeLocationFeatures.value.length === 0 && Object.keys(layerVisibility.peek()).includes("canopyLayer")) {
         // remove the option
         const { "canopyLayer": _, ...others } = layerVisibility.peek()
         layerVisibility.value = others

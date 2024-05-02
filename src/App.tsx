@@ -14,6 +14,8 @@ import "./appState/backendSignals"
 // the two main anchor sites for the two app routes (Mobile / Desktop)
 import DesktopNavigation from "./layout/DesktopNavigation"
 import MobileNavigation from "./layout/MobileNavigation"
+import { DndProvider } from "react-dnd"
+import { HTML5Backend } from "react-dnd-html5-backend"
 
 
 export const App = () => {
@@ -33,9 +35,11 @@ export const App = () => {
       <CssBaseline />
 
       
-      <MapProvider>
-        {isMobile || windowWidth < 768 ? <MobileNavigation /> : <DesktopNavigation /> }
-      </MapProvider>
+      <DndProvider backend={HTML5Backend}>
+        <MapProvider>
+          {isMobile || windowWidth < 768 ? <MobileNavigation /> : <DesktopNavigation /> }
+        </MapProvider>
+      </DndProvider>
 
     </IntegraThemeProvider>
   </>
