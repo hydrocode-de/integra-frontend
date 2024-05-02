@@ -17,7 +17,7 @@ import SimulationResultDetailCard from "../components/Simulation/SimulationResul
 import DraggableElementsCard from "../layout/desktop/DraggableElementsCard";
 import SideContent from "../layout/desktop/SideContent";
 import SideTreeDetailCard from "../components/TreeLines/SideTreeDetailCard";
-import TreeSpeciesSelectionModal from "../components/TreeSpeciesSelectionModal";
+import TreeSpeciesSelectionModal from "../components/treeSpeciesSelection/TreeSpeciesSelectionModal";
 
 const DesktopMain: React.FC = () => {
   // get the current theme
