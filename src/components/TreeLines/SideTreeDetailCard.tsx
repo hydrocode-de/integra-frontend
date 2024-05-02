@@ -43,40 +43,44 @@ const SideTreeDetailCard: React.FC = () => {
     if (!tree.value) return null
 
     return <>
-        <Card sx={{mt: 1, mx: 1, p: open.value ? 2 : 1}}>
+        <Card sx={{mt: 1, width:"100%", mx: 1, p: open.value ? 2 : 1}}>
             <Box display="flex">
-                <IconButton onClick={handleView} size="small">
-                    <VisibilityOutlined />
-                </IconButton>
+      
 
                 <CardActionArea onClick={() => open.value =!open.peek()}>
-                    <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" m={0}>
+                    <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" m={0} pr={1}>
                         <Typography variant={open.value ? "h6" : "body1"} my="auto">
                             { tree.value.properties.treeType }
                         </Typography>
                         { open.value ? <ExpandLess /> : <ExpandMore /> }
                     </Box>
                 </CardActionArea>
-
+                <IconButton onClick={handleView} size="small">
+                    <VisibilityOutlined />
+                </IconButton>
                 <IconButton onClick={handleClose} size="small">
                     <Close />
                 </IconButton>
             </Box>
 
             <Collapse in={open.value}>
-                <Box sx={{overflowY: 'scroll', p: 1}}>
+                <Box sx={{p: 1}}>
                     {/* Create a silder to adjust the age and harvest Age */}
-                    <Box sx={{p: 1}}>
-                        <Typography variant="h6">Planung</Typography>
+                    <Box>
+                        <Typography variant="body1">Planung</Typography>
+                        <Box>
+
                         <Slider 
-                            min={1}
-                            max={100}
-                            value={[tree.value.properties.age || 1, tree.value.properties.harvestAge || 60]}
-                            onChange={(e, v) => {updateSingleTreeSeed(
-                                tree.peek()!.id!.toString(), 
-                                {age: (v as number[])[0], harvestAge: (v as number[])[1]}
-                            )}}
+                        sx={{mx:1, width:"90%"}} 
+                        min={1}
+                        max={100}
+                        value={[tree.value.properties.age || 1, tree.value.properties.harvestAge || 60]}
+                        onChange={(e, v) => {updateSingleTreeSeed(
+                            tree.peek()!.id!.toString(), 
+                            {age: (v as number[])[0], harvestAge: (v as number[])[1]}
+                        )}}
                         />
+                        </Box>
                         <Typography variant="caption">
                             {tree.value.properties.treeType} ({tree.value.properties.age} Jahre)&nbsp;
                             wird in {tree.value.properties.harvestAge! - tree.value.properties.age!} Jahren geerntet&nbsp;
