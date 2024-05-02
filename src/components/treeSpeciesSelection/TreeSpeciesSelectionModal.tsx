@@ -1,6 +1,7 @@
-import { Box, Modal, Rating, Typography } from "@mui/material";
+import { Box, Icon, Modal, Rating, Slider, Typography } from "@mui/material";
 import React from "react";
 import DraggableTree from "../TreeLines/DraggableTree";
+import { Check, Circle, CircleOutlined, MonetizationOn } from "@mui/icons-material";
 
 const treeZoneStyle = {
   display: "flex",
@@ -76,10 +77,10 @@ const TreeSpeciesSelectionModal: React.FC = () => {
           </Box>
         </Box>
         <Typography sx={{ mb: 1, mt: 4 }} variant="h6">
-          Bergahorn Steckbrief
+          Feldahorn (Acer campestre)
         </Typography>
-        <Box sx={{ display: "flex" }}>
-          <div>
+        <Box sx={{ display: "flex", maxWidth: 700 }}>
+          {/* <div>
             <Box
               sx={{
                 p: 2,
@@ -90,34 +91,132 @@ const TreeSpeciesSelectionModal: React.FC = () => {
             >
               <DraggableTree treeType="Bergahorn" age={50} />
             </Box>
-          </div>
+          </div> */}
           <Typography variant="body2">
-            Der Bergahorn (Acer pseudoplatanus) ist eine Pflanzenart aus der Gattung der Ahorne (Acer) in der Familie
-            der Seifenbaumgewächse (Sapindaceae). Er ist in Europa heimisch und wird auch Berg-, Wiesen- oder Waldahorn
-            genannt. Der Bergahorn ist ein sommergrüner Baum, der Wuchshöhen von bis zu 30 Metern und Stammdurchmesser
-            von bis zu 1,5 Metern erreichen kann. Der Bergahorn ist einhäusig getrenntgeschlechtig (monözisch), das
-            heißt, männliche und weibliche Blüten sitzen auf ein und derselben Pflanze. Die Blütezeit reicht von April
-            bis Mai. Die Früchte sind geflügelte Nüsschen, die in Paaren zusammenstehen und im Herbst reifen.
+            Der Feldahorn (Acer campestre) eignet sich sehr gut für die Stammholzproduktion oder den Einsatz als
+            Heckenpflanze in Agroforstsystemen. Der Feldahorn hat einen langsamen Wuchs und erreicht eine maximale Höhe
+            von 28 m. Er stellt geringe Ansprüche an den Standort. Der Feldahorn hat eine vielseitige ökologische
+            Bedeutung. Sein leicht abbaubares Laub fördert die Humusbildung und dient als hochwertiges Futter für
+            Insekten und Vögel. Es kann ebenfalls als Futter für Nutztiere verwendet werden.
           </Typography>
         </Box>
-        <Box sx={{ mt: 4, width: 400 }}>
-          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-            <Typography sx={{ mb: 1, mr: 1 }} variant="subtitle1">
-              Standort
-            </Typography>
-            <Rating name="read-only" value={4} readOnly />
+        <Box sx={{ display: "flex", mt: 4 }}>
+          <Box sx={{ borderRadius: 2, px: 4, py: 3, bgcolor: "grey.100", width: "40%" }}>
+            <Typography variant="h6">Standortansprüche</Typography>
+            <Box mt={1}>
+              <Typography sx={{}} variant="subtitle1">
+                Niederschlag (mm)
+              </Typography>
+              <Slider
+                min={100}
+                max={1000}
+                // valueLabelDisplay="on"
+                value={[500, 1000]}
+                disabled
+                marks={[
+                  {
+                    value: 100,
+                    label: "100",
+                  },
+                  {
+                    value: 300,
+                    label: "300",
+                  },
+                  {
+                    value: 600,
+                    label: "600",
+                  },
+                  {
+                    value: 900,
+                    label: "900",
+                  },
+                ]}
+              />
+            </Box>
+            <Box mt={1}>
+              <Typography variant="subtitle1">Bodenfeuchte (m³/m³)</Typography>
+              <Slider
+                min={100}
+                max={1000}
+                // valueLabelDisplay="on"
+                value={[300, 500]}
+                disabled
+                marks={[
+                  {
+                    value: 100,
+                    label: "100",
+                  },
+                  {
+                    value: 300,
+                    label: "300",
+                  },
+                  {
+                    value: 600,
+                    label: "600",
+                  },
+                  {
+                    value: 900,
+                    label: "900",
+                  },
+                ]}
+              />
+            </Box>
+            <Box mt={1}>
+              <Typography sx={{}} variant="subtitle1">
+                pH-Wert
+              </Typography>
+              <Slider
+                min={100}
+                max={1000}
+                // valueLabelDisplay="on"
+                value={[500, 800]}
+                disabled
+                marks={[
+                  {
+                    value: 100,
+                    label: "100",
+                  },
+                  {
+                    value: 300,
+                    label: "300",
+                  },
+                  {
+                    value: 600,
+                    label: "600",
+                  },
+                  {
+                    value: 900,
+                    label: "900",
+                  },
+                ]}
+              />
+            </Box>
           </Box>
-          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-            <Typography sx={{ mb: 1, mr: 1 }} variant="subtitle1">
-              Ökologischer Nutzen
+          <Box sx={{ borderRadius: 2, ml: 4, px: 4, py: 3, bgcolor: "grey.100", width: "40%" }}>
+            <Typography mb={2} variant="h6">
+              Nutzungsmöglichkeiten
             </Typography>
-            <Rating name="read-only" value={4} readOnly />
-          </Box>
-          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-            <Typography sx={{ mb: 1, mr: 1 }} variant="subtitle1">
-              Wirtschaftlicher Nutzen
-            </Typography>
-            <Rating name="read-only" value={4} readOnly />
+            <Box sx={{ display: "flex", pb: 2 }}>
+              <MonetizationOn />
+              <Typography pl={1} flex={1} variant="subtitle1">
+                Wertholz
+              </Typography>
+              <Check />
+            </Box>
+            <Box sx={{ display: "flex", pb: 2 }}>
+              <MonetizationOn />
+              <Typography pl={1} flex={1} variant="subtitle1">
+                Biomasse / Kurzumtrieb
+              </Typography>
+              <CircleOutlined sx={{ m: "auto" }} />
+            </Box>
+            <Box sx={{ display: "flex", pb: 2 }}>
+              <MonetizationOn />
+              <Typography pl={1} flex={1} variant="subtitle1">
+                Bienenweide
+              </Typography>
+              <CircleOutlined sx={{ m: "auto" }} />
+            </Box>
           </Box>
         </Box>
       </Box>
