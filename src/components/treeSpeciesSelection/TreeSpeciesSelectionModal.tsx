@@ -1,7 +1,7 @@
-import { Box, Modal, Slider, Typography } from "@mui/material";
+import { Box, Modal, Typography } from "@mui/material";
 import React from "react";
 import DraggableTree from "../TreeLines/DraggableTree";
-import { Check, CircleOutlined, EmojiNature, EuroRounded, ForestRounded, MonetizationOn } from "@mui/icons-material";
+import { EmojiNature, EuroRounded, ForestRounded } from "@mui/icons-material";
 import StandortValueRange from "./StandortSlider";
 import NutzungsChecker from "./NutzungsChecker";
 

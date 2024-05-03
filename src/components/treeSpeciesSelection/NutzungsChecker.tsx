@@ -1,6 +1,6 @@
-import { Box, Modal, Slider, Typography } from "@mui/material";
-import { Check, CircleOutlined, Close, EuroRounded, MonetizationOn } from "@mui/icons-material";
-import { ReactElement, ReactNode } from "react";
+import { Box, Typography } from "@mui/material";
+import { Check, CircleOutlined, Close } from "@mui/icons-material";
+import { ReactElement } from "react";
 
 const NutzungsChecker = ({
   label,
