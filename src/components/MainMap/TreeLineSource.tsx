@@ -6,15 +6,39 @@ import bbox from "@turf/bbox"
 import { treeLines, treeLocations } from "../../appState/treeLineSignals"
 import { TreeLine, TreeLocation } from "../../appState/treeLine.model"
 import { fitBounds } from "./MapObservableStore"
-import { canopyLayer } from "../../appState/simulationSignals"
+import { canopyLayer, currentSeason } from "../../appState/simulationSignals"
 import { useSignal, useSignalEffect } from "@preact/signals-react"
 import { layerVisibility } from "../../appState/mapSignals"
 import { calculatedTreeLines, updateTreePosition } from "../../appState/treeLocationSignals"
 import { setDetailId } from "../../appState/sideContentSignals"
+import { ageToSize } from "../../appState/backendSignals"
 
 const TreeLineSource: React.FC = () => {
     // add a state to track if a tree location is currently dragged
     const [draggedTree, setDraggedTree] = useState<string | null>(null)
+
+    // map the treeLocation into the new treeLocationData that maps the current season data to the treeLocations to load the corrent image
+    const [treeLocationData, setTreeLocationData] = useState<TreeLocation>({type: "FeatureCollection", features: []})
+
+    useSignalEffect(() => {
+        // get the season
+        const season = currentSeason.value
+        
+        const newFeatures = treeLocations.value.features.map(f => {
+            const size = ageToSize(f.properties.age!)
+            
+            return {
+                ...f,
+                properties: {
+                    ...f.properties,
+                    image: `${f.properties.treeShape}_${size}_${season}.png`
+                }
+            }
+        })
+
+        // Set the new Data
+        setTreeLocationData({type: "FeatureCollection", features: newFeatures})
+    })
 
     // get a reference to the map
     const map = useMap()
@@ -205,13 +229,22 @@ const TreeLineSource: React.FC = () => {
                 }}
             />
         </Source>
-        <Source id="tree-locations" type="geojson" data={treeLocations.value} generateId>
+        {/* <Source id="tree-locations" type="geojson" data={treeLocations.value} generateId> */}
+        <Source id="tree-locations" type="geojson" data={treeLocationData} generateId>
             <Layer id="tree-locations" source="tree-locations" type="symbol"
                 layout={{
                     'visibility': canopyIsVisible.value ? 'visible' : 'visible',
                     'icon-image': ['coalesce', ['get', 'image'], 'default'],
                     'icon-anchor': 'bottom',
-                    //'icon-size': ['case', ['boolean', ['feature-state', 'hover'], false], 1.1, 1],
+                    'icon-size': [
+                        'interpolate',
+                        ['linear'],
+                        ['get', 'height'],
+                        0,
+                        0.15,
+                        25,
+                        1
+                    ],
                 }}
             />
             <Layer id="canopy-center-layer" source="tree-locations" type="circle"
