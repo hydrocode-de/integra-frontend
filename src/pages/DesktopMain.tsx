@@ -110,9 +110,6 @@ const DesktopMain: React.FC = () => {
           <Outlet />
         )} */}
 
-        {/* Only render the simulation cards if there is data and no editing */}
-        {hasData.value && drawState.value === DrawState.OFF ? (
-          <>
             {/* add the simulation slider */}
             <Box
               minWidth="256px"
@@ -129,7 +126,9 @@ const DesktopMain: React.FC = () => {
                 <SimulationStepSlider />
               </Card>
             </Box>
-
+            
+          {/* Only render the simulation cards if there is data and no editing */}
+          {hasData.value && drawState.value === DrawState.OFF ? (<>
             {/* add the statistics card */}
             <Box
               // width="calc(100% - 350px - 10px - 100px)"
