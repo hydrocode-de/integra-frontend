@@ -44,22 +44,33 @@ const TreeSpeciesSelectionModal: React.FC = () => {
           p: 4,
         }}
       >
-        <Typography sx={{ mb: 1 }} variant="h6">
+        <Typography sx={{ mb: 1 }} variant="h5">
           Deine Baumarten
         </Typography>
         <Box
           sx={{
-            border: "3px dashed",
-            borderColor: "grey.200",
+            border: "2px dashed",
+            borderColor: "grey.400",
             borderRadius: 2,
             bgcolor: "grey.100",
             // width: "100%",
             height: "100px",
             display: "flex",
           }}
-        ></Box>
-        <Typography sx={{ mb: 1, mt: 4 }} variant="h6">
-          Entdecke weiter Baumarten
+        >
+          <Typography
+            sx={{
+              // position: "absolute",
+              textAlign: "center",
+              margin: "auto",
+            }}
+            color="GrayText"
+          >
+            Hier kannst du deine Baumarten platzieren
+          </Typography>
+        </Box>
+        <Typography sx={{ mb: 1, mt: 4 }} variant="h6" color="GrayText">
+          Entdecke weitere Baumarten
         </Typography>
         <Box
           sx={{
