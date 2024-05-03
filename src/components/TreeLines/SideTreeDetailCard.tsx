@@ -1,8 +1,8 @@
 import { useSignal, useSignalEffect } from "@preact/signals-react";
 import { activeTreeDetailId, setDetailId } from "../../appState/sideContentSignals";
-import { treeFeatures, updateSingleTreeSeed } from "../../appState/treeLocationSignals";
+import { rawTreeFeatures, treeFeatures, updateSingleTreeSeed } from "../../appState/treeLocationSignals";
 import { TreeLocation } from "../../appState/treeLine.model";
-import { Box, Card, CardActionArea, Collapse, IconButton, Slider, Typography } from "@mui/material";
+import { Box, Card, CardActionArea, Chip, Collapse, IconButton, Slider, Typography } from "@mui/material";
 import { Close, ExpandLess, ExpandMore, VisibilityOutlined } from "@mui/icons-material";
 import { flyTo } from "../MainMap/MapObservableStore";
 import StarRating from "../StarRating";
@@ -18,7 +18,7 @@ const SideTreeDetailCard: React.FC = () => {
     // listen to changes in the activeTreeDetailId signal
     useSignalEffect(() => {
         if (activeTreeDetailId.value) {
-            tree.value = treeFeatures.value.filter(f => f.id === activeTreeDetailId.peek())[0]
+            tree.value = rawTreeFeatures.value.filter(f => f.id === activeTreeDetailId.peek())[0]
         } else {
             tree.value = undefined
         }
@@ -66,6 +66,16 @@ const SideTreeDetailCard: React.FC = () => {
 
             <Collapse in={open.value}>
                 <Box sx={{overflowY: 'scroll', p: 1}}>
+                    {/* Place chips to inform if the Tree actually exists */}
+                    { tree.value.properties.age! > 0 ? (
+                        tree.value.properties.harvestAge! > tree.value.properties.age! ? (
+                            <Chip label="wächst" color="warning" variant="outlined" />
+                        ) : (
+                            <Chip label={`geerntet nach ${tree.value.properties.harvestAge} Jahren`} color="success" variant="outlined" />
+                        )
+                    ) : <Chip label="in Planung" color="info" variant="outlined" /> }
+
+
                     {/* Create a silder to adjust the age and harvest Age */}
                     <Box sx={{p: 1}}>
                         <Typography variant="h6">Planung</Typography>
@@ -81,7 +91,7 @@ const SideTreeDetailCard: React.FC = () => {
                             onChange={(e, v) => {updateSingleTreeSeed(
                                 tree.peek()!.id!.toString(), 
                                 {
-                                    age: simulationStep.peek().current - (v as number[])[0], 
+                                    age: simulationStep.peek().current - (v as number[])[0],
                                     harvestAge: ((v as number[])[1] + tree.peek()?.properties.age!) - simulationStep.peek().current
                                 }
                             )}}
