@@ -17,6 +17,7 @@ import SimulationResultDetailCard from "../components/Simulation/SimulationResul
 import DraggableElementsCard from "../layout/desktop/DraggableElementsCard";
 import SideContent from "../layout/desktop/SideContent";
 import SideTreeDetailCard from "../components/TreeLines/SideTreeDetailCard";
+import { zoom } from "../appState/mapSignals";
 
 const DesktopMain: React.FC = () => {
   // get the current theme
@@ -48,9 +49,9 @@ const DesktopMain: React.FC = () => {
               INTEGRA
             </Typography>
 
-            {/* <Typography variant="h6" component="div" sx={{flexFlow: 1, mr: 2}}>
-                        Lng: {center.lng} Lat: {center.lat} Zoom: {zoom}
-                    </Typography> */}
+            <Typography variant="h6" component="div" sx={{flexFlow: 1, mr: 2}}>
+              Zoom: {zoom}
+            </Typography>
 
             <ProjectSelect />
             <IconButton
