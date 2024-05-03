@@ -42,11 +42,11 @@ const DraggableElementsCard: React.FC = () => {
             <Box component="div" display="flex" flexDirection="row">
                 
                 <DragBox>
-                    <DraggableTree treeType="Bergahorn"  age={editAge.value} />
+                    <DraggableTree treeType="Alnus glutinosa"  age={editAge.value} />
                 </DragBox>
 
                 <DragBox>
-                    <DraggableTree treeType="Vogelbeere"  age={editAge.value} />
+                    <DraggableTree treeType="Pyrus communis"  age={editAge.value} />
                 </DragBox>
             </Box>
 

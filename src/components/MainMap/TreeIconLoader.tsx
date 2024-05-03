@@ -1,6 +1,6 @@
 import { useSignalEffect } from "@preact/signals-react"
 import { useMap } from "react-map-gl"
-import { treeIconStore, treeIconsLoaded } from "../../appState/backendSignals"
+import { iconImages, treeIconsLoaded } from "../../appState/backendSignals"
 
 const TreeIconLoader: React.FC = () => {
     // use a reference to the map
@@ -18,12 +18,19 @@ const TreeIconLoader: React.FC = () => {
             return
         }
         else {
-            Object.entries(treeIconStore.value).forEach(([iconId, imgInfo]) => {
-                // it is important to check that the image does not exist, because the the effect could run twice
-                if (!map.current?.hasImage(iconId)) {
-                    map.current?.addImage(iconId, imgInfo.icon)
+            // Object.entries(treeIconStore.value).forEach(([iconId, imgInfo]) => {
+            //     // it is important to check that the image does not exist, because the the effect could run twice
+            //     if (!map.current?.hasImage(iconId)) {
+            //         map.current?.addImage(iconId, imgInfo.icon)
                     
-                    // console.log(`add ${iconId}`)
+            //         // console.log(`add ${iconId}`)
+            //     }
+            // })
+
+            iconImages.value.forEach(({filename, icon}) => {
+                // it is important to check that the image does not exist, because the the effect could run twice
+                if (!map.current?.hasImage(filename)) {
+                    map.current?.addImage(filename, icon)
                 }
             })
         }

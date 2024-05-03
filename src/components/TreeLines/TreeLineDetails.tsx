@@ -57,7 +57,7 @@ const TreeLineDetails: React.FC<TreeLineDetailsProps> = ({ treeLine }) => {
             >
               {treeSpecies.value.map((species) => (
                 <MenuItem key={species.type} value={species.type}>
-                  {species.type} ({species.latin})
+                  {species.type} ({species.latin_name})
                 </MenuItem>
               ))}
               <MenuItem value="generic">unbekannte Art</MenuItem>
