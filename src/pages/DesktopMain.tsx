@@ -26,9 +26,6 @@ const DesktopMain: React.FC = () => {
   // get the theme toggler
   const modeToggler = useModeToggler();
 
-  // drawer state
-  const drawerOpen = useSignal<boolean>(false);
-
   return (
     <Box sx={{ height: "100vh" }}>
       <Box sx={{ flexGrow: 1 }}>
