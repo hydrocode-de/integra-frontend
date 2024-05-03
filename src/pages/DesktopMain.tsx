@@ -61,7 +61,7 @@ const DesktopMain: React.FC = () => {
               width="40vw"
               maxWidth="384px"
               position="fixed"
-              bottom="16px"
+              bottom="24px"
               left="0"
               right="0"
               mx="auto"
