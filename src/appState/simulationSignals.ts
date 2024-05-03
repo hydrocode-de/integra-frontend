@@ -33,7 +33,7 @@ export const simulationStep = computed<SimulationStep>(() => {
 
 // DEV: this line controls whether new trees are placed at age 1 or using the current simulation step
 effect(() => {
-    editAge.value = simulationStep.value.current
+    editAge.value = simulationStep.value.current + 1
 })
 
 // season
