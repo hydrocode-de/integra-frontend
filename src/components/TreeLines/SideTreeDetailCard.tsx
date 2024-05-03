@@ -81,7 +81,7 @@ const SideTreeDetailCard: React.FC = () => {
                             onChange={(e, v) => {updateSingleTreeSeed(
                                 tree.peek()!.id!.toString(), 
                                 {
-                                    age: (v as number[])[0] + simulationStep.peek().current, 
+                                    age: simulationStep.peek().current - (v as number[])[0], 
                                     harvestAge: ((v as number[])[1] + tree.peek()?.properties.age!) - simulationStep.peek().current
                                 }
                             )}}
