@@ -26,7 +26,7 @@ const DesktopMain: React.FC = () => {
   // get the current theme
   const theme = useIntegraTheme();
   // create a signal for tabbar state
-  const [activeTabbar, setActiveTabbar] = useState("map");
+  const [activeTabbar, setActiveTabbar] = useState("summary");
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setActiveTabbar(newValue);
   };
