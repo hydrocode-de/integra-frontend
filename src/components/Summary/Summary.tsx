@@ -143,6 +143,22 @@ const Summary = () => {
         Hier sehen Sie eine Übersicht Ihres geplanten Agroforstsystems.
       </Typography>
       <SummaryTable />
+      <Typography pt={6} pb={2} variant="h4">
+        Informationen
+      </Typography>
+      <Divider />
+      <Typography pt={3} variant="h6">
+        Übersicht
+      </Typography>
+      <Typography
+        color={"textSecondary"}
+        sx={{
+          maxWidth: 600,
+          pb: 1,
+        }}
+      >
+        Wichtige Rechtliche Rahmenbedingen zu Anlage ihres Agroforstsystemes
+      </Typography>
     </Box>
   );
 };
