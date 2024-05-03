@@ -6,6 +6,7 @@ import { Box, Card, CardActionArea, Collapse, IconButton, Slider, Typography } f
 import { Close, ExpandLess, ExpandMore, VisibilityOutlined } from "@mui/icons-material";
 import { flyTo } from "../MainMap/MapObservableStore";
 import StarRating from "../StarRating";
+import { simulationStep } from "../../appState/simulationSignals";
 
 const SideTreeDetailCard: React.FC = () => {
     // state to track if the card is open
@@ -69,13 +70,22 @@ const SideTreeDetailCard: React.FC = () => {
                     <Box sx={{p: 1}}>
                         <Typography variant="h6">Planung</Typography>
                         <Slider 
-                            min={1}
+                            min={0}
                             max={100}
-                            value={[tree.value.properties.age || 1, tree.value.properties.harvestAge || 60]}
+                            value={[
+                                // current simulation step minus the current age
+                                simulationStep.value.current - (tree.value.properties.age || 1), 
+                                // position of the first slider plus the harvest age
+                                ((simulationStep.value.current - (tree.value.properties.age || 1)) + (tree.value.properties.harvestAge! || 60))
+                            ]}
                             onChange={(e, v) => {updateSingleTreeSeed(
                                 tree.peek()!.id!.toString(), 
-                                {age: (v as number[])[0], harvestAge: (v as number[])[1]}
+                                {
+                                    age: (v as number[])[0] + simulationStep.peek().current, 
+                                    harvestAge: ((v as number[])[1] + tree.peek()?.properties.age!) - simulationStep.peek().current
+                                }
                             )}}
+                            
                         />
                         <Typography variant="caption">
                             {tree.value.properties.treeType} ({tree.value.properties.age} Jahre)&nbsp;
