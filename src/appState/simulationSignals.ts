@@ -31,6 +31,10 @@ export const simulationStep = computed<SimulationStep>(() => {
     }
 })
 
+// season
+export type SEASON = "Flowering" | "Summer" | "Autumn" | "Winter"
+export const currentSeason = signal<SEASON>("Summer")
+
 // public handler to set the simulation duration directly
 /**
  * Sets the current step of the simulation.
