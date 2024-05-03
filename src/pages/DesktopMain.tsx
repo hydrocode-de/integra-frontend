@@ -35,9 +35,9 @@ const DesktopMain: React.FC = () => {
   const modeToggler = useModeToggler();
 
   return (
-    <Box sx={{ height: "100vh" }}>
+    <Box sx={{ height: "100vh", display: "flex", flexDirection: "column" }}>
       <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static" variant="elevation" color="default">
+        <AppBar position="static" color="default">
           <Toolbar sx={{ display: "flex", justifyContent: "center" }}>
             <Typography sx={{ position: "absolute", left: 16 }} variant="h6" component="div">
               INTEGRA
@@ -65,7 +65,8 @@ const DesktopMain: React.FC = () => {
         </AppBar>
       </Box>
       {activeTabbar === "map" ? (
-        <Box width="100vw" height="calc(100vh - 100px)" m="0" p="0" display="flex">
+        // <Box width="100vw" height="calc(100vh - 100px)" m="0" p="0" display="flex">
+        <Box width="100vw" sx={{ flexGrow: 1, display: "flex", height: "100%" }} m="0" p="0">
           {/* Only render the simulation cards if there is data and no editing */}
           {hasData.value ? (
             <>
