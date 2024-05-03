@@ -34,6 +34,7 @@ const DesktopMain: React.FC = () => {
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               INTEGRA
             </Typography>
+
             <ProjectSelect />
             <IconButton
               size="medium"
@@ -50,7 +51,7 @@ const DesktopMain: React.FC = () => {
       </Box>
       <Box width="100vw" height="calc(100vh - 90px)" m="0" p="0" display="flex">
         {/* Only render the simulation cards if there is data and no editing */}
-        {hasData.value && drawState.value === DrawState.OFF ? (
+        {hasData.value ? (
           <>
             {/* add the simulation slider */}
             <Box
