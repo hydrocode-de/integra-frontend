@@ -3,8 +3,8 @@ import { Box, Typography } from "@mui/material";
 const Footer = () => {
   return (
     <Box sx={{ display: "flex", justifyContent: "center", bgcolor: "background.paper" }}>
-      <u style={{ margin: 0, padding: 0, paddingRight: 48, fontSize: 16 }}>Impressum</u>
-      <u style={{ margin: 0, padding: 0, fontSize: 16 }}>Datenschutz</u>
+      <u style={{ margin: 0, padding: 0, paddingRight: 48, fontSize: 16, cursor: 'pointer' }}>Impressum</u>
+      <u style={{ margin: 0, padding: 0, fontSize: 16, cursor: 'pointer' }}>Datenschutz</u>
     </Box>
   );
 };
