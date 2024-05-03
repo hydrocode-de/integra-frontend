@@ -1,5 +1,5 @@
-import { AppBar, Box, Card, Drawer, IconButton, MenuItem, MenuList, Toolbar, Typography } from "@mui/material";
-import { DarkMode, LightMode, Menu, ArrowBack } from "@mui/icons-material";
+import { AppBar, Box, Card, IconButton, Tab, Tabs, Toolbar, Typography } from "@mui/material";
+import { DarkMode, LightMode, Summarize, Map } from "@mui/icons-material";
 
 import { useIntegraTheme, useModeToggler } from "../context/IntegraThemeContext";
 import MainMap from "../components/MainMap/MainMap";
@@ -18,10 +18,18 @@ import DraggableElementsCard from "../layout/desktop/DraggableElementsCard";
 import SideContent from "../layout/desktop/SideContent";
 import SideTreeDetailCard from "../components/TreeLines/SideTreeDetailCard";
 import Footer from "../layout/Footer";
+import { useState } from "react";
+import { act } from "react-dom/test-utils";
+import Summary from "../components/Summary/Summary";
 
 const DesktopMain: React.FC = () => {
   // get the current theme
   const theme = useIntegraTheme();
+  // create a signal for tabbar state
+  const [activeTabbar, setActiveTabbar] = useState("map");
+  const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
+    setActiveTabbar(newValue);
+  };
 
   // get the theme toggler
   const modeToggler = useModeToggler();
@@ -30,84 +38,95 @@ const DesktopMain: React.FC = () => {
     <Box sx={{ height: "100vh" }}>
       <Box sx={{ flexGrow: 1 }}>
         <AppBar position="static" variant="elevation" color="default">
-          <Toolbar>
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Toolbar sx={{ display: "flex", justifyContent: "center" }}>
+            <Typography sx={{ position: "absolute", left: 16 }} variant="h6" component="div">
               INTEGRA
             </Typography>
-
-            <ProjectSelect />
-            <IconButton
-              size="medium"
-              edge="start"
-              color="inherit"
-              aria-label="switch color mode"
-              sx={{ ml: 2 }}
-              onClick={modeToggler}
-            >
-              {theme.palette.mode === "dark" ? <LightMode /> : <DarkMode />}
-            </IconButton>
+            <Tabs value={activeTabbar} onChange={handleTabChange}>
+              <Tab label="Karte" value="map" icon={<Map />} iconPosition="start" />
+              <Tab label="Zusammenfassung" value="summary" icon={<Summarize />} iconPosition="start" />
+            </Tabs>
+            <Box sx={{ position: "absolute", right: 16 }}>
+              <Box sx={{ display: "flex" }}>
+                <ProjectSelect />
+                <IconButton
+                  size="medium"
+                  edge="start"
+                  color="inherit"
+                  aria-label="switch color mode"
+                  sx={{ ml: 2 }}
+                  onClick={modeToggler}
+                >
+                  {theme.palette.mode === "dark" ? <LightMode /> : <DarkMode />}
+                </IconButton>
+              </Box>
+            </Box>
           </Toolbar>
         </AppBar>
       </Box>
-      <Box width="100vw" height="calc(100vh - 90px)" m="0" p="0" display="flex">
-        {/* Only render the simulation cards if there is data and no editing */}
-        {hasData.value ? (
-          <>
-            {/* add the simulation slider */}
-            <Box
-              minWidth="256px"
-              width="40vw"
-              maxWidth="384px"
-              position="fixed"
-              bottom="16px"
-              left="0"
-              right="0"
-              mx="auto"
-              zIndex="99"
-            >
-              <Card sx={{ borderRadius: 2 }}>
-                <SimulationStepSlider />
-              </Card>
-            </Box>
-
-            {/* add the statistics card */}
-            <Box
-              // width="calc(100% - 350px - 10px - 100px)"
-              position="fixed"
-              top="80px"
-              right="16px"
-              zIndex="99"
-              display="flex"
-              flexDirection={"column"}
-              justifyContent="flex-end"
-            >
-              <Box minWidth="256px" flexBasis="33%" mb={1}>
-                <Card sx={{ borderRadius: 2, border: 0 }}>
-                  <SimulationResultDetailCard defaultMetric="carbon" />
+      {activeTabbar === "map" ? (
+        <Box width="100vw" height="calc(100vh - 100px)" m="0" p="0" display="flex">
+          {/* Only render the simulation cards if there is data and no editing */}
+          {hasData.value ? (
+            <>
+              {/* add the simulation slider */}
+              <Box
+                minWidth="256px"
+                width="40vw"
+                maxWidth="384px"
+                position="fixed"
+                bottom="16px"
+                left="0"
+                right="0"
+                mx="auto"
+                zIndex="99"
+              >
+                <Card sx={{ borderRadius: 2 }}>
+                  <SimulationStepSlider />
                 </Card>
               </Box>
-              <Box minWidth="256px" flexBasis="33%" mb={1}>
-                <Card sx={{ borderRadius: 2, border: 0 }}>
-                  <SimulationResultDetailCard defaultMetric="height" />
-                </Card>
+
+              {/* add the statistics card */}
+              <Box
+                // width="calc(100% - 350px - 10px - 100px)"
+                position="fixed"
+                top="80px"
+                right="16px"
+                zIndex="99"
+                display="flex"
+                flexDirection={"column"}
+                justifyContent="flex-end"
+              >
+                <Box minWidth="256px" flexBasis="33%" mb={1}>
+                  <Card sx={{ borderRadius: 2, border: 0 }}>
+                    <SimulationResultDetailCard defaultMetric="carbon" />
+                  </Card>
+                </Box>
+                <Box minWidth="256px" flexBasis="33%" mb={1}>
+                  <Card sx={{ borderRadius: 2, border: 0 }}>
+                    <SimulationResultDetailCard defaultMetric="height" />
+                  </Card>
+                </Box>
               </Box>
-            </Box>
-          </>
-        ) : null}
+            </>
+          ) : null}
 
-        <SideContent>
-          <DraggableElementsCard />
-          <SideTreeDetailCard />
-        </SideContent>
+          <SideContent>
+            <DraggableElementsCard />
+            <SideTreeDetailCard />
+          </SideContent>
 
-        <MainMap mapId="desktop">
-          <DrawControl />
-          <TreeLineSource />
-          <ReferenceAreaSource />
-          <MapLayerSwitchButton />
-          <TreeLineTooltip />
-        </MainMap>
-      </Box>
+          <MainMap mapId="desktop">
+            <DrawControl />
+            <TreeLineSource />
+            <ReferenceAreaSource />
+            <MapLayerSwitchButton />
+            <TreeLineTooltip />
+          </MainMap>
+        </Box>
+      ) : (
+        <Summary />
+      )}
       <Footer />
     </Box>
   );
