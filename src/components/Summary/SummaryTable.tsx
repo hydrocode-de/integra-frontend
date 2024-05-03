@@ -14,7 +14,7 @@ const SummaryTable = () => {
   ];
 
   return (
-    <TableContainer sx={{ my: 4 }} component={Paper}>
+    <TableContainer sx={{ my: 2, bgcolor: "grey.100" }} component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>

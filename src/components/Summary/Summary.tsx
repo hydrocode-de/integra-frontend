@@ -43,12 +43,12 @@ const Summary = () => {
       </Typography>
       <Typography
         color={"textSecondary"}
-        // variant="body1"
         sx={{
           maxWidth: 600,
+          pb: 1,
         }}
       >
-        Hier sehen Sie eine Übersicht Ihres Agroforstsystems.
+        Hier sehen Sie eine Übersicht der geplanten Fläche.
       </Typography>
       <Box sx={{ display: "flex", py: 2 }}>
         <Box sx={{ width: 500, height: 500 }}>
@@ -60,7 +60,7 @@ const Summary = () => {
           </MainMap>
         </Box>
         <Box sx={{ display: "flex", flexDirection: "column", flexGrow: 1 }}>
-          <Box sx={{ ml: 4, mb: 4, flexGrow: 1, display: "flex" }}>
+          <Box sx={{ ml: 2, mb: 2, flexGrow: 1, display: "flex" }}>
             <Box
               sx={{
                 display: "flex",
@@ -69,7 +69,7 @@ const Summary = () => {
                 borderRadius: 2,
                 flexGrow: 1,
                 p: 2,
-                mr: 4,
+                mr: 2,
               }}
             >
               <Typography variant="h6" m={0} pb={1}>
@@ -106,7 +106,7 @@ const Summary = () => {
           <Box
             sx={{
               display: "flex",
-              ml: 4,
+              ml: 2,
               p: 2,
               px: 4,
               borderRadius: 2,
@@ -130,6 +130,18 @@ const Summary = () => {
           </Box>
         </Box>
       </Box>
+      <Typography pt={3} variant="h6">
+        Planung
+      </Typography>
+      <Typography
+        color={"textSecondary"}
+        sx={{
+          maxWidth: 600,
+          pb: 1,
+        }}
+      >
+        Hier sehen Sie eine Übersicht Ihres geplanten Agroforstsystems.
+      </Typography>
       <SummaryTable />
     </Box>
   );
