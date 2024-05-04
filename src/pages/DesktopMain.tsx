@@ -16,6 +16,7 @@ import SimulationResultDetailCard from "../components/Simulation/SimulationResul
 import DraggableElementsCard from "../layout/desktop/DraggableElementsCard";
 import SideContent from "../layout/desktop/SideContent";
 import SideTreeDetailCard from "../components/TreeLines/SideTreeDetailCard";
+import { zoom } from "../appState/mapSignals";
 import Footer from "../layout/Footer";
 
 const DesktopMain: React.FC = () => {
@@ -34,6 +35,7 @@ const DesktopMain: React.FC = () => {
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               INTEGRA
             </Typography>
+
             <ProjectSelect />
             <IconButton
               size="medium"

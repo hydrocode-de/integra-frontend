@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardActionArea, Collapse, Typography } from "@mui/material"
+import { Alert, Box, Button, Card, CardActionArea, Collapse, Typography } from "@mui/material"
 
 import DraggableTree  from "../../components/TreeLines/DraggableTree"
 import { editAge, editTreeLineId } from "../../appState/treeLocationSignals"
@@ -6,6 +6,8 @@ import { useSignal } from "@preact/signals-react"
 import { ExpandLess, ExpandMore } from "@mui/icons-material"
 import { nanoid } from "nanoid"
 import TreeLinesOverview from "../../components/TreeLines/TreeLinesOverview"
+import { zoom } from "../../appState/mapSignals"
+import { flyTo } from "../../components/MainMap/MapObservableStore"
 
 const DragBox: React.FC<React.PropsWithChildren> = ({children}) => (
     <Box
@@ -37,15 +39,22 @@ const DraggableElementsCard: React.FC = () => {
         </CardActionArea>
 
         <Collapse in={open.value}>
-            <Box component="div" display="flex" flexDirection="row">
-                
-                <DragBox>
-                    <DraggableTree treeType="Alnus glutinosa"  age={editAge.value} />
-                </DragBox>
+            <Box component="div" display="flex" flexDirection="row" mt="1">
+                { zoom.value < 14.5 ? (
+                    <Alert severity="info">
+                        Editor auf dieser Zoomstufe nicht verfügbar.<br /> 
+                        <Button variant="text" size="small" onClick={() => flyTo({zoom: 18.5, pitch: 45})}>Hereinzoomen.</Button>
+                    </Alert>
+                ) : (<>
+                        <DragBox>
+                            <DraggableTree treeType="Alnus glutinosa"  age={editAge.value} />
+                        </DragBox>
 
-                <DragBox>
-                    <DraggableTree treeType="Pyrus communis"  age={editAge.value} />
-                </DragBox>
+                        <DragBox>
+                            <DraggableTree treeType="Pyrus communis"  age={editAge.value} />
+                        </DragBox>
+                    </>)
+                }
             </Box>
 
             {/* Controls */}

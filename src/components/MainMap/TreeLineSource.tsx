@@ -8,7 +8,7 @@ import { TreeLine, TreeLocation } from "../../appState/treeLine.model"
 import { fitBounds } from "./MapObservableStore"
 import { canopyLayer, currentSeason } from "../../appState/simulationSignals"
 import { useSignal, useSignalEffect } from "@preact/signals-react"
-import { layerVisibility } from "../../appState/mapSignals"
+import { layerVisibility, zoom } from "../../appState/mapSignals"
 import { calculatedTreeLines, updateTreePosition } from "../../appState/treeLocationSignals"
 import { setDetailId } from "../../appState/sideContentSignals"
 import { ageToSize } from "../../appState/backendSignals"
@@ -233,18 +233,33 @@ const TreeLineSource: React.FC = () => {
         <Source id="tree-locations" type="geojson" data={treeLocationData} generateId>
             <Layer id="tree-locations" source="tree-locations" type="symbol"
                 layout={{
-                    'visibility': canopyIsVisible.value ? 'visible' : 'visible',
+                    //'visibility': canopyIsVisible.value ? 'visible' : 'visible',
+                    'visibility': zoom.value < 14.5 ? 'none' : 'visible',
                     'icon-image': ['coalesce', ['get', 'image'], 'default'],
                     'icon-anchor': 'bottom',
+                    // 'icon-size': [
+                    //     'interpolate',
+                    //     ['linear'],
+                    //     ['get', 'height'],
+                    //     0,
+                    //     0.15,
+                    //     25,
+                    //     1.2
+                    // ],
                     'icon-size': [
-                        'interpolate',
-                        ['linear'],
-                        ['get', 'height'],
-                        0,
+                        'step',
+                        ['zoom'],
                         0.15,
-                        25,
-                        1
-                    ],
+                        //15, ['interpolate', ['linear'], ['get', 'height'], 0, 0.15, 25, 0.6],
+                        //16, ['interpolate', ['linear'], ['get', 'height'], 0, 0.15, 25, 0.7],
+                        17, ['interpolate', ['linear'], ['get', 'height'], 0, 0.15, 25, 0.5],
+                        18, ['interpolate', ['linear'], ['get', 'height'], 0, 0.15, 25, 0.7],
+                        19, ['interpolate', ['linear'], ['get', 'height'], 0, 0.15, 25, 1.4],
+                        19.5, ['interpolate', ['linear'], ['get', 'height'], 0, 0.15, 25, 1.5],
+                        20, ['interpolate', ['linear'], ['get', 'height'], 0, 0.15, 25, 2.5],
+                        21, ['interpolate', ['linear'], ['get', 'height'], 0, 0.15, 25, 4],
+                        22, ['interpolate', ['linear'], ['get', 'height'], 0, 0.15, 25, 6],
+                    ]
                 }}
             />
             <Layer id="canopy-center-layer" source="tree-locations" type="circle"
