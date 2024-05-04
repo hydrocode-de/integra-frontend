@@ -5,7 +5,6 @@ import { TreeLocation } from "../../appState/treeLine.model";
 import { Box, Card, CardActionArea, Chip, Collapse, IconButton, Rating, Slider, Tooltip, Typography } from "@mui/material";
 import { Close, ExpandLess, ExpandMore, VisibilityOutlined } from "@mui/icons-material";
 import { flyTo } from "../MainMap/MapObservableStore";
-import StarRating from "../StarRating";
 import { simulationStep } from "../../appState/simulationSignals";
 
 const SideTreeDetailCard: React.FC = () => {
@@ -157,8 +156,6 @@ const SideTreeDetailCard: React.FC = () => {
                         
                         
                     </Box>
-
-                    {/* <pre><code>{ JSON.stringify(tree, null, 2)}</code></pre> */}
                 </Box>
             </Collapse>
         </Card>
