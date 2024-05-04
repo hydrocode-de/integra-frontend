@@ -4,6 +4,7 @@ import DraggableTree from "../TreeLines/DraggableTree";
 import { EmojiNature, EuroRounded, ForestRounded } from "@mui/icons-material";
 import StandortValueRange from "./StandortSlider";
 import NutzungsChecker from "./NutzungsChecker";
+import { Signal } from "@preact/signals-react";
 
 const treeZoneStyle = {
   display: "flex",
@@ -28,9 +29,9 @@ const treeZoneSelectedStyle = {
   },
 };
 
-const TreeSpeciesSelectionModal: React.FC = () => {
+const TreeSpeciesSelectionModal: React.FC<{isOpen:Signal<boolean>}> = ({isOpen}) => {
   return (
-    <Modal open={true}>
+    <Modal onClose={() => (isOpen.value = !isOpen.peek())}  open={isOpen.value}>
       <Box
         sx={{
           position: "absolute",
@@ -53,14 +54,12 @@ const TreeSpeciesSelectionModal: React.FC = () => {
             borderColor: "grey.400",
             borderRadius: 2,
             bgcolor: "grey.100",
-            // width: "100%",
             height: "100px",
             display: "flex",
           }}
         >
           <Typography
             sx={{
-              // position: "absolute",
               textAlign: "center",
               margin: "auto",
             }}
