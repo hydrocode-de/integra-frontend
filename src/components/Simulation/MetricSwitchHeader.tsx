@@ -1,7 +1,6 @@
 import { FormControl, MenuItem, Select, Typography } from "@mui/material"
 import { useSignal } from "@preact/signals-react"
 import { NAME_LOOKUP } from "./SimulationResultDetailCard"
-import { useState } from "react"
 
 
 const MetricSwitchHeader: React.FC<{metric: string, metricTitle: string, onSwitch: (metricName: string) => void}> = ({ metric, metricTitle, onSwitch }) => {

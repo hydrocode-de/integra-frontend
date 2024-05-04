@@ -1,4 +1,4 @@
-import { Box, CardActionArea, Collapse, IconButton, LinearProgress, Typography } from "@mui/material";
+import { Box, CardActionArea, Collapse, LinearProgress, Typography } from "@mui/material";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import { useSignal, useSignalEffect } from "@preact/signals-react";
 import { StatMetric, TreeTypeStatistics, totalStatistics } from "../../appState/statisticsSignals";

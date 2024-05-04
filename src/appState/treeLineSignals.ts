@@ -90,6 +90,7 @@ const allTreeLocationFeatures = computed<TreeLocation["features"]>(() => {
                     id: nanoid(12),
                     treeLineId: treeLine.properties.id,
                     treeType: settings.treeType,
+                    treeShape: 'Form1',
 
                     // spread everything here, but use the age from the !settings!
                     ...data,

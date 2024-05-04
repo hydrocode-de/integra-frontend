@@ -1,6 +1,6 @@
 import { computed, effect, signal } from "@preact/signals-react";
 import { TreeLocation } from "./treeLine.model";
-import { loadClosestDataPoint } from "./backendSignals"
+import { loadClosestDataPoint, treeSpecies } from "./backendSignals"
 import { treeLocationFeatures } from "./treeLineSignals";
 import { lineString } from "@turf/helpers";
 import length from "@turf/length";
@@ -20,6 +20,7 @@ interface RawTreeLocation {
     id: string,
     location: {lat: number, lng: number},
     treeType: string,
+    treeShape: string,
     treeLineId: string,
     age: number,
     harvestAge?: number
@@ -49,6 +50,7 @@ export const rawTreeFeatures = computed<TreeLocation["features"]>(() => {
             },
             properties: {
                 treeType: tree.treeType,
+                treeShape: tree.treeShape,
                 treeLineId: tree.treeLineId,
                 ...loadClosestDataPoint(tree.treeType, tree.age),
                 age: tree.age,
@@ -106,6 +108,12 @@ export const addNewTree = (tree: {location: {lat: number, lng: number}, treeType
     // get the next id
     const nextId = `s${rawTreeLocationSeedData.peek().length + 1}`
 
+    // get the shape associated to this tree
+    const shape = treeSpecies.peek().find(species => species.latin_name === tree.treeType)!.shape
+    if (!shape) {
+        console.log(`ERROR: addNewTree(${tree.treeType}): no shape found for this treeType`)
+    }
+
     rawTreeLocationSeedData.value = [
         ...rawTreeLocationSeedData.value,
         {
@@ -113,7 +121,8 @@ export const addNewTree = (tree: {location: {lat: number, lng: number}, treeType
             id: nextId,
             age: editAge.peek(),
             harvestAge: editHarvestAge.peek(),
-            treeLineId: editTreeLineId.peek()
+            treeLineId: editTreeLineId.peek(),
+            treeShape: shape
         }
     ]
 }

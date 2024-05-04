@@ -1,7 +1,6 @@
 import { Typography } from "@mui/material"
-import { CalculatedTreeLine, activeTreeLineIds, editTreeLineId, treeFeatures } from "../../appState/treeLocationSignals"
+import { activeTreeLineIds, editTreeLineId, treeFeatures } from "../../appState/treeLocationSignals"
 import { useSignal, useSignalEffect } from "@preact/signals-react"
-import distance from "@turf/distance"
 
 interface TreeLineSummary {
     id: string

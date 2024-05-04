@@ -1,4 +1,4 @@
-import { Box, CardActionArea, Collapse, IconButton, Slider, Typography } from "@mui/material";
+import { Box, CardActionArea, Collapse, Slider, Typography } from "@mui/material";
 import { ExpandMore, ExpandLess } from "@mui/icons-material";
 import { Mark } from "@mui/base";
 import { setSimulationStep, simulationStep } from "../../appState/simulationSignals";
