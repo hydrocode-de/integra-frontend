@@ -11,7 +11,7 @@ import { layerVisibility } from "./mapSignals";
 import buffer from "@turf/buffer";
 import area from "@turf/area";
 import { TreeLocationProperties } from "./treeLine.model";
-import { updateAllTreeAges } from "./treeLocationSignals";
+import { editAge, updateAllTreeAges } from "./treeLocationSignals";
 
 // the iteration is too important, so we make it private to this module
 const step = signal<number>(0)
@@ -29,6 +29,11 @@ export const simulationStep = computed<SimulationStep>(() => {
         current: step.value,
         previous: previousStep.peek()
     }
+})
+
+// DEV: this line controls whether new trees are placed at age 1 or using the current simulation step
+effect(() => {
+    editAge.value = simulationStep.value.current + 1
 })
 
 // season

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react"
 import { useDrag } from "react-dnd"
-import { ageToSize, loadClosestDataPoint, treeIconsLoaded, treeSpecies } from "../../appState/backendSignals"
+import { ageToSize, treeIconsLoaded, treeSpecies } from "../../appState/backendSignals"
 import { SEASON, currentSeason } from "../../appState/simulationSignals"
 import { useSignalEffect } from "@preact/signals-react"
 
