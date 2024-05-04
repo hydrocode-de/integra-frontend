@@ -51,10 +51,8 @@ const DesktopMain: React.FC = () => {
           </Toolbar>
         </AppBar>
       </Box>
-      <Box width="100vw" height="calc(100vh - 90px)" m="0" p="0" display="flex">
-        {/* Only render the simulation cards if there is data and no editing */}
-        {hasData.value && drawState.value === DrawState.OFF ? (
-          <>
+      
+      <Box width="100vw" height="calc(100vh - 64px)" m="0" p="0" display="flex">
             {/* add the simulation slider */}
             <Box
               minWidth="256px"
@@ -71,7 +69,9 @@ const DesktopMain: React.FC = () => {
                 <SimulationStepSlider />
               </Card>
             </Box>
-
+            
+          {/* Only render the simulation cards if there is data and no editing */}
+          {hasData.value && drawState.value === DrawState.OFF ? (<>
             {/* add the statistics card */}
             <Box
               // width="calc(100% - 350px - 10px - 100px)"
