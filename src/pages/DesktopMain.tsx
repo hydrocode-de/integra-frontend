@@ -1,5 +1,5 @@
-import { AppBar, Box, Card, Drawer, IconButton, MenuItem, MenuList, Toolbar, Typography } from "@mui/material";
-import { DarkMode, LightMode, Menu, ArrowBack } from "@mui/icons-material";
+import { AppBar, Box, Card, IconButton, Toolbar, Typography } from "@mui/material";
+import { DarkMode, LightMode  } from "@mui/icons-material";
 
 import { useIntegraTheme, useModeToggler } from "../context/IntegraThemeContext";
 import MainMap from "../components/MainMap/MainMap";
@@ -10,7 +10,6 @@ import { DrawState } from "../appState/treeLine.model";
 import TreeLineTooltip from "../components/MainMap/TreeLineTooltip";
 import ReferenceAreaSource from "../components/MainMap/ReferenceAreaSource";
 import ProjectSelect from "../components/ProjectSelect";
-import { useSignal } from "@preact/signals-react";
 import MapLayerSwitchButton from "../components/MainMap/MapLayerSwitchButton";
 import SimulationStepSlider from "../components/Simulation/SimulationStepSlider";
 import SimulationResultDetailCard from "../components/Simulation/SimulationResultDetailCard";
@@ -26,8 +25,6 @@ const DesktopMain: React.FC = () => {
   // get the theme toggler
   const modeToggler = useModeToggler();
 
-  // drawer state
-  const drawerOpen = useSignal<boolean>(false);
 
   return (
     <Box sx={{ height: "100vh" }}>
@@ -110,7 +107,9 @@ const DesktopMain: React.FC = () => {
           <TreeLineTooltip />
         </MainMap>
       </Box>
+      
       <Footer />
+
     </Box>
   );
 };

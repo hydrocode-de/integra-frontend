@@ -1,6 +1,6 @@
 import { useSignal, useSignalEffect } from "@preact/signals-react";
 import { activeTreeDetailId, setDetailId } from "../../appState/sideContentSignals";
-import { rawTreeFeatures, treeFeatures, updateSingleTreeSeed } from "../../appState/treeLocationSignals";
+import { rawTreeFeatures, updateSingleTreeSeed } from "../../appState/treeLocationSignals";
 import { TreeLocation } from "../../appState/treeLine.model";
 import { Box, Card, CardActionArea, Chip, Collapse, IconButton, Slider, Typography } from "@mui/material";
 import { Close, ExpandLess, ExpandMore, VisibilityOutlined } from "@mui/icons-material";

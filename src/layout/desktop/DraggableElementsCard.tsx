@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from "react"
-import { Box, Button, Card, CardActionArea, Collapse, List, ListItem, Slider, Typography } from "@mui/material"
+import { Box, Button, Card, CardActionArea, Collapse, Typography } from "@mui/material"
 
 import DraggableTree  from "../../components/TreeLines/DraggableTree"
-import { CalculatedTreeLine, calculatedTreeLineFeatures, editAge, editTreeLineId } from "../../appState/treeLocationSignals"
-import { useSignal, useSignalEffect } from "@preact/signals-react"
+import { editAge, editTreeLineId } from "../../appState/treeLocationSignals"
+import { useSignal } from "@preact/signals-react"
 import { ExpandLess, ExpandMore } from "@mui/icons-material"
 import { nanoid } from "nanoid"
-import { treeLocationFeatures } from "../../appState/treeLineSignals"
 import TreeLinesOverview from "../../components/TreeLines/TreeLinesOverview"
 
 const DragBox: React.FC<React.PropsWithChildren> = ({children}) => (
