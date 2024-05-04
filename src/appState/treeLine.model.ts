@@ -28,6 +28,7 @@ export interface TreeLocationProperties extends Partial<TreeDataPoint> {
     id: string,
     treeLineId?: string,
     treeType: string,
+    treeShape: string
 }
 
 // define the interface for user-created tree locations

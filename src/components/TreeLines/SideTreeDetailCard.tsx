@@ -1,11 +1,11 @@
 import { useSignal, useSignalEffect } from "@preact/signals-react";
 import { activeTreeDetailId, setDetailId } from "../../appState/sideContentSignals";
-import { treeFeatures, updateSingleTreeSeed } from "../../appState/treeLocationSignals";
+import { rawTreeFeatures, updateSingleTreeSeed } from "../../appState/treeLocationSignals";
 import { TreeLocation } from "../../appState/treeLine.model";
-import { Box, Card, CardActionArea, Collapse, IconButton, Slider, Typography } from "@mui/material";
+import { Box, Card, CardActionArea, Chip, Collapse, IconButton, Rating, Slider, Tooltip, Typography } from "@mui/material";
 import { Close, ExpandLess, ExpandMore, VisibilityOutlined } from "@mui/icons-material";
 import { flyTo } from "../MainMap/MapObservableStore";
-import StarRating from "../StarRating";
+import { simulationStep } from "../../appState/simulationSignals";
 
 const SideTreeDetailCard: React.FC = () => {
     // state to track if the card is open
@@ -14,14 +14,30 @@ const SideTreeDetailCard: React.FC = () => {
     // get a copy of the tree
     const tree = useSignal<TreeLocation["features"][0] | undefined>(undefined)
 
+    {/* For now, we use a mix of pollen, nectar and blossoms, like an overall rating */}
+    const pollenRating = useSignal<number>(0)
+    const nectarRating = useSignal<number>(0)
+    const blossomsRating = useSignal<number>(0)
+
+    // for now hard-code the limits, can be requested from supabase one day
+    useSignalEffect(() => {
+        // pollenRating is the relative amount of pollen compared to the max of 140.000.000.000.000, rescaled to 0-5
+        pollenRating.value = tree.value?.properties.pollen! / 140000000000000 * 5 || 0
+        // nectarRating is the relative amount of nectar compared to the max of 12.000, rescaled to 0-5
+        nectarRating.value = tree.value?.properties.nectar! / 12000 * 5 || 0
+        //blossomsRating is the relative amount of blossoms compared to the max of 4.000.000, rescaled to 0-5
+        blossomsRating.value = tree.value?.properties.blossoms! / 4000000 * 5 || 0
+    })
+
     // listen to changes in the activeTreeDetailId signal
     useSignalEffect(() => {
         if (activeTreeDetailId.value) {
-            tree.value = treeFeatures.value.filter(f => f.id === activeTreeDetailId.peek())[0]
+            tree.value = rawTreeFeatures.value.filter(f => f.id === activeTreeDetailId.peek())[0]
         } else {
             tree.value = undefined
         }
     })
+
 
     // some card handlers
     const handleClose = () => {
@@ -33,7 +49,7 @@ const SideTreeDetailCard: React.FC = () => {
         // fly the map to the tree location
         flyTo({
             center: center,
-            zoom: 17,
+            zoom: 20.5,
             pitch: 45
         })
     }
@@ -65,17 +81,47 @@ const SideTreeDetailCard: React.FC = () => {
 
             <Collapse in={open.value}>
                 <Box sx={{overflowY: 'scroll', p: 1}}>
-                    {/* Create a silder to adjust the age and harvest Age */}
+                    {/* Place chips to inform if the Tree actually exists */}
+                    { tree.value.properties.age! > 0 ? (
+                        tree.value.properties.harvestAge! > tree.value.properties.age! ? (
+                            <Chip label="wächst" color="warning" variant="outlined" />
+                        ) : (
+                            <Chip label={`geerntet nach ${tree.value.properties.harvestAge} Jahren`} color="success" variant="outlined" />
+                        )
+                    ) : <Chip label="in Planung" color="info" variant="outlined" /> }
+
+                    {/* Basic info about the tree */}
                     <Box sx={{p: 1}}>
+                        <Box display="flex" flexDirection="row" justifyContent="space-between">
+                            <Typography variant="body2">Höhe:</Typography>
+                            <Typography variant="body1">{tree.value.properties.height?.toFixed(1)} m</Typography>
+                        </Box>
+                        <Box display="flex" flexDirection="row" justifyContent="space-between">
+                            <Typography variant="body2">Stamm Länge:</Typography>
+                            <Typography variant="body1">{tree.value.properties.canopyHeight?.toFixed(1)} m</Typography>
+                        </Box>
+                    </Box>
+
+                    {/* Create a silder to adjust the age and harvest Age */}
+                    <Box sx={{p: 1, mt: 1}}>
                         <Typography variant="h6">Planung</Typography>
                         <Slider 
-                            min={1}
+                            min={0}
                             max={100}
-                            value={[tree.value.properties.age || 1, tree.value.properties.harvestAge || 60]}
+                            value={[
+                                // current simulation step minus the current age
+                                simulationStep.value.current - (tree.value.properties.age || 1), 
+                                // position of the first slider plus the harvest age
+                                ((simulationStep.value.current - (tree.value.properties.age || 1)) + (tree.value.properties.harvestAge! || 60))
+                            ]}
                             onChange={(e, v) => {updateSingleTreeSeed(
                                 tree.peek()!.id!.toString(), 
-                                {age: (v as number[])[0], harvestAge: (v as number[])[1]}
+                                {
+                                    age: simulationStep.peek().current - (v as number[])[0],
+                                    harvestAge: ((v as number[])[1] + tree.peek()?.properties.age!) - simulationStep.peek().current
+                                }
                             )}}
+                            
                         />
                         <Typography variant="caption">
                             {tree.value.properties.treeType} ({tree.value.properties.age} Jahre)&nbsp;
@@ -86,16 +132,30 @@ const SideTreeDetailCard: React.FC = () => {
                         <Typography variant="h6" mt="2">
                             Schatten
                         </Typography>
-                        <StarRating value={4} />
+                        <Rating value={4} readOnly />
 
-                        <Typography variant="h6" mt="2">
-                            Blühangebot
-                        </Typography>
-                        <StarRating value={2.5} />
-
+                        <Tooltip 
+                            title={<Box display="flex" flexDirection="column">
+                                <span>Pollen: {pollenRating.value.toFixed(1)}</span>
+                                <span>Nektar: {nectarRating.value.toFixed(1)}</span>
+                                <span>Blühtenzahl {blossomsRating.value.toFixed(1)}</span>
+                            </Box>} 
+                            placement="right"
+                        >
+                            <Box>
+                                <Typography variant="h6" mt="2">
+                                    Blühangebot
+                                </Typography>
+                                <Rating 
+                                    readOnly 
+                                    value={(blossomsRating.value + nectarRating.value + pollenRating.value) / 3.} 
+                                    precision={0.5}
+                                />
+                            </Box>
+                        </Tooltip>
+                        
+                        
                     </Box>
-
-                    {/* <pre><code>{ JSON.stringify(tree, null, 2)}</code></pre> */}
                 </Box>
             </Collapse>
         </Card>
