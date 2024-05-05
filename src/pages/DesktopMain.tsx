@@ -54,9 +54,9 @@ const DesktopMain: React.FC = () => {
       <Box width="100vw" height="calc(100vh - 64px)" m="0" p="0" display="flex">
             {/* add the simulation slider */}
             <Box
-              minWidth="256px"
+              minWidth="450px"
               width="40vw"
-              maxWidth="384px"
+              maxWidth="600px"
               position="fixed"
               bottom="24px"
               left="0"
