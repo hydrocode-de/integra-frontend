@@ -9,7 +9,7 @@ import { fitBounds } from "./MapObservableStore"
 import { canopyLayer, currentSeason } from "../../appState/simulationSignals"
 import { useSignal, useSignalEffect } from "@preact/signals-react"
 import { layerVisibility, zoom } from "../../appState/mapSignals"
-import { calculatedTreeLines, updateTreePosition } from "../../appState/treeLocationSignals"
+import { calculatedTreeLines, futureTreeFeatures, harvestedTreeFeatures, updateTreePosition } from "../../appState/treeLocationSignals"
 import { setDetailId } from "../../appState/sideContentSignals"
 import { ageToSize } from "../../appState/backendSignals"
 
@@ -272,6 +272,33 @@ const TreeLineSource: React.FC = () => {
                 }}
             />
         </Source>
+        {/* Add a source to show the future tree location with a green cross */}
+        <Source id="future-tree-locations" type="geojson" data={{type: 'FeatureCollection', features: futureTreeFeatures.value}} generateId>
+            <Layer id="future-tree-locations" source="future-tree-locations" type="circle"
+                layout={{
+                    'visibility': zoom.value < 14.5 ? 'none' : 'visible',
+                }}
+                paint={{
+                    'circle-color': 'green',
+                    'circle-opacity': 0.5,
+                    'circle-radius': 6
+                }}
+            />
+        </Source>
+        <Source id="harvested-tree-locations" type="geojson" data={{type: 'FeatureCollection', features: harvestedTreeFeatures.value}} generateId>
+            <Layer id="harvested-tree-locations" source="harvested-tree-locations" type="circle"
+                layout={{
+                    'visibility': zoom.value < 14.5 ? 'none' : 'visible',
+                }}
+                paint={{
+                    'circle-color': 'brown',
+                    'circle-opacity': 0.5,
+                    'circle-radius': 6
+                }}
+            />
+        </Source>
+
+
         <Source id="canopy" type="geojson" data={canopyLayer.value} generateId>
             <Layer id="canopy-layer" source="canopy" type="fill" 
                 layout={{'visibility': canopyIsVisible.value ? 'visible' : 'none'}}

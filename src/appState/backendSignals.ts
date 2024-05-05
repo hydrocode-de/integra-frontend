@@ -3,8 +3,6 @@
  * To ease things a bit, I put all the firebase stuff in here as well.
  */
 import { batch, computed, effect, signal } from "@preact/signals-react";
-import cloneDeep from "lodash.clonedeep";
-import { parse } from "papaparse";
 import { createClient } from "@supabase/supabase-js";
 
 // connect to supabase
@@ -197,6 +195,37 @@ supabase.from("full_dataset_json").select('*')
   
   treeData.value = data
 })
+
+
+/**
+ * SHADING DATA
+ */
+
+// define the raw tree shade data point
+interface RawShadeHull {
+  species_id: number;
+  age: number;
+  month: number;
+  pruned: boolean;
+  coordinates: number[][];
+}
+
+interface RawTreeShade {
+  id: number;
+  latin_name: string;
+  age: number;
+  shade_data: RawShadeHull[];
+}
+
+// create a database of shading data
+// this is a private store and there will be a read only signal for building actual shading polygons from it
+// this is meant to be a buffer for shading data, that is updated, whenever a new tree species was loaded
+// to the map
+const rawTreeShadeData = signal<RawTreeShade[]>([]);
+effect(() => {
+  // listen for changes in the existing tree species
+})
+export const treeShadeData = computed<RawTreeShade[]>(() => rawTreeShadeData.value);
 
 
 
