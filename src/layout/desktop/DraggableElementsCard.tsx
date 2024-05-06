@@ -8,6 +8,7 @@ import { nanoid } from "nanoid"
 import TreeLinesOverview from "../../components/TreeLines/TreeLinesOverview"
 import { zoom } from "../../appState/mapSignals"
 import { flyTo } from "../../components/MainMap/MapObservableStore"
+import TreeSpeciesSelectionModal from "../../components/treeSpeciesSelection/TreeSpeciesSelectionModal"
 
 const DragBox: React.FC<React.PropsWithChildren> = ({children}) => (
     <Box
@@ -25,8 +26,10 @@ const DragBox: React.FC<React.PropsWithChildren> = ({children}) => (
 const DraggableElementsCard: React.FC = () => {
     // state to handle card state
     const open = useSignal<boolean>(true)
+    const treeSelectionOpen = useSignal<boolean>(false)
 
     return <>
+    <TreeSpeciesSelectionModal isOpen={treeSelectionOpen} />
     <Card sx={{mx: 1, p: open.value ? 2 : 1}}>
         {/* Draggable components box */}
         <CardActionArea onClick={() => (open.value = !open.peek())}>
@@ -46,6 +49,7 @@ const DraggableElementsCard: React.FC = () => {
                         <Button variant="text" size="small" onClick={() => flyTo({zoom: 18.5, pitch: 45})}>Hereinzoomen.</Button>
                     </Alert>
                 ) : (<>
+                      <Box onClick={() => (treeSelectionOpen.value = !treeSelectionOpen.peek())}   sx={{display:'flex', p:1, borderRadius:2, bgcolor:'grey.100', width:'100%'}}>
                         <DragBox>
                             <DraggableTree treeType="Acer pseudoplatanus"  age={editAge.value} />
                         </DragBox>
@@ -53,6 +57,7 @@ const DraggableElementsCard: React.FC = () => {
                         <DragBox>
                             <DraggableTree treeType="Pyrus communis"  age={editAge.value} />
                         </DragBox>
+                     </Box>
                     </>)
                 }
             </Box>
