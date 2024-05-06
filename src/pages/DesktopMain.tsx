@@ -17,10 +17,8 @@ import DraggableElementsCard from "../layout/desktop/DraggableElementsCard";
 import SideContent from "../layout/desktop/SideContent";
 import SideTreeDetailCard from "../components/TreeLines/SideTreeDetailCard";
 import TreeSpeciesSelectionModal from "../components/treeSpeciesSelection/TreeSpeciesSelectionModal";
-import { zoom } from "../appState/mapSignals";
 import Footer from "../layout/Footer";
 import { useState } from "react";
-import { act } from "react-dom/test-utils";
 import Summary from "../components/Summary/Summary";
 
 const DesktopMain: React.FC = () => {
@@ -66,6 +64,7 @@ const DesktopMain: React.FC = () => {
         </AppBar>
       </Box>
       
+      { activeTabbar === "map" ? (
       <Box width="100vw" height="calc(100vh - 64px)" m="0" p="0" display="flex">
             {/* add the simulation slider */}
             <Box
