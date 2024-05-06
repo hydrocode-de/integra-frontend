@@ -5,8 +5,7 @@ import { useIntegraTheme, useModeToggler } from "../context/IntegraThemeContext"
 import MainMap from "../components/MainMap/MainMap";
 import DrawControl from "../components/MainMap/DrawControl";
 import TreeLineSource from "../components/MainMap/TreeLineSource";
-import { drawState, hasData } from "../appState/treeLineSignals";
-import { DrawState } from "../appState/treeLine.model";
+import { hasData } from "../appState/treeLineSignals";
 import TreeLineTooltip from "../components/MainMap/TreeLineTooltip";
 import ReferenceAreaSource from "../components/MainMap/ReferenceAreaSource";
 import ProjectSelect from "../components/ProjectSelect";
@@ -16,7 +15,6 @@ import SimulationResultDetailCard from "../components/Simulation/SimulationResul
 import DraggableElementsCard from "../layout/desktop/DraggableElementsCard";
 import SideContent from "../layout/desktop/SideContent";
 import SideTreeDetailCard from "../components/TreeLines/SideTreeDetailCard";
-import TreeSpeciesSelectionModal from "../components/treeSpeciesSelection/TreeSpeciesSelectionModal";
 import Footer from "../layout/Footer";
 import { useState } from "react";
 import Summary from "../components/Summary/Summary";
