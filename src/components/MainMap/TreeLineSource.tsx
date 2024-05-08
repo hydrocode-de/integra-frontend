@@ -259,7 +259,8 @@ const TreeLineSource: React.FC = () => {
                         20, ['interpolate', ['linear'], ['get', 'height'], 0, 0.15, 25, 2.5],
                         21, ['interpolate', ['linear'], ['get', 'height'], 0, 0.15, 25, 4],
                         22, ['interpolate', ['linear'], ['get', 'height'], 0, 0.15, 25, 6],
-                    ]
+                    ],
+                    'icon-allow-overlap': true
                 }}
             />
             <Layer id="canopy-center-layer" source="tree-locations" type="circle"
