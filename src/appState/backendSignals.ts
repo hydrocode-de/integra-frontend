@@ -2,9 +2,8 @@
  * The backend signals are used to communicate with the backend and reflect the current state of the backend.
  * To ease things a bit, I put all the firebase stuff in here as well.
  */
-import { batch, computed, effect, signal } from "@preact/signals-react";
+import { batch, computed, signal } from "@preact/signals-react";
 import cloneDeep from "lodash.clonedeep";
-import { parse } from "papaparse";
 import { createClient } from "@supabase/supabase-js";
 
 // connect to supabase
@@ -199,6 +198,47 @@ supabase.from("full_dataset_json").select('*')
 })
 
 
+/**
+ * Adding shades data
+ */
+interface RawShadeArray {
+  species_id: number,
+  age: number,
+  month: number,
+  pruned: boolean,
+  coordinates: number[][]
+}
+
+export interface ShadeDatapoint {
+  id: number,
+  latin_name: string,
+  age: number,
+  shade_data: RawShadeArray[]
+}
+
+export interface ShadeData {
+  [key: string]: ShadeDatapoint[]
+}
+
+// make the signal private to prevent direct manipulation
+const rawShadeDatapoints = signal<ShadeData>({});
+
+// load shade data whenever a new tree species was used on the map
+export const loadShadeData = (species: string) => {
+  supabase.from("shades_json").select('*').eq('latin_name', species)
+  .then(response => response.data as ShadeDatapoint[])
+  
+  // buffer the loaded data
+  .then(points => {
+    rawShadeDatapoints.value = cloneDeep({
+      ...rawShadeDatapoints.value,
+      [species]: points
+    })
+  })
+}
+
+// read-only signal of shade data
+export const shadeDatapoints = computed<ShadeData>(() => rawShadeDatapoints.value)
 
 
 // DEPRECATED - old code
