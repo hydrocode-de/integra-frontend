@@ -18,6 +18,7 @@ import SideTreeDetailCard from "../components/TreeLines/SideTreeDetailCard";
 import Footer from "../layout/Footer";
 import { useState } from "react";
 import Summary from "../components/Summary/Summary";
+import TreeShadeSource from "../components/MainMap/TreeShadeSource";
 
 const DesktopMain: React.FC = () => {
   // get the current theme
@@ -118,6 +119,7 @@ const DesktopMain: React.FC = () => {
           <MainMap mapId="desktop">
             <DrawControl />
             <TreeLineSource />
+            <TreeShadeSource /> 
             <ReferenceAreaSource />
             <MapLayerSwitchButton />
             <TreeLineTooltip />
