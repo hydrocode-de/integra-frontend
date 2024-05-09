@@ -59,7 +59,11 @@ const SideTreeDetailCard: React.FC = () => {
     if (!tree.value) return null
 
     return <>
-        <Card sx={{mt: 1, mx: 1, p: open.value ? 2 : 1}}>
+        <Card sx={{
+            mt: open.value ? '16px' : '0px', 
+            ml: open.value ? '16px' : '0px',
+            p: open.value ? 2 : 1
+        }}>
             <Box display="flex">
                 <IconButton onClick={handleView} size="small">
                     <VisibilityOutlined />
