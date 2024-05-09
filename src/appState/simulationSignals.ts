@@ -6,12 +6,12 @@
  */
 
 import { batch, computed, effect, signal } from "@preact/signals-react";
-import { updateAllLineAges, treeLocationFeatures } from "./treeLineSignals";
 import { layerVisibility } from "./mapSignals";
 import buffer from "@turf/buffer";
 import area from "@turf/area";
-import { TreeLocationProperties } from "./treeLine.model";
+import { TreeLocationProperties } from "./tree.model";
 import { editAge, updateAllTreeAges } from "./treeLocationSignals";
+import { treeLocationFeatures } from "./geoJsonSignals";
 
 // the iteration is too important, so we make it private to this module
 const step = signal<number>(0)
@@ -106,9 +106,6 @@ export const resetSimulationStep = (newStep: number, previous: number) => {
 effect(() => {
     // check if we need to decrease or increase the treeAge
     const ageChange = simulationStep.value.current - simulationStep.value.previous
-
-    // update all treeLines accordingly
-    updateAllLineAges(ageChange)
 
     // update all single trees accordingly
     updateAllTreeAges(ageChange)
