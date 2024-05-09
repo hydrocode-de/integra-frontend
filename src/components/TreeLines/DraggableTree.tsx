@@ -17,16 +17,24 @@ const DraggableTree: React.FC<TreeDropProperties> = ({ treeType, age }) => {
     const [season, setSeason] = useState<SEASON>(currentSeason.peek())
     const [iconAbbrev, setIconAbbrev] = useState<string>('')
 
+    // we need to translate from preact-signals to react useEffect by hand here
+    const [iconsLoaded, setIconsLoaded] = useState<boolean>(treeIconsLoaded.peek())
+    useSignalEffect(() => {
+        setIconsLoaded(treeIconsLoaded.value)
+    })
+
     // listen for changes in the season
     useSignalEffect(() => {
         setSeason(currentSeason.value)
     })
 
     useEffect(() => {
+        // make react happy
+        if (!iconsLoaded) return
         // search the list of tree species to figure out the shape
         const icon = treeSpecies.peek().find(species => species.latin_name === treeType)?.icon_abbrev || ''
         setIconAbbrev(icon)
-    }, [treeType, treeIconsLoaded.value])
+    }, [treeType, iconsLoaded])
 
     // listen for changes in the age and treeType
     const updateSrc = useCallback(() => {
@@ -42,8 +50,9 @@ const DraggableTree: React.FC<TreeDropProperties> = ({ treeType, age }) => {
     }, [age, iconAbbrev, season])
 
     useEffect(() => {
+        if (!iconsLoaded) return
         updateSrc()
-    }, [updateSrc, treeIconsLoaded.value])
+    }, [updateSrc, iconsLoaded])
 
     // run only once on startup
     //useEffect(() => updateSrc(), [])
@@ -60,7 +69,7 @@ const DraggableTree: React.FC<TreeDropProperties> = ({ treeType, age }) => {
     }))
 
     return <>
-        <img src={src} ref={drag} style={{opacity: isDragging ? 0.4 : 0.9, width: '50px', height: '50px'}} />
+        <img src={src} ref={drag} style={{opacity: isDragging ? 0.4 : 0.9, width: '50px', height: '50px'}} alt="" />
     </>
 }
 
