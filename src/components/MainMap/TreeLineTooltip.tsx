@@ -1,7 +1,7 @@
 import { Box, Card, CardHeader, Typography } from "@mui/material"
 import { useSignal, useSignalEffect } from "@preact/signals-react"
 import { MapLayerMouseEvent, useMap } from "react-map-gl"
-import { TreeLocation } from "../../appState/treeLine.model"
+import { TreeLocation } from "../../appState/tree.model"
 
 const TreeLineTooltip: React.FC = () => {
     // create a signal for the tooltip location

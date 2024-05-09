@@ -1,11 +1,11 @@
 import { computed, effect } from "@preact/signals-react";
-import { ShadeDatapoint, loadShadeData, shadeDatapoints } from "./backendSignals";
+import { loadShadeData, shadeDatapoints } from "./backendSignals";
 import { appView } from "./appViewSignals";
-import { treeLocationFeatures } from "./treeLineSignals";
 
 import {toMercator, toWgs84} from "@turf/projection"
 import { seasonMonth } from "./simulationSignals";
 import { activeTreeTypes } from "./treeLocationSignals";
+import { treeLocationFeatures } from "./geoJsonSignals";
 
 
 // add an effect to load new shade-datapoints whenever a new tree type is added to the map

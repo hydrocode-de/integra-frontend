@@ -11,12 +11,10 @@ export interface TreeEditSettings {
 }
 
 // define the properties of a TreeLine
-interface TreeLineProperties {
+export interface TreeLineProperties {
     id: string,
-    name: string,
-    treeCount: number,
-    length?: number,
-    editSettings: TreeEditSettings
+    width: number,
+    name?: string,
 }
 
 // define the interface for user-created treeLines
@@ -34,12 +32,22 @@ export interface TreeLocationProperties extends Partial<TreeDataPoint> {
 // define the interface for user-created tree locations
 export type TreeLocation = FeatureCollection<Point, TreeLocationProperties>
 
-// define the buffer for the draw control
-export type DrawBuffer = FeatureCollection<LineString>
 
-// export an enum for draw state
-export enum DrawState {
-    OFF = "off",
-    LINE = "line",
-    EDIT = "edit"
+interface CalculatedTreeLineProperties extends TreeLineProperties {
+    treeCount?: number,
+    lineLength?: number,
+}
+
+// define the type of a calculated tree line
+export type CalculatedTreeLine = GeoJSON.FeatureCollection<GeoJSON.LineString, CalculatedTreeLineProperties>
+
+
+export interface RawTreeLocation {
+    id: string,
+    location: {lat: number, lng: number},
+    treeType: string,
+    icon_abbrev?: string  
+    treeLineId: string,
+    age: number,
+    harvestAge?: number
 }

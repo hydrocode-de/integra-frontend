@@ -1,10 +1,6 @@
 import { Box, Divider, Typography } from "@mui/material";
 import MainMap from "../MainMap/MainMap";
-import DrawControl from "../MainMap/DrawControl";
 import TreeLineSource from "../MainMap/TreeLineSource";
-import ReferenceAreaSource from "../MainMap/ReferenceAreaSource";
-import MapLayerSwitchButton from "../MainMap/MapLayerSwitchButton";
-import TreeLineTooltip from "../MainMap/TreeLineTooltip";
 import SummaryTable from "./SummaryTable";
 
 const ItemPair = ({ label, value }: { label: string; value: string }) => {
@@ -51,14 +47,13 @@ const Summary = () => {
         Hier sehen Sie eine Übersicht der geplanten Fläche.
       </Typography>
       <Box sx={{ display: "flex", py: 2 }}>
+        
         <Box sx={{ width: 500, height: 500 }}>
           <MainMap mapId="summary">
-            <DrawControl />
             <TreeLineSource />
-            <ReferenceAreaSource />
-            <TreeLineTooltip />
           </MainMap>
         </Box>
+        
         <Box sx={{ display: "flex", flexDirection: "column", flexGrow: 1 }}>
           <Box sx={{ ml: 2, mb: 2, flexGrow: 1, display: "flex" }}>
             <Box

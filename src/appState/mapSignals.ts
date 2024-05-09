@@ -1,5 +1,4 @@
 import { signal, computed, effect } from "@preact/signals-react"
-import { referenceFeature } from "./statisticsSignals"
 
 export interface ViewState {
     longitude: number,
@@ -29,17 +28,21 @@ export const center = computed(() => {
 // layers and their visibility
 export const layerVisibility = signal<{[layerId: string]: "none" | "visible"}>({})
 
-// add effects for aout-disabling layers
+// add effects for auto-disabling layers
 effect(() => {
-    if (!referenceFeature.value) {
-        const { referenceArea, ...others } = layerVisibility.peek()
-        layerVisibility.value = others 
-    }
-    // otherwise if it did not exist before, add it
-    else if (!Object.keys(layerVisibility.peek()).includes("referenceArea")) {
-        layerVisibility.value = {
-            ...layerVisibility.peek(),
-            referenceArea: "visible"
-        }
-    }
+    // I keep this for reference, when the real area is added
+    // please do not yet remove
+
+    
+    // if (!referenceFeature.value) {
+    //     const { referenceArea, ...others } = layerVisibility.peek()
+    //     layerVisibility.value = others 
+    // }
+    // // otherwise if it did not exist before, add it
+    // else if (!Object.keys(layerVisibility.peek()).includes("referenceArea")) {
+    //     layerVisibility.value = {
+    //         ...layerVisibility.peek(),
+    //         referenceArea: "visible"
+    //     }
+    // }
 })

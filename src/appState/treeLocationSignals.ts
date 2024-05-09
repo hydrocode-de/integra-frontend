@@ -1,11 +1,6 @@
-import { computed, effect, signal } from "@preact/signals-react";
-import { TreeLocation } from "./treeLine.model";
+import { computed, signal } from "@preact/signals-react";
+import { RawTreeLocation, TreeLocation } from "./tree.model";
 import { loadClosestDataPoint, treeSpecies } from "./backendSignals"
-import { treeLocationFeatures } from "./treeLineSignals";
-import { lineString } from "@turf/helpers";
-import length from "@turf/length";
-import center from "@turf/center";
-import distance from "@turf/distance";
 import { nanoid } from "nanoid";
 
 /**
@@ -16,18 +11,10 @@ import { nanoid } from "nanoid";
  * 3. change existing points
  */
 
-interface RawTreeLocation {
-    id: string,
-    location: {lat: number, lng: number},
-    treeType: string,
-    icon_abbrev?: string  
-    treeLineId: string,
-    age: number,
-    harvestAge?: number
-}
+
 // new main signal to store rawTreeLocation data which is the single source of truth
 // to where trees are located.
-const rawTreeLocationSeedData = signal<RawTreeLocation[]>([]);
+export const rawTreeLocationSeedData = signal<RawTreeLocation[]>([]);
 
 // as soon as the rawTreeLocationSeedData changes, we can compile a list of all existing treeLineIds
 // this could be extended to some basic metadata about these lines.
@@ -85,20 +72,6 @@ export const treeFeatures = computed<TreeLocation["features"]>(() => {
     return newTrees
 })
 
-// only trees that are not yet planted
-export const futureTreeFeatures = computed<TreeLocation["features"]>(() => {
-    // filter rawTreeFeatures for trees which are not yet planted
-    return rawTreeFeatures.value.filter(tree => tree.properties.age! <= 0)
-})
-
-// only trees that are already harvested
-export const harvestedTreeFeatures = computed<TreeLocation["features"]>(() => {
-    // filter rawTreeFeatures for trees which are already harvested
-    return rawTreeFeatures.value.filter(
-        tree => tree.properties.harvestAge && tree.properties.age! >= tree.properties.harvestAge
-    )
-})
-
 // create signals to compute the current edit Settings
 export const editAge = signal<number>(1)
 export const editHarvestAge = signal<number>(100)
@@ -135,113 +108,6 @@ export const addNewTree = (tree: {location: {lat: number, lng: number}, treeType
     ]
 }
 
-/**
- * Add the state of computed tree line features
- * 
- * These lines are a signal of its own but use an effect to update the geometry of the line
- * This way, a change in the tree location will effect the line, but the line can also hold line data
- * which can be changed independently of the tree locations. (like its width or usage)
- */
-// The calculatedTreeLineProps need their own interface as editSettings do not apply
-interface TreeLineProperties {
-    id: string,
-    width: number,
-    name?: string,
-}
-
-interface CalculatedTreeLineProperties extends TreeLineProperties {
-    treeCount?: number,
-    lineLength?: number,
-}
-
-export type CalculatedTreeLine = GeoJSON.FeatureCollection<GeoJSON.LineString, CalculatedTreeLineProperties>
-
-const calculatedTreeLineProps = signal<TreeLineProperties[]>([])
-
-
-
-// function to create new default treeLineProps, whenever there is a tree that is not part of any tree line.
-const createMissingTreeLineProps = (tree: RawTreeLocation) => {
-    // the the treeLineId in question
-    const treeLineId = tree.treeLineId
-
-    // creaze the properties with defaults
-    const props = { id: treeLineId, width: 5, name: `TreeLine ${treeLineId}` }
-
-    // create the new state of the treelineprops
-    const newTreeLineProps = [...calculatedTreeLineProps.peek(), {...props}]
-
-    // update the signal
-    calculatedTreeLineProps.value = newTreeLineProps
-}
-// define an effect to add a new treeLineProps whenever a tree is added with an treeLineId that is not yet in the list
-effect(() => {
-    // whenever rawTreeLocationSeedData changes, we need to check if there are new treeLineIds
-    rawTreeLocationSeedData.value.forEach(tree => {
-        // check if the active treeLineIds contain the treeLineId already
-        if (!activeTreeLineIds.peek().includes(tree.treeLineId)) {
-            createMissingTreeLineProps(tree)
-        }
-    })
-})
-
-// create calculatedTreeLineFeatures from the props. It is possible that we have props, that do not have 
-// trees anymore. These are just ignored here
-export const calculatedTreeLineFeatures = computed<CalculatedTreeLine["features"]>(() => {
-    // container for the line features
-    const treeLines: CalculatedTreeLine["features"] = []
-
-    const allTrees = treeLocationFeatures.value
-    const allLineProperties = calculatedTreeLineProps.value
-
-    // for each activeTreeLineId and filter all trees that belong to this line
-    activeTreeLineIds.peek().forEach(lineId => {
-        const trees = allTrees.filter(tree => tree.properties.treeLineId === lineId)
-
-        if (trees.length < 2) return
-        // construct the line from these features
-        // TODO: here, we could implement an algorithm that adds the points one at a time to contrstuct the 
-        // shortest possible path
-        
-        // get the centroid of the trees
-        const centroid = center({type: 'FeatureCollection', features: trees})
-
-        // get the tree that is furthest away from the centroid
-        const startTree = trees.reduce((prev, curr) => distance(centroid, curr) > distance(centroid, prev) ? curr : prev)
-
-        // construct the line 
-        const distToStartTree = trees.map(t => distance(startTree, t))
-
-        // order the trees by increasing distance to startTree
-        const orderedTrees = trees.sort((a, b) => distToStartTree[trees.indexOf(a)] - distToStartTree[trees.indexOf(b)])
-        
-        const line = lineString(orderedTrees.map(tree => tree.geometry.coordinates))
-        treeLines.push({
-            ...line,
-            properties: {
-                ...allLineProperties.find(line => line.id === lineId)!,
-                treeCount: trees.length,
-                lineLength: length(line, {units: 'meters'})
-            }
-        })
-    })
-
-    return [...treeLines]
-})
-
-export const calculatedTreeLines = computed<CalculatedTreeLine>(() => {
-    return {
-        type: 'FeatureCollection',
-        features: calculatedTreeLineFeatures.value
-    }
-})
-
-
-
-
-/**
- * Functions to change the tree location data
- */
 // change all tree ages at once
 export const updateAllTreeAges = (ageChange: number) => {
     // build the neww array
