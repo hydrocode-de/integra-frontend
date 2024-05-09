@@ -1,4 +1,4 @@
-import { Theme, ThemeProvider, createTheme, useMediaQuery } from "@mui/material";
+import { Theme, ThemeProvider, createTheme } from "@mui/material";
 import { Dispatch, createContext, useContext, useReducer } from "react";
 
 
@@ -33,7 +33,9 @@ const themeReducer = ((theme: Theme, action: ThemeAction) => {
 // create a ThemeProvider Component
 const IntegraThemeProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
     // to set the initial state of the theme, read out the users preference
-    const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
+    // We comment this for now, because we only optimize for light theme
+    // const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
+    const prefersDarkMode = false
 
     const initialTheme = createTheme({
         palette: {
