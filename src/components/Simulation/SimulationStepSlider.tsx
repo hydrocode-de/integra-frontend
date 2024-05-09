@@ -1,4 +1,4 @@
-import { Box, CardActionArea, Collapse, Slider, Typography } from "@mui/material";
+import { Box, Card, CardActionArea, Collapse, Slider, Typography } from "@mui/material";
 import { ExpandMore, ExpandLess } from "@mui/icons-material";
 import { Mark } from "@mui/base";
 import { seasonMonth, setSimulationStep, simulationStep } from "../../appState/simulationSignals";
@@ -44,40 +44,56 @@ const SimulationStepSlider: React.FC = () => {
 
   return (
     <>
-      <Box sx={{ borderRadius: 2, m: 1, ml: 2, mr: 2 }} p={open.value ? 0 : 0}>
-        <CardActionArea onClick={() => (open.value = !open.peek())}>
-          <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" m={0}>
-            <Typography variant={open.value ? "h6" : "body1"} my="auto">
-              {simulationStep.value.current === 0
-                ? "Simulation starten"
-                : "Bäume nach " + simulationStep.value.current + " Jahren"}
-            </Typography>
-            {/* <IconButton size="small"> */}
-            {open.value ? <ExpandMore /> : <ExpandLess />}
-            {/* </IconButton> */}
+      <Box
+        minWidth="450px"
+        width="40vw"
+        maxWidth="600px"
+        position="fixed"
+        bottom={open.value ? '48px' : '32px'}
+        left="0"
+        right="0"
+        mx="auto"
+        zIndex="99"
+      >
+        <Card sx={{ borderRadius: 2 }}>
+          
+          <Box sx={{ borderRadius: 2, m: 1, ml: 2, mr: 2 }} p={open.value ? 0 : 0}>
+            <CardActionArea onClick={() => (open.value = !open.peek())}>
+              <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" m={0}>
+                <Typography variant={open.value ? "h6" : "body1"} my="auto">
+                  {simulationStep.value.current === 0
+                    ? "Simulation starten"
+                    : "Bäume nach " + simulationStep.value.current + " Jahren"}
+                </Typography>
+                {/* <IconButton size="small"> */}
+                {open.value ? <ExpandMore /> : <ExpandLess />}
+                {/* </IconButton> */}
+              </Box>
+            </CardActionArea>
+            <Collapse in={open.value}>
+              <Box display="flex" mt={1} p={1} alignItems="center">
+                <Slider
+                  marks={marks}
+                  valueLabelDisplay="auto"
+                  value={simulationStep.value.current}
+                  onChange={(e, value) => setSimulationStep(value as number)}
+                />
+                <Box ml={2}>
+                  <CircularSlider 
+                    width={90}
+                    label=""
+                    data={Object.keys(monthToIndex)}
+                    dataIndex={6}
+                    onChange={(mon: keyof typeof monthToIndex) => setDataIndex(mon)}
+                    valueFontSize="0.9rem"
+                    labelColor="black"
+                  />
+                </Box>
+              </Box>
+            </Collapse>
           </Box>
-        </CardActionArea>
-        <Collapse in={open.value}>
-          <Box display="flex" mt={1} p={1} alignItems="center">
-            <Slider
-              marks={marks}
-              valueLabelDisplay="auto"
-              value={simulationStep.value.current}
-              onChange={(e, value) => setSimulationStep(value as number)}
-            />
-            <Box ml={2}>
-              <CircularSlider 
-                width={90}
-                label=""
-                data={Object.keys(monthToIndex)}
-                dataIndex={6}
-                onChange={(mon: keyof typeof monthToIndex) => setDataIndex(mon)}
-                valueFontSize="0.9rem"
-                labelColor="black"
-              />
-            </Box>
-          </Box>
-        </Collapse>
+
+        </Card>
       </Box>
     </>
   );
