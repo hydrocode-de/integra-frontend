@@ -15,7 +15,7 @@ const DraggableTree: React.FC<TreeDropProperties> = ({ treeType, age }) => {
     // get the current source, given the age
     const [src, setSrc] = useState<string>('icons/default-tree.png')
     const [season, setSeason] = useState<SEASON>(currentSeason.peek())
-    const [treeShape, setTreeShape] = useState<string>('Form1')
+    const [iconAbbrev, setIconAbbrev] = useState<string>('')
 
     // listen for changes in the season
     useSignalEffect(() => {
@@ -24,22 +24,22 @@ const DraggableTree: React.FC<TreeDropProperties> = ({ treeType, age }) => {
 
     useEffect(() => {
         // search the list of tree species to figure out the shape
-        const shape = treeSpecies.peek().find(species => species.latin_name === treeType)?.shape || 'Form1'
-        setTreeShape(shape)
+        const icon = treeSpecies.peek().find(species => species.latin_name === treeType)?.icon_abbrev || ''
+        setIconAbbrev(icon)
     }, [treeType, treeIconsLoaded.value])
 
     // listen for changes in the age and treeType
     const updateSrc = useCallback(() => {
         // check if we have a shape
-        if (!treeShape) {
+        if (!iconAbbrev || iconAbbrev === '') {
             setSrc('icons/default-tree.png')
         } else {
             // translate age to size
             const size = ageToSize(age)
-            const newSrc = `${process.env.REACT_APP_SUPABASE_URL}/storage/v1/object/public/icons/${treeShape}_${size}_${season}.png`
+            const newSrc = `${process.env.REACT_APP_SUPABASE_URL}/storage/v1/object/public/icons/${size}_${season}_${iconAbbrev}.png`
             setSrc(newSrc)
         }
-    }, [age, treeShape, season])
+    }, [age, iconAbbrev, season])
 
     useEffect(() => {
         updateSrc()

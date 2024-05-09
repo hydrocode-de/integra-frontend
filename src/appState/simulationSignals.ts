@@ -39,14 +39,14 @@ effect(() => {
 // season
 export const seasonMonth = signal<number>(6)
 
-export type SEASON = "Flowering" | "Summer" | "Autumn" | "Winter"
+export type SEASON = "flowering" | "summer" | "autumn" | "winter"
 export const currentSeason = computed<SEASON>(() => {
     const mon = seasonMonth.value
 
-    if ([12, 1, 2].includes(mon)) return "Winter"
-    if ([3, 4, 5].includes(mon)) return "Flowering"
-    if ([6, 7, 8].includes(mon)) return "Summer"
-    return "Autumn"
+    if ([12, 1, 2].includes(mon)) return "winter"
+    if ([3, 4, 5].includes(mon)) return "flowering"
+    if ([6, 7, 8].includes(mon)) return "summer"
+    return "autumn"
 })
 
 // use a function to go to the next season month to handle the order correctly

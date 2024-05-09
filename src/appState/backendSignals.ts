@@ -51,6 +51,7 @@ interface TreeSpecies {
   shape: string,
   latin_name: string,
   german_name?: string,
+  icon_abbrev?: string
 }
 
 interface TreeData extends TreeSpecies {
@@ -134,10 +135,10 @@ export const loadClosestDataPoint = (
 
 // helper function to translate age to age class
 export const ageToSize = (age: number): string => {
-  if (age <= 5) return "Size1";
-  if (age <= 20) return "Size2";
-  if (age <= 50) return "Size3";
-  return "Size4";
+  if (age <= 5) return "s";
+  if (age <= 20) return "m";
+  if (age <= 50) return "l";
+  return "xl";
 }
 
 // hard-code the url
@@ -146,17 +147,17 @@ const ICON_URL = `${process.env.REACT_APP_SUPABASE_URL}/storage/v1/object/public
 // load all form images
 // we load the form names from the db and load the image
 // each tree shape has in total four ages times four seasons
-supabase.from("unique_tree_shapes").select('*')
+supabase.from("species").select('icon_abbrev').filter('icon_abbrev', 'not.is', 'null')
 .then(r => {
   // console.log(r.data)
 
   // save the promises for the data icons
   const loadPromises: Promise<{filename: string, image: ImageBitmap}>[] = [];
 
-  (r.data as {shape: string}[]).forEach(({ shape }) => {
-    (['Size1', 'Size2', 'Size3', 'Size4'].forEach(size => {
-      (['Flowering', 'Summer', 'Autumn', 'Winter'].forEach(season => {
-        const file_name = `${shape}_${size}_${season}.png`
+  (r.data as {icon_abbrev: string}[]).forEach(({ icon_abbrev }) => {
+    (['s', 'm', 'l', 'xl'].forEach(size => {
+      (['flowering', 'summer', 'autumn', 'winter'].forEach(season => {
+        const file_name = `${size}_${season}_${icon_abbrev}.png`
         // console.log(file_name)
 
         // load the image
@@ -241,120 +242,3 @@ export const loadShadeData = (species: string) => {
 export const shadeDatapoints = computed<ShadeData>(() => rawShadeDatapoints.value)
 
 
-// DEPRECATED - old code
-// DATA HANDLING
-// this works with local data right now, but it is written in a way that we can
-// adapt to all possible data storage scenarios
-
-// const parseTreeData = (data: unknown[]): TreeData[] => {
-//   const parsedData: { [key: string]: TreeData } = {};
-//   // a little buffer to save species we already found
-//   const nameBuffer: string[] = [];
-
-//   // check each row
-//   data.forEach((row: any) => {
-//     // check if we have seen the species before
-//     if (row.Baumart && !nameBuffer.includes(row.Baumart)) {
-//       nameBuffer.push(row.Baumart);
-//       parsedData[row.Baumart] = {
-//         type: row.Baumart,
-//         latin: row.LateinischerName,
-//         short: row["Kürzel"],
-//         data: [],
-//       } as TreeData;
-//     }
-
-//     // add the data point to the species
-//     if (row.Baumart) {
-//       parsedData[row.Baumart].data.push({
-//         age: row.Alter,
-//         bhd: row.BHD,
-//         height: row["Baumhöhe"],
-//         canopyHeight: row["Kronenansatzhöhe"],
-//         canopyWidth: row.Kronenbreite,
-//         agb: row.AGB,
-//         carbon: row.Kohlenstoffgehalt,
-//         image: row.image || "default-tree.png",
-//         filename: row.image || "default-tree.png",
-//       });
-//     }
-//   });
-
-//   // return the data a a list
-//   // TODO this is the place where we could support different internal data formats
-//   return Object.values(parsedData);
-// };
-// // load the model_data.csv file on application startup
-// // right now, the data is located in the public folder, but the parse function can load from anywhere
-// // if we happen to gain so much control over the modelling step, that we can decide on the result format,
-// // we could directly export the data as parse injects it into the signals
-// parse("/model_data.csv", {
-//   download: true,
-//   // this does cause an error right now ?!
-//   //    worker: true,                   // use a webworker, so that the app can continue loading
-//   header: true, // first line are header
-//   dynamicTyping: true, // most data are numbers
-//   complete: async (results) => {
-//     // alternative: step: (row) => {} if stuff gets bigger one day
-//     // parse the data into the treeData signal
-//     const data = parseTreeData(results.data);
-
-//     // copy the current store with all pre-defined images (as of now only default)
-//     const store = cloneDeep(treeIconStore.peek());
-
-//     // map out only the images and metadata we need
-//     const allImages =  data.flatMap(tree => tree.data.map(d => {
-//       return {type: tree.type, age: d.age, image: d.image}
-//     }))
-
-//     // get a set of filenames
-//     const filenames = [...new Set(allImages.map(d => d.image))]
-
-//     // load these images async
-//     const loadPromises: Promise<{filename: string, image: ImageBitmap}>[] = filenames.map((filename) => {
-//       return new Promise(async (resolve) => {
-//         // await the fetch
-//         const image = await fetch(`/icons/${filename}`).then(r => r.blob()).then(blob => createImageBitmap(blob))
-
-//         resolve({filename, image})
-//       })
-//     })
-
-//     // wait util all images are loaded
-//     Promise.all(loadPromises).then(fileMaps => {
-//       // turn the filemaps into a Map
-//       const fileMap = new Map(fileMaps.map(f => [f.filename, f.image]))
-//       // console.log(fileMap)
-
-//       // map each image filename to the image blob to the store
-//       data.forEach(tree => tree.data.forEach(dataPoint => {
-//         const image =  fileMap.get(dataPoint.image) || DEFAULT_IMG
-//         store[`${tree.type}-${dataPoint.age}`] = {icon: image, filename: dataPoint.image}
-//       }))
-
-//       // update the data with the image identifier
-//       const updatedData = data.map((tree => {
-//         return {
-//           ...tree,
-//           data: tree.data.map(dataPoint => {
-//             return {
-//               ...dataPoint,
-
-//               // overwrite the filename with the treeIcon Idenfifier for mapbox
-//               image: `${tree.type}-${dataPoint.age}`
-//             }
-//           })
-//         }
-//       }))
-
-//       // update the treeData and the Icon store in one batch
-//       batch(() => {
-//         treeIconStore.value = cloneDeep(store);
-//         treeData.value = updatedData;
-//         treeIconsLoaded.value = true;
-
-//         // console.log(treeIconStore.peek())
-//       });
-//     })
-//   },
-// });
