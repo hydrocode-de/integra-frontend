@@ -9,8 +9,7 @@ import { batch, computed, effect, signal } from "@preact/signals-react";
 import localforage from "localforage";
 import { nanoid } from "nanoid";
 
-import { TreeLine } from "./treeLine.model";
-import { emitValidatedRawTreeLines, readOnlyRawTreeLineFeatures } from "./treeLineSignals";
+import { TreeLine } from "./tree.model";
 import { resetSimulationStep, simulationStep } from "./simulationSignals";
 
 // some helper
@@ -47,55 +46,55 @@ export const editState = computed<ProjectEditState>(() => internalEditState.valu
 
 // store the current project after some time
 let dirtyTimeout: NodeJS.Timeout | null = null
-effect(() => {
-    // get the project data as it changes
-    const rawData = readOnlyRawTreeLineFeatures.value
+// effect(() => {
+//     // get the project data as it changes
+//     const rawData = readOnlyRawTreeLineFeatures.value
 
-    // get the current simulation Step
-    const currentStep = simulationStep.value.current
-    const previous = simulationStep.peek().previous
+//     // get the current simulation Step
+//     const currentStep = simulationStep.value.current
+//     const previous = simulationStep.peek().previous
 
-    if (rawData.length > 0 || currentStep !== previous) {
-        internalEditState.value = ProjectEditState.DIRTY
-    } else {
-        internalEditState.value = ProjectEditState.SAVED
-    }
+//     if (rawData.length > 0 || currentStep !== previous) {
+//         internalEditState.value = ProjectEditState.DIRTY
+//     } else {
+//         internalEditState.value = ProjectEditState.SAVED
+//     }
 
-    // if the current project is anonymous, we do not save anything
-    if (project.value.id === "anonymous") return
+//     // if the current project is anonymous, we do not save anything
+//     if (project.value.id === "anonymous") return
     
-    // whenever the rawFeatures change, we wait a second and the save to localstorage
-    if (dirtyTimeout) clearTimeout(dirtyTimeout)
-    dirtyTimeout = setTimeout(() => {
-        localforage.setItem<ProjectData>(
-            project.peek().id,
-            { 
-                treeLines: readOnlyRawTreeLineFeatures.peek(),
-                simulationStep: simulationStep.peek().current
-            }
-        ).then(() => internalEditState.value = ProjectEditState.SAVED)
-        // for development you can uncomment this line to see when saving is finished
-        //.then(() =>  console.log(`saved ${rawData.length} features to ${project.peek().id}`))
-    }, DIRTY_TIMEOUT)
-})
+//     // whenever the rawFeatures change, we wait a second and the save to localstorage
+//     if (dirtyTimeout) clearTimeout(dirtyTimeout)
+//     dirtyTimeout = setTimeout(() => {
+//         localforage.setItem<ProjectData>(
+//             project.peek().id,
+//             { 
+//                 treeLines: readOnlyRawTreeLineFeatures.peek(),
+//                 simulationStep: simulationStep.peek().current
+//             }
+//         ).then(() => internalEditState.value = ProjectEditState.SAVED)
+//         // for development you can uncomment this line to see when saving is finished
+//         //.then(() =>  console.log(`saved ${rawData.length} features to ${project.peek().id}`))
+//     }, DIRTY_TIMEOUT)
+// })
 
 
 // effect to listen for changes in the current project
-effect(() => {
-    // we only load data from the storage if the project is not anonymous
-    // if (project.value.id !== "anonymous") {
-        localforage.getItem<ProjectData>(project.value.id).then(data => {
-            if (data) {
-                resetSimulationStep(data.simulationStep, data.simulationStep)
-                emitValidatedRawTreeLines(data.treeLines)
-            } else {
-                // empty as the current project has no data
-                resetSimulationStep(0, 0)
-                emitValidatedRawTreeLines([])
-            }
-        })
-    // }
-})
+// effect(() => {
+//     // we only load data from the storage if the project is not anonymous
+//     // if (project.value.id !== "anonymous") {
+//         localforage.getItem<ProjectData>(project.value.id).then(data => {
+//             if (data) {
+//                 resetSimulationStep(data.simulationStep, data.simulationStep)
+//                 emitValidatedRawTreeLines(data.treeLines)
+//             } else {
+//                 // empty as the current project has no data
+//                 resetSimulationStep(0, 0)
+//                 emitValidatedRawTreeLines([])
+//             }
+//         })
+//     // }
+// })
 
 // listen for changes in the projects array - but only if project is not null
 effect(() => {
