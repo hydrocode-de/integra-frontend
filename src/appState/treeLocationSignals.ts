@@ -20,7 +20,7 @@ interface RawTreeLocation {
     id: string,
     location: {lat: number, lng: number},
     treeType: string,
-    treeShape: string,
+    icon_abbrev?: string  
     treeLineId: string,
     age: number,
     harvestAge?: number
@@ -50,7 +50,7 @@ export const rawTreeFeatures = computed<TreeLocation["features"]>(() => {
             },
             properties: {
                 treeType: tree.treeType,
-                treeShape: tree.treeShape,
+                icon_abbrev: tree.icon_abbrev,
                 treeLineId: tree.treeLineId,
                 ...loadClosestDataPoint(tree.treeType, tree.age),
                 age: tree.age,
@@ -116,9 +116,10 @@ export const addNewTree = (tree: {location: {lat: number, lng: number}, treeType
     const nextId = `s${rawTreeLocationSeedData.peek().length + 1}`
 
     // get the shape associated to this tree
-    const shape = treeSpecies.peek().find(species => species.latin_name === tree.treeType)!.shape
-    if (!shape) {
-        console.log(`ERROR: addNewTree(${tree.treeType}): no shape found for this treeType`)
+    const icon_abbrev = treeSpecies.peek().find(species => species.latin_name === tree.treeType)!.icon_abbrev
+    if (!icon_abbrev) {
+        console.log(`ERROR: addNewTree('${tree.treeType}'): no icon associated to this treeType`)
+        console.log(treeSpecies.peek())
     }
 
     rawTreeLocationSeedData.value = [
@@ -129,7 +130,7 @@ export const addNewTree = (tree: {location: {lat: number, lng: number}, treeType
             age: editAge.peek(),
             harvestAge: editHarvestAge.peek(),
             treeLineId: editTreeLineId.peek(),
-            treeShape: shape
+            icon_abbrev: icon_abbrev
         }
     ]
 }
