@@ -1,5 +1,5 @@
 import { computed, effect } from "@preact/signals-react";
-import { ShadeDatapoint, loadShadeData, shadeDatapoints } from "./backendSignals";
+import { loadShadeData, shadeDatapoints } from "./backendSignals";
 import { appView } from "./appViewSignals";
 import { treeLocationFeatures } from "./treeLineSignals";
 
