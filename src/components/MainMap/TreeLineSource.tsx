@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useState } from "react"
 import { Source, Layer, useMap, MapLayerMouseEvent, MapMouseEvent } from "react-map-gl"
 
-import {  treeLocations } from "../../appState/treeLineSignals"
-import {  TreeLocation } from "../../appState/treeLine.model"
+import {  TreeLocation } from "../../appState/tree.model"
 import { canopyLayer, currentSeason } from "../../appState/simulationSignals"
 import { useSignal, useSignalEffect } from "@preact/signals-react"
 import { layerVisibility, zoom } from "../../appState/mapSignals"
-import { calculatedTreeLines, updateTreePosition } from "../../appState/treeLocationSignals"
+import { updateTreePosition } from "../../appState/treeLocationSignals"
 import { setDetailId } from "../../appState/sideContentSignals"
 import { ageToSize } from "../../appState/backendSignals"
+import { calculatedTreeLines, treeLocations } from "../../appState/geoJsonSignals"
 
 const TreeLineSource: React.FC = () => {
     // add a state to track if a tree location is currently dragged
