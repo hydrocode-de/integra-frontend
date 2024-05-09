@@ -31,7 +31,7 @@ const TreeLineSource: React.FC = () => {
                 ...f,
                 properties: {
                     ...f.properties,
-                    image: `${f.properties.treeShape}_${size}_${season}.png`
+                    image: `${size}_${season}_${f.properties.icon_abbrev}.png`
                 }
             }
         })
