@@ -1,13 +1,11 @@
 import { AppBar, Box, Tab, Tabs, Toolbar, Typography } from "@mui/material";
 import {  Summarize, Map } from "@mui/icons-material";
 
-
 import MainMap from "../components/MainMap/MainMap";
 import TreeLineSource from "../components/MainMap/TreeLineSource";
 import TreeLineTooltip from "../components/MainMap/TreeLineTooltip";
 import MapLayerSwitchButton from "../components/MainMap/MapLayerSwitchButton";
 import SimulationStepSlider from "../components/Simulation/SimulationStepSlider";
-import DraggableElementsCard from "../layout/desktop/DraggableElementsCard";
 import SideContent from "../layout/desktop/SideContent";
 import SideTreeDetailCard from "../components/TreeLines/SideTreeDetailCard";
 import Footer from "../layout/Footer";
@@ -16,6 +14,7 @@ import Summary from "../components/Summary/Summary";
 import TreeShadeSource from "../components/MainMap/TreeShadeSource";
 import { simulationIsTouched } from "../appState/simulationSignals";
 import { hasData } from "../appState/geoJsonSignals";
+import MainActionCard from "../layout/desktop/MainActionCard/MainActionCard";
 
 const DesktopMain: React.FC = () => {
 
@@ -55,7 +54,7 @@ const DesktopMain: React.FC = () => {
           { hasData.value || simulationIsTouched.value ? <SimulationStepSlider /> : null}
 
           <SideContent>
-            <DraggableElementsCard />
+            <MainActionCard />
             <SideTreeDetailCard />
           </SideContent>
 
