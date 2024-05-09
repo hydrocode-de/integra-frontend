@@ -5,8 +5,7 @@ import { useIntegraTheme, useModeToggler } from "../context/IntegraThemeContext"
 import MainMap from "../components/MainMap/MainMap";
 import DrawControl from "../components/MainMap/DrawControl";
 import TreeLineSource from "../components/MainMap/TreeLineSource";
-import { drawState, hasData } from "../appState/treeLineSignals";
-import { DrawState } from "../appState/treeLine.model";
+import { hasData } from "../appState/treeLineSignals";
 import TreeLineTooltip from "../components/MainMap/TreeLineTooltip";
 import ReferenceAreaSource from "../components/MainMap/ReferenceAreaSource";
 import ProjectSelect from "../components/ProjectSelect";
@@ -16,12 +15,10 @@ import SimulationResultDetailCard from "../components/Simulation/SimulationResul
 import DraggableElementsCard from "../layout/desktop/DraggableElementsCard";
 import SideContent from "../layout/desktop/SideContent";
 import SideTreeDetailCard from "../components/TreeLines/SideTreeDetailCard";
-import TreeSpeciesSelectionModal from "../components/treeSpeciesSelection/TreeSpeciesSelectionModal";
-import { zoom } from "../appState/mapSignals";
 import Footer from "../layout/Footer";
 import { useState } from "react";
-import { act } from "react-dom/test-utils";
 import Summary from "../components/Summary/Summary";
+import TreeShadeSource from "../components/MainMap/TreeShadeSource";
 
 const DesktopMain: React.FC = () => {
   // get the current theme
@@ -65,29 +62,30 @@ const DesktopMain: React.FC = () => {
           </Toolbar>
         </AppBar>
       </Box>
-      {activeTabbar === "map" ? (
-        // <Box width="100vw" height="calc(100vh - 100px)" m="0" p="0" display="flex">
-        <Box width="100vw" sx={{ flexGrow: 1, display: "flex", height: "100%" }} m="0" p="0">
+      
+      { activeTabbar === "map" ? (
+      <Box width="100vw" height="calc(100vh - 64px)" m="0" p="0" display="flex">
+            {/* add the simulation slider */}
+            <Box
+              minWidth="450px"
+              width="40vw"
+              maxWidth="600px"
+              position="fixed"
+              bottom="24px"
+              left="0"
+              right="0"
+              mx="auto"
+              zIndex="99"
+            >
+              <Card sx={{ borderRadius: 2 }}>
+                <SimulationStepSlider />
+              </Card>
+            </Box>
+            
+
           {/* Only render the simulation cards if there is data and no editing */}
           {hasData.value ? (
             <>
-              {/* add the simulation slider */}
-              <Box
-                minWidth="256px"
-                width="40vw"
-                maxWidth="384px"
-                position="fixed"
-                bottom="16px"
-                left="0"
-                right="0"
-                mx="auto"
-                zIndex="99"
-              >
-                <Card sx={{ borderRadius: 2 }}>
-                  <SimulationStepSlider />
-                </Card>
-              </Box>
-
               {/* add the statistics card */}
               <Box
                 // width="calc(100% - 350px - 10px - 100px)"
@@ -121,6 +119,7 @@ const DesktopMain: React.FC = () => {
           <MainMap mapId="desktop">
             <DrawControl />
             <TreeLineSource />
+            <TreeShadeSource /> 
             <ReferenceAreaSource />
             <MapLayerSwitchButton />
             <TreeLineTooltip />

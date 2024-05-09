@@ -55,7 +55,7 @@ const DraggableElementsCard: React.FC = () => {
                         </DragBox>
 
                         <DragBox>
-                            <DraggableTree treeType="Pyrus communis"  age={editAge.value} />
+                            <DraggableTree treeType="Prunus avium"  age={editAge.value} />
                         </DragBox>
                      </Box>
                     </>)

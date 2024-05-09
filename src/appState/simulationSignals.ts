@@ -37,8 +37,29 @@ effect(() => {
 })
 
 // season
+export const seasonMonth = signal<number>(6)
+
 export type SEASON = "Flowering" | "Summer" | "Autumn" | "Winter"
-export const currentSeason = signal<SEASON>("Summer")
+export const currentSeason = computed<SEASON>(() => {
+    const mon = seasonMonth.value
+
+    if ([12, 1, 2].includes(mon)) return "Winter"
+    if ([3, 4, 5].includes(mon)) return "Flowering"
+    if ([6, 7, 8].includes(mon)) return "Summer"
+    return "Autumn"
+})
+
+// use a function to go to the next season month to handle the order correctly
+// this can then later implement the half-months
+export const nextSeasonMonth = () => {
+    const currentMonth = seasonMonth.value
+    if (currentMonth === 12) {
+        seasonMonth.value = 1
+    } else {
+        seasonMonth.value = currentMonth + 1
+    
+    }
+}
 
 // public handler to set the simulation duration directly
 /**

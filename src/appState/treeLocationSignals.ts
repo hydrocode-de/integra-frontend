@@ -64,6 +64,13 @@ export const rawTreeFeatures = computed<TreeLocation["features"]>(() => {
     return features
 })
 
+// export a list of all unique tree types planted (or about to plant) on the area
+export const activeTreeTypes = computed<string[]>(() => {
+    // go for all unique tree types in the seed data
+    const uniqueTypes = new Set<string>(rawTreeFeatures.value.map(feature => feature.properties.treeType))
+
+    return Array.from(uniqueTypes)
+})
 /* 
  * generate the various filtered views on rawTreeFeatures
  */
