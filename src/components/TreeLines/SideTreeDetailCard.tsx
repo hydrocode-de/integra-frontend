@@ -1,7 +1,7 @@
 import { useSignal, useSignalEffect } from "@preact/signals-react";
 import { activeTreeDetailId, setDetailId } from "../../appState/sideContentSignals";
 import { rawTreeFeatures, updateSingleTreeSeed } from "../../appState/treeLocationSignals";
-import { TreeLocation } from "../../appState/treeLine.model";
+import { TreeLocation } from "../../appState/tree.model";
 import { Box, Card, CardActionArea, Chip, Collapse, IconButton, Rating, Slider, Tooltip, Typography } from "@mui/material";
 import { Close, ExpandLess, ExpandMore, VisibilityOutlined } from "@mui/icons-material";
 import { flyTo } from "../MainMap/MapObservableStore";
@@ -14,7 +14,7 @@ const SideTreeDetailCard: React.FC = () => {
     // get a copy of the tree
     const tree = useSignal<TreeLocation["features"][0] | undefined>(undefined)
 
-    {/* For now, we use a mix of pollen, nectar and blossoms, like an overall rating */}
+    // For now, we use a mix of pollen, nectar and blossoms, like an overall rating
     const pollenRating = useSignal<number>(0)
     const nectarRating = useSignal<number>(0)
     const blossomsRating = useSignal<number>(0)

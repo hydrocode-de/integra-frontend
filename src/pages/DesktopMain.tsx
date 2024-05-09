@@ -4,7 +4,6 @@ import {  Summarize, Map } from "@mui/icons-material";
 
 import MainMap from "../components/MainMap/MainMap";
 import TreeLineSource from "../components/MainMap/TreeLineSource";
-import { hasData } from "../appState/treeLineSignals";
 import TreeLineTooltip from "../components/MainMap/TreeLineTooltip";
 import MapLayerSwitchButton from "../components/MainMap/MapLayerSwitchButton";
 import SimulationStepSlider from "../components/Simulation/SimulationStepSlider";
@@ -16,6 +15,7 @@ import { useState } from "react";
 import Summary from "../components/Summary/Summary";
 import TreeShadeSource from "../components/MainMap/TreeShadeSource";
 import { simulationIsTouched } from "../appState/simulationSignals";
+import { hasData } from "../appState/geoJsonSignals";
 
 const DesktopMain: React.FC = () => {
 
