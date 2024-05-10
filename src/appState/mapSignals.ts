@@ -1,4 +1,5 @@
 import { signal, computed, effect } from "@preact/signals-react"
+import { LngLatBounds } from "mapbox-gl"
 
 export interface ViewState {
     longitude: number,
@@ -15,6 +16,8 @@ export const viewState = signal<ViewState>({
     bearing: 0,
     pitch: 0
 })
+
+export const mapBounds = signal<LngLatBounds | undefined>(undefined)
 
 export const zoom = computed(() => viewState.value.zoom)
 
