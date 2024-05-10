@@ -4,7 +4,7 @@ import { useDrop } from "react-dnd"
 import mapboxgl from "mapbox-gl"
 
 // load the map signals to update the viewState
-import { viewState } from "../../appState/mapSignals"
+import { mapBounds, viewState } from "../../appState/mapSignals"
 
 // load the mapbox css
 import 'mapbox-gl/dist/mapbox-gl.css'
@@ -23,6 +23,9 @@ const MainMap: React.FC<React.PropsWithChildren<{mapId: string}>> = ({ mapId, ch
     const onMove = (event: ViewStateChangeEvent) => {
         // update the viewState signal
         viewState.value = {...viewState.value, ...event.viewState}
+
+        // update the bounding box of the map
+        mapBounds.value = mapRef.current?.getMap().getBounds()
     }
 
     const onLoad = (e: mapboxgl.MapboxEvent) => {
