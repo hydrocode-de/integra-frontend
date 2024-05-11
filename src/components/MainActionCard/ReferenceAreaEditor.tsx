@@ -22,7 +22,7 @@ const ReferenceAreaEditor: React.FC = () => {
 
                 <Alert severity="warning">Bearbeiten noch in Entwicklung.</Alert>
 
-                <Button variant="outlined" disabled={zoom.value < 13.0} onClick={onLoadOSM}>Load OSM</Button>
+                {/* <Button variant="outlined" disabled={zoom.value < 13.0} onClick={onLoadOSM}>Load OSM</Button> */}
             </>) }
         </Box>
     </>

@@ -2,6 +2,7 @@ import { Layer, MapLayerMouseEvent, Source, useMap } from "react-map-gl"
 import { AreaSuggestions, ReferenceArea, areaSuggestions, createReferenceAreaFromSuggestion, referenceArea } from "../../appState/referenceAreaSignals"
 import { useEffect, useState } from "react"
 import { useSignalEffect } from "@preact/signals-react"
+import { layerVisibility } from "../../appState/mapSignals"
 
 export const ReferenceAreaSource: React.FC = () => {
     // get a reference to the map
@@ -99,6 +100,7 @@ export const ReferenceAreaSource: React.FC = () => {
                 id="reference-area"
                 source="reference-area"
                 type="fill"
+                layout={{'visibility': layerVisibility.value['referenceArea']}}
                 paint={{
                     'fill-color': 'purple',
                     'fill-opacity': 0.08,
@@ -108,6 +110,7 @@ export const ReferenceAreaSource: React.FC = () => {
                 id="refernce-area-line"
                 source="reference-area"
                 type="line"
+                layout={{'visibility': layerVisibility.value['referenceArea']}}
                 paint={{
                     'line-color': 'purple',
                     'line-width': 5,
