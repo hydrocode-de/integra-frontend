@@ -175,6 +175,7 @@ export const createReferenceAreaFromSuggestion = (osm_id: string) => {
     const areaCenter = center(suggestion)
     flyTo({
         zoom: 16.0, 
-        center: {lat: areaCenter.geometry.coordinates[1], lng: areaCenter.geometry.coordinates[0]}
+        center: {lat: areaCenter.geometry.coordinates[1], lng: areaCenter.geometry.coordinates[0]},
+        pitch: 45
     })
 }
