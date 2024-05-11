@@ -16,6 +16,7 @@ import { simulationIsTouched } from "../appState/simulationSignals";
 import { hasData } from "../appState/geoJsonSignals";
 import MainActionCard from "../components/MainActionCard/MainActionCard";
 import ReferenceAreaSource from "../components/MainMap/ReferenceAreaSource";
+import ResultContent from "../layout/desktop/ResultContent";
 
 const DesktopMain: React.FC = () => {
 
@@ -66,6 +67,10 @@ const DesktopMain: React.FC = () => {
             <TreeLineTooltip />
             <ReferenceAreaSource />
           </MainMap>
+
+          <ResultContent>
+            
+          </ResultContent>
         </Box>
       ) : (
         <Summary />
