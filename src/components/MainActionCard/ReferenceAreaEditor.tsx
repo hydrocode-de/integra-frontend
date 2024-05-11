@@ -2,6 +2,7 @@ import { Alert, Box, Button } from "@mui/material"
 import { flyTo } from "../MainMap/MapObservableStore"
 import { zoom } from "../../appState/mapSignals"
 import { loadReferenceAreaSuggestions } from "../../appState/referenceAreaSignals"
+import GeocoderSearch from "./GeocoderSearch"
 
 
 const ReferenceAreaEditor: React.FC = () => {
@@ -11,8 +12,11 @@ const ReferenceAreaEditor: React.FC = () => {
     return <>
         <Box display="flex" flexDirection="column">
             { zoom.value < 14.5 ? (<>
-                <Alert severity="info">
-                    Zoome nahe genug heran, um eine Agrarfläche zu wählen.
+                <Box sx={{mt: 2}}>
+                    <GeocoderSearch />
+                </Box>
+                <Alert sx={{mt: 2}} severity="info">
+                    Zoome nahe genug heran, um eine Agrarfläche zu wählen, oder suche einen Ort.
                     <Button variant="text" onClick={() => flyTo({zoom: 14.5})}>heranzoomen</Button>
                 </Alert>
             </>) : (<>

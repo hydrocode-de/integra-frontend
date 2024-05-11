@@ -6,6 +6,7 @@ import DraggableElements from "./DraggableElements";
 import { zoom } from "../../appState/mapSignals";
 import { referenceArea } from "../../appState/referenceAreaSignals";
 import { useState } from "react";
+import ZoomBackCard from "./ZoomBackCard";
 
 const MainActionCard: React.FC = () => {
     // create a signal to track collapsible state of the card
@@ -15,8 +16,6 @@ const MainActionCard: React.FC = () => {
     // - finding a location and adding a reference area
     // - adding trees
     const [actionMode, setActionMode] = useState<"reference" | "addTree" | "zoomIn">("reference")
-    const [hasReference, setHasReference] = useState<boolean>(false)
-    const [zoomedOut, setZoomedOut] = useState<boolean>(false)
 
     // listen to changes in the zoom level and the reference area
     useSignalEffect(() => {
@@ -44,15 +43,17 @@ const MainActionCard: React.FC = () => {
             <CardActionArea onClick={() => (open.value = !open.peek())}>
                 <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" m={0}>
                     <Typography variant={open.value ? "h6" : "body1"} my="auto">
-                        {actionMode === 'addTree' ? 'Bäume hinzufügen' : 'Agrarfläche hinzufügen' }
+                        {actionMode === 'reference' ?  'Agrarfläche hinzufügen' : 'Bäume hinzufügen' }
                     </Typography>
                     { open.value ? <ExpandLess /> : <ExpandMore /> }
                 </Box>
-            </CardActionArea>  
+            </CardActionArea>
 
             <Collapse in={open.value}>
                 <Box component="div" display="flex" flexDirection="row" mt="1">
-                    { actionMode === 'addTree' ? <DraggableElements /> : <ReferenceAreaEditor /> }
+                    { actionMode === 'reference' ? <ReferenceAreaEditor /> : null }
+                    { actionMode === 'addTree' ? <DraggableElements /> : null }
+                    { actionMode === 'zoomIn' ? <ZoomBackCard /> : null }
                 </Box>
             </Collapse>
         </Card>

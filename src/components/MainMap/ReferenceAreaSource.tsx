@@ -100,7 +100,7 @@ export const ReferenceAreaSource: React.FC = () => {
                 id="reference-area"
                 source="reference-area"
                 type="fill"
-                layout={{'visibility': layerVisibility.value['referenceArea']}}
+                layout={{'visibility': layerVisibility.value['referenceArea'] === 'visible' ? 'visible' : 'none'}}
                 paint={{
                     'fill-color': 'purple',
                     'fill-opacity': 0.08,
@@ -110,7 +110,7 @@ export const ReferenceAreaSource: React.FC = () => {
                 id="refernce-area-line"
                 source="reference-area"
                 type="line"
-                layout={{'visibility': layerVisibility.value['referenceArea']}}
+                layout={{'visibility': layerVisibility.value['referenceArea'] === 'visible' ? 'visible' : 'none'}}
                 paint={{
                     'line-color': 'purple',
                     'line-width': 5,
