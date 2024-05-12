@@ -14,7 +14,8 @@ import Summary from "../components/Summary/Summary";
 import TreeShadeSource from "../components/MainMap/TreeShadeSource";
 import { simulationIsTouched } from "../appState/simulationSignals";
 import { hasData } from "../appState/geoJsonSignals";
-import MainActionCard from "../layout/desktop/MainActionCard/MainActionCard";
+import MainActionCard from "../components/MainActionCard/MainActionCard";
+import ReferenceAreaSource from "../components/MainMap/ReferenceAreaSource";
 
 const DesktopMain: React.FC = () => {
 
@@ -63,6 +64,7 @@ const DesktopMain: React.FC = () => {
             <TreeShadeSource /> 
             <MapLayerSwitchButton />
             <TreeLineTooltip />
+            <ReferenceAreaSource />
           </MainMap>
         </Box>
       ) : (
