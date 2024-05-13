@@ -12,6 +12,9 @@ export const supabase = createClient(supabaseUrl, supabaseKey);
 export interface SpeciesProfile {
   id: number;
   species_id: number;
+  latin_name: string;
+  german_name: string;
+  type: string;
   profile: string;
   precipitation_min: number;
   precipitation_max: number;
@@ -41,7 +44,7 @@ const rawSpeciesProfile = signal<SpeciesProfile[] | null>(null);
 
 // console.log("fetching species profile");
 supabase
-  .from("species_profile")
+  .from("species_profile_full_view")
   .select("*")
   .then(({ data, error }) => {
     if (error) {
