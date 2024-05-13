@@ -1,10 +1,11 @@
 import { Box, Modal, Typography } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import DraggableTree from "../TreeLines/DraggableTree";
 import { EmojiNature, EuroRounded, ForestRounded } from "@mui/icons-material";
 import StandortValueRange from "./StandortSlider";
 import NutzungsChecker from "./NutzungsChecker";
 import { Signal } from "@preact/signals-react";
+import { speciesProfile } from "../../appState/speciesProfileSignals";
 
 const treeZoneStyle = {
   display: "flex",
@@ -29,9 +30,10 @@ const treeZoneSelectedStyle = {
   },
 };
 
-const TreeSpeciesSelectionModal: React.FC<{isOpen:Signal<boolean>}> = ({isOpen}) => {
+const TreeSpeciesSelectionModal: React.FC<{ isOpen: Signal<boolean> }> = ({ isOpen }) => {
+  console.log(speciesProfile.value);
   return (
-    <Modal onClose={() => (isOpen.value = !isOpen.peek())}  open={isOpen.value}>
+    <Modal onClose={() => (isOpen.value = !isOpen.peek())} open={isOpen.value}>
       <Box
         sx={{
           position: "absolute",
