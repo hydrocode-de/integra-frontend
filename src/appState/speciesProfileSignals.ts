@@ -9,7 +9,7 @@ const supabaseKey = process.env.REACT_APP_SUPABASE_KEY!;
 
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
-export interface SpeciesProfile {
+export interface SpeciesProfileI {
   id: number;
   species_id: number;
   latin_name: string;
@@ -40,7 +40,7 @@ export interface SpeciesProfile {
   information_links: string[];
 }
 
-const rawSpeciesProfile = signal<SpeciesProfile[] | null>(null);
+const rawSpeciesProfile = signal<SpeciesProfileI[] | null>(null);
 
 // console.log("fetching species profile");
 supabase
