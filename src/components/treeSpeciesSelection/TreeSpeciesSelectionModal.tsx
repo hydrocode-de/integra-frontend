@@ -7,6 +7,8 @@ import NutzungsChecker from "./NutzungsChecker";
 import { Signal } from "@preact/signals-react";
 import { speciesProfile } from "../../appState/speciesProfileSignals";
 
+import { treeSpecies } from "../../appState/backendSignals";
+
 const treeZoneStyle = {
   display: "flex",
   flexDirection: "column",
@@ -81,34 +83,17 @@ const TreeSpeciesSelectionModal: React.FC<{ isOpen: Signal<boolean> }> = ({ isOp
           }}
           component="div"
         >
-          <Box sx={treeZoneStyle}>
-            <DraggableTree treeType="Bergahorn" age={50} />
-            <Typography variant="caption">Bergahorn</Typography>
-          </Box>
-          <Box sx={treeZoneStyle}>
-            <DraggableTree treeType="Bergahorn" age={50} />
-            <Typography variant="caption">Bergahorn</Typography>
-          </Box>
-          <Box sx={treeZoneSelectedStyle}>
-            <DraggableTree treeType="Bergahorn" age={50} />
-            <Typography variant="caption">Feldahorn</Typography>
-          </Box>
-          <Box sx={treeZoneStyle}>
-            <DraggableTree treeType="Bergahorn" age={50} />
-            <Typography variant="caption">Bergahorn</Typography>
-          </Box>
-          <Box sx={treeZoneStyle}>
-            <DraggableTree treeType="Bergahorn" age={50} />
-            <Typography variant="caption">Bergahorn</Typography>
-          </Box>
-          <Box sx={treeZoneStyle}>
-            <DraggableTree treeType="Bergahorn" age={50} />
-            <Typography variant="caption">Bergahorn</Typography>
-          </Box>
-          <Box sx={treeZoneStyle}>
-            <DraggableTree treeType="Bergahorn" age={50} />
-            <Typography variant="caption">Bergahorn</Typography>
-          </Box>
+          {treeSpecies
+            .peek()
+            .filter((species) => species.latin_name === "Acer pseudoplatanus" || species.latin_name === "Prunus avium")
+            ?.map((species) => {
+              return (
+                <Box sx={treeZoneStyle}>
+                  <DraggableTree treeType={species.latin_name} age={50} />
+                  <Typography variant="caption">{species.german_name}</Typography>
+                </Box>
+              );
+            })}
         </Box>
         <Box sx={{ display: "flex" }}>
           <Box sx={{ maxWidth: 500, pl: 2, pr: 4, borderRadius: 2, p: 2, bgcolor: "grey.100" }}>
