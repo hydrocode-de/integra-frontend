@@ -1,5 +1,5 @@
 import { Box, Modal, Typography } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import DraggableTree from "../TreeLines/DraggableTree";
 import { EmojiNature, EuroRounded, ForestRounded } from "@mui/icons-material";
 import StandortValueRange from "./StandortSlider";
@@ -33,6 +33,8 @@ const treeZoneSelectedStyle = {
 };
 
 const TreeSpeciesSelectionModal: React.FC<{ isOpen: Signal<boolean> }> = ({ isOpen }) => {
+  const [selectedSpecies, setSelectedSpecies] = useState<string>("Acer pseudoplatanus");
+
   console.log(speciesProfile.value);
   return (
     <Modal onClose={() => (isOpen.value = !isOpen.peek())} open={isOpen.value}>
@@ -88,7 +90,10 @@ const TreeSpeciesSelectionModal: React.FC<{ isOpen: Signal<boolean> }> = ({ isOp
             .filter((species) => species.latin_name === "Acer pseudoplatanus" || species.latin_name === "Prunus avium")
             ?.map((species) => {
               return (
-                <Box sx={treeZoneStyle}>
+                <Box
+                  sx={selectedSpecies === species.latin_name ? treeZoneSelectedStyle : treeZoneStyle}
+                  onClick={() => setSelectedSpecies(species.latin_name)}
+                >
                   <DraggableTree treeType={species.latin_name} age={50} />
                   <Typography variant="caption">{species.german_name}</Typography>
                 </Box>
