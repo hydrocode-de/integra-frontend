@@ -5,7 +5,7 @@ import { EmojiNature, EuroRounded, ForestRounded } from "@mui/icons-material";
 import StandortValueRange from "./StandortSlider";
 import NutzungsChecker from "./NutzungsChecker";
 import { Signal } from "@preact/signals-react";
-import { speciesProfile } from "../../appState/speciesProfileSignals";
+import { SpeciesProfileI, speciesProfile } from "../../appState/speciesProfileSignals";
 
 import { treeSpecies } from "../../appState/backendSignals";
 
@@ -33,7 +33,9 @@ const treeZoneSelectedStyle = {
 };
 
 const TreeSpeciesSelectionModal: React.FC<{ isOpen: Signal<boolean> }> = ({ isOpen }) => {
-  const [selectedSpecies, setSelectedSpecies] = useState<string>("Acer pseudoplatanus");
+  const [selectedSpeciesProfile, setSelectedSpeciesProfile] = useState<SpeciesProfileI | undefined>(
+    speciesProfile.peek()?.[0]
+  );
 
   console.log(speciesProfile.value);
   return (
@@ -85,14 +87,14 @@ const TreeSpeciesSelectionModal: React.FC<{ isOpen: Signal<boolean> }> = ({ isOp
           }}
           component="div"
         >
-          {treeSpecies
+          {speciesProfile
             .peek()
-            .filter((species) => species.latin_name === "Acer pseudoplatanus" || species.latin_name === "Prunus avium")
+            // .filter((species) => species.latin_name === "Acer pseudoplatanus" || species.latin_name === "Prunus avium")
             ?.map((species) => {
               return (
                 <Box
-                  sx={selectedSpecies === species.latin_name ? treeZoneSelectedStyle : treeZoneStyle}
-                  onClick={() => setSelectedSpecies(species.latin_name)}
+                  sx={selectedSpeciesProfile?.latin_name === species.latin_name ? treeZoneSelectedStyle : treeZoneStyle}
+                  onClick={() => setSelectedSpeciesProfile(species)}
                 >
                   <DraggableTree treeType={species.latin_name} age={50} />
                   <Typography variant="caption">{species.german_name}</Typography>
@@ -103,14 +105,10 @@ const TreeSpeciesSelectionModal: React.FC<{ isOpen: Signal<boolean> }> = ({ isOp
         <Box sx={{ display: "flex" }}>
           <Box sx={{ maxWidth: 500, pl: 2, pr: 4, borderRadius: 2, p: 2, bgcolor: "grey.100" }}>
             <Typography sx={{ mb: 2 }} variant="inherit">
-              Feldahorn (Acer campestre)
+              {selectedSpeciesProfile?.german_name} ({selectedSpeciesProfile?.latin_name})
             </Typography>
             <Typography variant="body2" textAlign="justify">
-              Der Feldahorn (Acer campestre) eignet sich sehr gut für die Stammholzproduktion oder den Einsatz als
-              Heckenpflanze in Agroforstsystemen. Der Feldahorn hat einen langsamen Wuchs und erreicht eine maximale
-              Höhe von 28 m. Er stellt geringe Ansprüche an den Standort. Der Feldahorn hat eine vielseitige ökologische
-              Bedeutung. Sein leicht abbaubares Laub fördert die Humusbildung und dient als hochwertiges Futter für
-              Insekten und Vögel. Es kann ebenfalls als Futter für Nutztiere verwendet werden.
+              {selectedSpeciesProfile?.profile}
             </Typography>
           </Box>
           {/* <Box sx={{ display: "flex", mt: 4 }}> */}
@@ -120,9 +118,9 @@ const TreeSpeciesSelectionModal: React.FC<{ isOpen: Signal<boolean> }> = ({ isOp
             </Typography>
             <StandortValueRange
               min={100}
-              max={1000}
-              minValue={300}
-              maxValue={500}
+              max={2000}
+              minValue={selectedSpeciesProfile?.precipitation_min || 300}
+              maxValue={selectedSpeciesProfile?.precipitation_max || 500}
               label="Niederschlagsbedarf (mm)"
               marks={[
                 {
@@ -130,71 +128,80 @@ const TreeSpeciesSelectionModal: React.FC<{ isOpen: Signal<boolean> }> = ({ isOp
                   label: "100",
                 },
                 {
-                  value: 300,
-                  label: "300",
-                },
-                {
-                  value: 600,
-                  label: "600",
-                },
-                {
-                  value: 900,
-                  label: "900",
+                  value: 2000,
+                  label: "2000",
                 },
               ]}
             />
             <StandortValueRange
-              min={100}
-              max={1000}
-              minValue={300}
-              maxValue={500}
+              min={0}
+              max={10}
+              minValue={selectedSpeciesProfile?.soil_moisture_min || 1}
+              maxValue={selectedSpeciesProfile?.soil_moisture_max || 10}
               label="Bodenfeuchte (mm)"
               marks={[
                 {
-                  value: 100,
-                  label: "100",
+                  value: 0,
+                  label: "0",
                 },
                 {
-                  value: 300,
-                  label: "300",
-                },
-                {
-                  value: 600,
-                  label: "600",
-                },
-                {
-                  value: 900,
-                  label: "900",
+                  value: 10,
+                  label: "10",
                 },
               ]}
             />
             <StandortValueRange
-              min={100}
-              max={1000}
-              minValue={300}
-              maxValue={500}
+              min={0}
+              max={10}
+              minValue={selectedSpeciesProfile?.ph_min || 4}
+              maxValue={selectedSpeciesProfile?.ph_max || 8}
               label="pH-Wert"
               marks={[
                 {
-                  value: 100,
-                  label: "100",
+                  value: 0,
+                  label: "0",
                 },
                 {
-                  value: 300,
-                  label: "300",
+                  value: 10,
+                  label: "10",
+                },
+              ]}
+            />
+            <StandortValueRange
+              min={0}
+              max={10}
+              minValue={selectedSpeciesProfile?.nutrient_demand_min || 0} // if value is 0 it is executed as false (fix)
+              maxValue={selectedSpeciesProfile?.nutrient_demand_max || 10}
+              label="Nährstoffbedarf"
+              marks={[
+                {
+                  value: 0,
+                  label: "0",
                 },
                 {
-                  value: 600,
-                  label: "600",
+                  value: 10,
+                  label: "10",
+                },
+              ]}
+            />
+            <StandortValueRange
+              min={0}
+              max={10}
+              minValue={selectedSpeciesProfile?.late_frost_resistance_min || 0} // if value is 0 it is executed as false (fix)
+              maxValue={selectedSpeciesProfile?.late_frost_resistance_max || 10}
+              label="Spätfrostresistenz"
+              marks={[
+                {
+                  value: 0,
+                  label: "0",
                 },
                 {
-                  value: 900,
-                  label: "900",
+                  value: 10,
+                  label: "10",
                 },
               ]}
             />
           </Box>
-
           <Box sx={{ borderRadius: 2, p: 2, bgcolor: "grey.100" }}>
             <Typography mb={2} variant="inherit">
               Nutzungsmöglichkeiten
