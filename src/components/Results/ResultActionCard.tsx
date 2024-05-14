@@ -1,8 +1,12 @@
-import { Box, Button, Card, CardActionArea, Tab, Tabs, Typography } from "@mui/material"
+import { Box, Button, Card, CardActionArea, Collapse, Tab, Tabs, Typography } from "@mui/material"
 import { treeLocationFeatures } from "../../appState/geoJsonSignals"
 import { AppView, appView } from "../../appState/appViewSignals"
 import { useSignal } from "@preact/signals-react"
 import { ExpandLess, ExpandMore } from "@mui/icons-material"
+import BiomassResultCard from "./BiomassResultCard"
+import ShadeResultCard from "./ShadeResultCard"
+import BlossomResultCard from "./BlossomResultCard"
+import InsectResultCard from "./InsectResultCard"
 
 const ResultActionCard: React.FC = () => {
     // also the Resilt Action Card can be minimized
@@ -42,6 +46,13 @@ const ResultActionCard: React.FC = () => {
                     </Box>
                 </CardActionArea>
             </>)}
+
+            <Collapse in={open.value}>
+                { appView.value === "biomass" ? <BiomassResultCard /> : null }
+                { appView.value === "shade" ? <ShadeResultCard /> : null }
+                { appView.value === "blossoms" ? <BlossomResultCard /> : null }
+                { appView.value === "insects" ? <InsectResultCard /> : null}
+            </Collapse>
 
 
         </Card>
