@@ -5,6 +5,7 @@ import { seasonMonth, setSimulationStep, simulationStep } from "../../appState/s
 import { useSignal } from "@preact/signals-react";
 import CircularSlider from "@fseehawer/react-circular-slider";
 import { useEffect, useState } from "react";
+import { appView } from "../../appState/appViewSignals";
 
 // hard-code some marks
 const marks: Mark[] = [
@@ -72,13 +73,17 @@ const SimulationStepSlider: React.FC = () => {
             </CardActionArea>
             <Collapse in={open.value}>
               <Box display="flex" mt={1} p={1} alignItems="center">
+                
                 <Slider
                   marks={marks}
                   valueLabelDisplay="auto"
                   value={simulationStep.value.current}
                   onChange={(e, value) => setSimulationStep(value as number)}
                 />
-                <Box ml={2}>
+
+                {/* The month slider is not needed with the biomass tab open */}
+                { appView.value === 'biomass' ? null :(
+                  <Box ml={2}>
                   <CircularSlider 
                     width={90}
                     label=""
@@ -89,6 +94,8 @@ const SimulationStepSlider: React.FC = () => {
                     labelColor="black"
                   />
                 </Box>
+                )}
+                
               </Box>
             </Collapse>
           </Box>
