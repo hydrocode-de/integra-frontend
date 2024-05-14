@@ -13,7 +13,7 @@ const ResultActionCard: React.FC = () => {
     const open = useSignal<boolean>(true)
 
     // finally, if there is no result, we don't render anything
-    if (treeLocationFeatures.value.length === 0 && false) {
+    if (treeLocationFeatures.value.length === 0 && true) {  // set the && true to && false during dev to always show the card
         return <></>
     }
 
