@@ -1,25 +1,27 @@
 import { computed } from "@preact/signals-react";
-import { referenceArea } from "./referenceAreaSignals";
 import { shadingPolygons } from "./shadingSignals";
 
 import union from "@turf/union"
 import difference from "@turf/difference"
 import area from "@turf/area"
+import { agriculturalArea } from "./treeLineSignals";
+import intersect from "@turf/intersect";
 
 /**
  * The shade simulation needs to go into its own signal to 
  * avoid circular imports with shade (which depends on the tree locations) 
  * and the reference area
  */
-type AgriculturalArea = GeoJSON.FeatureCollection<GeoJSON.Polygon | GeoJSON.MultiPolygon>
+type ShadedArea = GeoJSON.FeatureCollection<GeoJSON.Polygon | GeoJSON.MultiPolygon>
 
-export const agriculturalArea = computed<AgriculturalArea>(() => {
+export const shadedArea = computed<ShadedArea>(() => {
     // the agricultural are is the difference between the reference area and the shading area
-    const reference = referenceArea.value
+    // todo is this reference or agricultural area?
+    const agricultural = agriculturalArea.value
     const singleShades = shadingPolygons.value.features
 
     // return nothing if any of the above is still empty
-    if (reference.features.length === 0 || singleShades.length === 0) {
+    if (agricultural.features.length === 0 || singleShades.length === 0) {
         return {type: 'FeatureCollection', features: []}
     }
 
@@ -28,30 +30,29 @@ export const agriculturalArea = computed<AgriculturalArea>(() => {
     // union all the shading polygons
     singleShades.forEach(f => shade = union(shade, f) || shade)
 
-    // the difference is the area we are after
-    const diff = difference(reference.features[0], shade) || reference.features[0]
+    // the agricultural area is already clipped by the tree lines, so
+    // we need the intersection here
+    const intersection = intersect(shade, agricultural.features[0])
     return {
         type: 'FeatureCollection',
-        features: [diff]
+        features: intersection ? [intersection] : []
     
     }
 })
 
 export interface ShadeStats {
-    referenceArea: number,
     agriculturalArea: number,
     shadedArea: number,
     shadedRatio: number
 }
 export const shadeStats = computed<ShadeStats>(() => {
-    const refArea = area(referenceArea.value)
     const agriArea = area(agriculturalArea.value)
-    const shadedRatio = 100 * (1 - agriArea / refArea)
+    const shadeArea = area(shadedArea.value)
+    const shadedRatio = 100 * ( shadeArea / agriArea)
 
     return {
-        referenceArea: refArea,
         agriculturalArea: agriArea,
-        shadedArea: refArea - agriArea,
+        shadedArea: shadeArea,
         shadedRatio: shadedRatio
     }
 })
