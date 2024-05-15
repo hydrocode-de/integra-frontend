@@ -81,7 +81,7 @@ export const loadReferenceAreaSuggestions = (): Promise<void> => {
 }
 
 // add a timeout for loading suggestions, as we only call the overpass api every second
-const isRequestionSuggestions = signal(false)
+const isRequestingSuggestions = signal(false)
 
 // add an effect to load suggestions every time the map moves and there are no suggestions loaded for the area.
 // This is only done, if the zoom level is close enough and there is not yet a reference area loaded.
@@ -89,7 +89,7 @@ effect(() => {
     // make sure that the trigger is on false
     // using value here, will trigger the effect right after a call has been made,
     // then it is checked after 1 second after each request if more requests are needed
-    if (isRequestionSuggestions.value) return
+    if (isRequestingSuggestions.value) return
 
     // first make sure that there is not yet a reference area
     if (referenceArea.value.features.length !== 0) return
@@ -129,12 +129,12 @@ effect(() => {
     if (intersectArea / mapArea < 0.7) {
         console.log('loading suggestions')
         // first set the trigger to true
-        isRequestionSuggestions.value = true
+        isRequestingSuggestions.value = true
 
         // load the sugegstions from Overpass API
         loadReferenceAreaSuggestions().then(() => {
             // loading is finished, so we set the trigger back in one second
-            setTimeout(() => isRequestionSuggestions.value = false, 1000)
+            setTimeout(() => isRequestingSuggestions.value = false, 1000)
         })
     } else {
         console.log(`no need to load suggestions, current coverage: ${(intersectArea / mapArea * 100).toFixed(1)}%`)
