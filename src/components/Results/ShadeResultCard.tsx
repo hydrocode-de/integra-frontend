@@ -11,7 +11,7 @@ const ShadeResultCard: React.FC = () => {
                     data={[{
                         type: 'pie',
                         values: [
-                            (shadeStats.value.agriculturalArea / 10000).toPrecision(3), 
+                            ((shadeStats.value.agriculturalArea - shadeStats.value.shadedArea) / 10000).toPrecision(3), 
                             (shadeStats.value.shadedArea / 10000).toPrecision(3)
                         ],
                         labels: ['Unbeschattet', 'Beschattet'],
