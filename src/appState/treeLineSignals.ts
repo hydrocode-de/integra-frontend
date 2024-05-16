@@ -6,21 +6,19 @@
  * which can be changed independently of the tree locations. (like its width or usage)
  */
 import { computed, effect, signal } from "@preact/signals-react"
-import { CalculatedTreeLine, RawTreeLocation, TreeLineProperties } from "./tree.model"
+import { CalculatedTreeLine, RawTreeLocation, TreeLineArea, TreeLineProperties } from "./tree.model"
 import { activeTreeLineIds, rawTreeLocationSeedData } from "./treeLocationSignals"
 import { treeLocationFeatures } from "./geoJsonSignals"
 import center from "@turf/center"
 import distance from "@turf/distance"
 import length from "@turf/length"
 import { lineString } from "@turf/helpers"
-
-
-
-
-
+import buffer from "@turf/buffer"
+import { referenceArea } from "./referenceAreaSignals"
+import difference from "@turf/difference"
+import union from "@turf/union"
 
 const calculatedTreeLineProps = signal<TreeLineProperties[]>([])
-
 
 
 // function to create new default treeLineProps, whenever there is a tree that is not part of any tree line.
@@ -78,11 +76,17 @@ export const calculatedTreeLineFeatures = computed<CalculatedTreeLine["features"
         // order the trees by increasing distance to startTree
         const orderedTrees = trees.sort((a, b) => distToStartTree[trees.indexOf(a)] - distToStartTree[trees.indexOf(b)])
         
+        // build the line stirng
         const line = lineString(orderedTrees.map(tree => tree.geometry.coordinates))
+        
+        // get the properties of the line
+        const props = allLineProperties.find(l => l.id === lineId) || {id: lineId, width: 5, name: `TreeLine ${lineId}`}
+        
+        // push the line to the treeLines
         treeLines.push({
             ...line,
             properties: {
-                ...allLineProperties.find(line => line.id === lineId)!,
+                ...props,
                 treeCount: trees.length,
                 lineLength: length(line, {units: 'meters'})
             }
@@ -92,5 +96,57 @@ export const calculatedTreeLineFeatures = computed<CalculatedTreeLine["features"
     return [...treeLines]
 })
 
+// build tree line Areas fron the calculatedTreeLineFeatures
+export const treeLineAreaFeatures = computed<TreeLineArea["features"]>(() => {
+    // get the current line features
+    const lines = calculatedTreeLineFeatures.value
 
+    // if there are no lines, return an empty array
+    if (lines.length === 0) return []
+    
+    // map them into buffer of given length
+    return lines.map(line => {
+        const lineArea = buffer(line, line.properties.width / 2, {units: 'meters'})
+        return {
+            ...lineArea,
+            properties: {
+                ...line.properties
+            }
+        }
+        
+    })
+})
+
+export const treeLineArea = computed<TreeLineArea>(() => {
+    return {
+        type: 'FeatureCollection',
+        features: treeLineAreaFeatures.value
+    }
+})
+
+// export the agricultural area, which is the difference of the reference area and the treeLine area
+export type AgriculturalArea = GeoJSON.FeatureCollection<GeoJSON.Polygon | GeoJSON.MultiPolygon>
+
+export const agriculturalArea = computed<AgriculturalArea>(() => {
+    const reference = referenceArea.value
+    const treeArea = treeLineArea.value
+
+    // return nothing if any of the above is still empty
+    if (reference.features.length === 0) {
+        return {type: 'FeatureCollection', features: []}
+    }
+
+    // otherwise, union all the tree areas into a Multipolygon
+    let lineUnion: GeoJSON.Feature<GeoJSON.Polygon | GeoJSON.MultiPolygon> = {type: 'Feature', geometry: {type: 'Polygon', 'coordinates': []}, properties: {}}
+    treeArea.features.forEach(f => lineUnion = union(lineUnion, f) || lineUnion)
+
+    // get the difference between the reference area and the union of treeLines
+    const diff = difference(reference.features[0], lineUnion) || reference.features[0]
+
+    // return the collection
+    return {
+        type: 'FeatureCollection',
+        features: [diff]
+    }
+})
 

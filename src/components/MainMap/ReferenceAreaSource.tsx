@@ -3,6 +3,7 @@ import { AreaSuggestions, ReferenceArea, areaSuggestions, createReferenceAreaFro
 import { useEffect, useState } from "react"
 import { useSignalEffect } from "@preact/signals-react"
 import { layerVisibility } from "../../appState/mapSignals"
+import { agriculturalArea } from "../../appState/treeLineSignals"
 
 export const ReferenceAreaSource: React.FC = () => {
     // get a reference to the map
@@ -90,7 +91,7 @@ export const ReferenceAreaSource: React.FC = () => {
                 }} 
             />
         </Source>
-        <Source
+        <Source 
             id="reference-area"
             type="geojson"
             data={referenceArea.value}
@@ -99,21 +100,42 @@ export const ReferenceAreaSource: React.FC = () => {
             <Layer 
                 id="reference-area"
                 source="reference-area"
-                type="fill"
-                layout={{'visibility': layerVisibility.value['referenceArea'] === 'visible' ? 'visible' : 'none'}}
-                paint={{
-                    'fill-color': 'purple',
-                    'fill-opacity': 0.08,
-                }}
-            />
-            <Layer 
-                id="refernce-area-line"
-                source="reference-area"
                 type="line"
                 layout={{'visibility': layerVisibility.value['referenceArea'] === 'visible' ? 'visible' : 'none'}}
                 paint={{
                     'line-color': 'purple',
-                    'line-width': 5,
+                    'line-width': 9,
+                
+                }}
+            />
+        </Source>
+        <Source
+            id="agriculture-area"
+            type="geojson"
+            data={agriculturalArea.value}
+            generateId
+        >
+            <Layer 
+                id="agriculture-area"
+                source="agriculture-area"
+                type="fill"
+                layout={{'visibility': layerVisibility.value['referenceArea'] === 'visible' ? 'visible' : 'none'}}
+                paint={{
+                    'fill-color': '#FFA07A',
+                    // 'fill-color': 'purple',
+                    'fill-opacity': 0.2,
+                }}
+                beforeId="tree-locations"
+            />
+            <Layer 
+                id="agriculture-area-line"
+                source="agriculture-area"
+                type="line"
+                layout={{'visibility': layerVisibility.value['referenceArea'] === 'visible' ? 'visible' : 'none'}}
+                paint={{
+                    'line-color': '#FFA07A',
+                    // 'line-color': 'purple',
+                    'line-width': 3,
                 }}
             />
         </Source>
