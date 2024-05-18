@@ -33,7 +33,7 @@ const distToLabel = (dist: number) => {
 interface DistanceLineProperties {
     distance: number
     label: string
-    id?: string
+    idPair?: string
 }
 
 export type DistanceLine = GeoJSON.FeatureCollection<GeoJSON.LineString, DistanceLineProperties>
@@ -123,9 +123,6 @@ export const treeLineDistanceFeatures = computed<DistanceLine["features"]>(() =>
 
     // buffer each tree line by 100 meters, intersect the buffer and create a distance line to each feature
     calculatedTreeLineFeatures.value.forEach((line, index) => {
-        // if the line id is already in the id list, skip (because the distance was already calculated for the other line)
-        if (distLines.find(f => f.properties.id === line.properties.id)) return
-        
         // buffer the line by 100 meter
         const lineBuffer = buffer(line, 100, {units: 'meters'})
 
@@ -134,6 +131,9 @@ export const treeLineDistanceFeatures = computed<DistanceLine["features"]>(() =>
 
         // get the closest points on the lines to each other
         others.forEach(other => {
+            // if the other line did already form a pair, skip this
+            if (distLines.find(l => l.properties.idPair === `${other.properties.id} - ${line.properties.id}`)) return
+            
             // go for all points on the other line to find the closest one
             const feat = explode(other).features.map(p => {
                 // get the closest point on the main line
@@ -152,7 +152,7 @@ export const treeLineDistanceFeatures = computed<DistanceLine["features"]>(() =>
                 {
                     distance: feat.distance,
                     label: distToLabel(feat.distance),
-                    id: other.properties.id
+                    idPair: `${line.properties.id} - ${other.properties.id}`
                 }   
             ))
         })
