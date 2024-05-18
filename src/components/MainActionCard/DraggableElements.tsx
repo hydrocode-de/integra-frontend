@@ -1,6 +1,6 @@
 import { Box, Button, Typography } from "@mui/material"
 import { useSignal } from "@preact/signals-react"
-import TreeSpeciesSelectionModal from "../TreeSpeciesSelection/TreeSpeciesSelectionModal"
+import TreeSpeciesSelectionModal from "../treeSpeciesSelection/TreeSpeciesSelectionModal"
 import DraggableTree from "../TreeLines/DraggableTree"
 import { editAge, editTreeLineId } from "../../appState/treeLocationSignals"
 import TreeLinesOverview from "../TreeLines/TreeLinesOverview"

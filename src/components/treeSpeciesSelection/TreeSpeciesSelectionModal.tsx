@@ -4,8 +4,8 @@ import DraggableTree from "../TreeLines/DraggableTree";
 import { EmojiNature, EuroRounded, ForestRounded } from "@mui/icons-material";
 import { Signal } from "@preact/signals-react";
 import { SpeciesProfileI, speciesProfile } from "../../appState/speciesProfileSignals";
-import StandortValueRange from "../TreeSpeciesSelection/StandortSlider";
-import NutzungsChecker from "../TreeSpeciesSelection/NutzungsChecker";
+import StandortValueRange from "./StandortSlider";
+import NutzungsChecker from "./NutzungsChecker";
 
 const treeZoneStyle = {
   display: "flex",
