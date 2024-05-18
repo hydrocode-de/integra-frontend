@@ -52,6 +52,8 @@ const StandortValueRange = ({
   minValue,
   maxValue,
   label,
+  tooltipTitle,
+  tooltipContent,
 }: {
   marks: { value: number; label: string }[];
   min: number;
@@ -59,13 +61,15 @@ const StandortValueRange = ({
   minValue: number;
   maxValue: number;
   label: string;
+  tooltipTitle?: string;
+  tooltipContent?: string;
 }) => {
   return (
     <Tooltip
       title={
         <>
-          <Typography color="inherit">Niederschlagsbedarf</Typography>
-          Feldahorn (Acer campestre) benötigt 300-500 mm Niederschlag pro Jahr.
+          <Typography color="inherit">{tooltipTitle}</Typography>
+          {tooltipContent}
         </>
       }
       placement="top"

@@ -7,8 +7,6 @@ import NutzungsChecker from "./NutzungsChecker";
 import { Signal } from "@preact/signals-react";
 import { SpeciesProfileI, speciesProfile } from "../../appState/speciesProfileSignals";
 
-import { treeSpecies } from "../../appState/backendSignals";
-
 const treeZoneStyle = {
   display: "flex",
   flexDirection: "column",
@@ -87,20 +85,17 @@ const TreeSpeciesSelectionModal: React.FC<{ isOpen: Signal<boolean> }> = ({ isOp
           }}
           component="div"
         >
-          {speciesProfile
-            .peek()
-            // .filter((species) => species.latin_name === "Acer pseudoplatanus" || species.latin_name === "Prunus avium")
-            ?.map((species) => {
-              return (
-                <Box
-                  sx={selectedSpeciesProfile?.latin_name === species.latin_name ? treeZoneSelectedStyle : treeZoneStyle}
-                  onClick={() => setSelectedSpeciesProfile(species)}
-                >
-                  <DraggableTree treeType={species.latin_name} age={50} />
-                  <Typography variant="caption">{species.german_name}</Typography>
-                </Box>
-              );
-            })}
+          {speciesProfile.peek()?.map((species) => {
+            return (
+              <Box
+                sx={selectedSpeciesProfile?.latin_name === species.latin_name ? treeZoneSelectedStyle : treeZoneStyle}
+                onClick={() => setSelectedSpeciesProfile(species)}
+              >
+                <DraggableTree treeType={species.latin_name} age={50} />
+                <Typography variant="caption">{species.german_name}</Typography>
+              </Box>
+            );
+          })}
         </Box>
         <Box sx={{ display: "flex" }}>
           <Box sx={{ maxWidth: 500, pl: 2, pr: 4, borderRadius: 2, p: 2, bgcolor: "grey.100" }}>
@@ -117,6 +112,8 @@ const TreeSpeciesSelectionModal: React.FC<{ isOpen: Signal<boolean> }> = ({ isOp
               Standortansprüche
             </Typography>
             <StandortValueRange
+              tooltipTitle="Niederschlagsbedarf"
+              tooltipContent={`${selectedSpeciesProfile?.german_name} (${selectedSpeciesProfile?.latin_name}) benötigt ${selectedSpeciesProfile?.precipitation_min}-${selectedSpeciesProfile?.precipitation_max} mm Niederschlag pro Jahr.`}
               min={100}
               max={2000}
               minValue={selectedSpeciesProfile?.precipitation_min || 300}
@@ -134,6 +131,8 @@ const TreeSpeciesSelectionModal: React.FC<{ isOpen: Signal<boolean> }> = ({ isOp
               ]}
             />
             <StandortValueRange
+              tooltipTitle="Bodenfeuchte"
+              tooltipContent={`${selectedSpeciesProfile?.german_name} (${selectedSpeciesProfile?.latin_name}) benötigt ${selectedSpeciesProfile?.soil_moisture_min}-${selectedSpeciesProfile?.soil_moisture_max} mm Bodenfeuchte.`}
               min={0}
               max={10}
               minValue={selectedSpeciesProfile?.soil_moisture_min || 1}
@@ -151,6 +150,8 @@ const TreeSpeciesSelectionModal: React.FC<{ isOpen: Signal<boolean> }> = ({ isOp
               ]}
             />
             <StandortValueRange
+              tooltipTitle="pH-Wert"
+              tooltipContent={`${selectedSpeciesProfile?.german_name} (${selectedSpeciesProfile?.latin_name}) benötigt ${selectedSpeciesProfile?.ph_min}-${selectedSpeciesProfile?.ph_max} pH-Wert.`}
               min={0}
               max={10}
               minValue={selectedSpeciesProfile?.ph_min || 4}
@@ -168,6 +169,8 @@ const TreeSpeciesSelectionModal: React.FC<{ isOpen: Signal<boolean> }> = ({ isOp
               ]}
             />
             <StandortValueRange
+              tooltipTitle="Nährstoffbedarf"
+              tooltipContent={`${selectedSpeciesProfile?.german_name} (${selectedSpeciesProfile?.latin_name}) benötigt ${selectedSpeciesProfile?.nutrient_demand_min}-${selectedSpeciesProfile?.nutrient_demand_max} Nährstoffbedarf.`}
               min={0}
               max={10}
               minValue={selectedSpeciesProfile?.nutrient_demand_min || 0} // if value is 0 it is executed as false (fix)
@@ -185,6 +188,8 @@ const TreeSpeciesSelectionModal: React.FC<{ isOpen: Signal<boolean> }> = ({ isOp
               ]}
             />
             <StandortValueRange
+              tooltipTitle="Spätfrostresistenz"
+              tooltipContent={`${selectedSpeciesProfile?.german_name} (${selectedSpeciesProfile?.latin_name}) hat eine Spätfrostresistenz von ${selectedSpeciesProfile?.late_frost_resistance_min} bis ${selectedSpeciesProfile?.late_frost_resistance_max}.`}
               min={0}
               max={10}
               minValue={selectedSpeciesProfile?.late_frost_resistance_min || 0} // if value is 0 it is executed as false (fix)
@@ -202,18 +207,83 @@ const TreeSpeciesSelectionModal: React.FC<{ isOpen: Signal<boolean> }> = ({ isOp
               ]}
             />
           </Box>
-          <Box sx={{ borderRadius: 2, p: 2, bgcolor: "grey.100" }}>
-            <Typography mb={2} variant="inherit">
-              Nutzungsmöglichkeiten
-            </Typography>
-            <NutzungsChecker label="Stammholzproduktion" icon={<EuroRounded color="info" />} status="checked" />
-            <NutzungsChecker label="Biomasse / Kurzumtrieb" icon={<ForestRounded color="info" />} status="unchecked" />
-            <NutzungsChecker label="Bienenweide" icon={<EmojiNature color="info" />} status="partial" />
-            <NutzungsChecker
-              label="Früchte / Nüsse /Streuobst"
-              icon={<EmojiNature color="info" />}
-              status="unchecked"
-            />
+          <Box>
+            <Box sx={{ borderRadius: 2, p: 2, bgcolor: "grey.100" }}>
+              <Typography mb={2} variant="inherit">
+                Nutzungsmöglichkeiten
+              </Typography>
+              <NutzungsChecker
+                tooltipTitle="Holzproduktion"
+                tooltipContent={`Mit ${selectedSpeciesProfile?.german_name} (${selectedSpeciesProfile?.latin_name}) kann Holz produziert werden.`}
+                label="Stammholzproduktion"
+                icon={<EuroRounded color="info" />}
+                status={selectedSpeciesProfile?.wood_production || true}
+              />
+              <NutzungsChecker
+                tooltipTitle="Biomasseproduktion"
+                tooltipContent={`Mit ${selectedSpeciesProfile?.german_name} (${selectedSpeciesProfile?.latin_name}) kann Biomasse produziert werden.`}
+                label="Biomasse / Kurzumtrieb"
+                icon={<ForestRounded color="info" />}
+                status={selectedSpeciesProfile?.short_rotation || true}
+              />
+              <NutzungsChecker
+                tooltipTitle="Nüsse und Früchte"
+                tooltipContent={`Mit ${selectedSpeciesProfile?.german_name} (${selectedSpeciesProfile?.latin_name}) können Nüsse und Früchte geerntet werden.`}
+                label="Nüsse / Früchte"
+                icon={<EmojiNature color="info" />}
+                status={selectedSpeciesProfile?.fruits_nuts || true}
+              />
+            </Box>
+            <Box sx={{ borderRadius: 2, p: 2, mt: 2, bgcolor: "grey.100" }}>
+              <Typography mb={2} variant="inherit">
+                Blüte
+              </Typography>
+              <StandortValueRange
+                tooltipTitle="Blütezeitpunkt"
+                tooltipContent={`${selectedSpeciesProfile?.german_name} (${
+                  selectedSpeciesProfile?.latin_name
+                }) blüht von ${selectedSpeciesProfile?.flowering_month_min! - 1} bis ${
+                  selectedSpeciesProfile?.flowering_month_max
+                }.`}
+                min={1}
+                max={12}
+                minValue={selectedSpeciesProfile?.flowering_month_min! - 1} // if value is 0 it is executed as false (fix)
+                maxValue={selectedSpeciesProfile?.flowering_month_max!}
+                label="Blütezeitpunkt"
+                marks={[
+                  {
+                    value: 1,
+                    label: "1",
+                  },
+                  {
+                    value: 12,
+                    label: "12",
+                  },
+                ]}
+              />
+              <StandortValueRange
+                tooltipTitle="Anzahl möglicher Insekten"
+                tooltipContent={`${selectedSpeciesProfile?.german_name} (${
+                  selectedSpeciesProfile?.latin_name
+                }) versorgt bis zu ${selectedSpeciesProfile?.max_n_of_insect_species!}
+                } Insekten.`}
+                min={0}
+                max={30}
+                minValue={0} // if value is 0 it is executed as false (fix)
+                maxValue={selectedSpeciesProfile?.max_n_of_insect_species!}
+                label="Anzahl möglicher Insekten"
+                marks={[
+                  {
+                    value: 0,
+                    label: "0",
+                  },
+                  {
+                    value: 30,
+                    label: "30",
+                  },
+                ]}
+              />
+            </Box>
           </Box>
         </Box>
       </Box>

@@ -1,7 +1,6 @@
-import { batch, computed, signal } from "@preact/signals-react";
+import { computed, signal } from "@preact/signals-react";
 // import cloneDeep from "lodash.clonedeep";
 import { createClient } from "@supabase/supabase-js";
-import cloneDeep from "lodash.clonedeep";
 
 // connect to supabase
 const supabaseUrl = process.env.REACT_APP_SUPABASE_URL!;
