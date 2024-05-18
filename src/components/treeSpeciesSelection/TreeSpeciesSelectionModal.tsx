@@ -1,11 +1,11 @@
 import { Box, Modal, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, {useState } from "react";
 import DraggableTree from "../TreeLines/DraggableTree";
 import { EmojiNature, EuroRounded, ForestRounded } from "@mui/icons-material";
-import StandortValueRange from "./StandortSlider";
-import NutzungsChecker from "./NutzungsChecker";
 import { Signal } from "@preact/signals-react";
 import { SpeciesProfileI, speciesProfile } from "../../appState/speciesProfileSignals";
+import StandortValueRange from "../TreeSpeciesSelection/StandortSlider";
+import NutzungsChecker from "../TreeSpeciesSelection/NutzungsChecker";
 
 const treeZoneStyle = {
   display: "flex",
