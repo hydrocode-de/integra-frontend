@@ -5,7 +5,7 @@ import { editAge, editTreeLineId } from "../../../appState/treeLocationSignals"
 import { useSignal } from "@preact/signals-react"
 import { nanoid } from "nanoid"
 import TreeLinesOverview from "../../../components/TreeLines/TreeLinesOverview"
-import TreeSpeciesSelectionModal from "../../../components/treeSpeciesSelection/TreeSpeciesSelectionModal"
+import TreeSpeciesSelectionModal from "../../../components/TreeSpeciesSelection/TreeSpeciesSelectionModal"
 
 const DragBox: React.FC<React.PropsWithChildren> = ({children}) => (
     <Box
