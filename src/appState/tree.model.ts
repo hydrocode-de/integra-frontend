@@ -41,6 +41,7 @@ interface CalculatedTreeLineProperties extends TreeLineProperties {
 // define the type of a calculated tree line
 export type CalculatedTreeLine = GeoJSON.FeatureCollection<GeoJSON.LineString, CalculatedTreeLineProperties>
 
+export type TreeLineArea = GeoJSON.FeatureCollection<GeoJSON.Polygon, CalculatedTreeLineProperties>
 
 export interface RawTreeLocation {
     id: string,

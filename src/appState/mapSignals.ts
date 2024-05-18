@@ -1,4 +1,5 @@
-import { signal, computed, effect } from "@preact/signals-react"
+import { signal, computed } from "@preact/signals-react"
+import { LngLatBounds } from "mapbox-gl"
 
 export interface ViewState {
     longitude: number,
@@ -16,6 +17,8 @@ export const viewState = signal<ViewState>({
     pitch: 0
 })
 
+export const mapBounds = signal<LngLatBounds | undefined>(undefined)
+
 export const zoom = computed(() => viewState.value.zoom)
 
 export const center = computed(() => {
@@ -27,22 +30,3 @@ export const center = computed(() => {
 
 // layers and their visibility
 export const layerVisibility = signal<{[layerId: string]: "none" | "visible"}>({})
-
-// add effects for auto-disabling layers
-effect(() => {
-    // I keep this for reference, when the real area is added
-    // please do not yet remove
-
-    
-    // if (!referenceFeature.value) {
-    //     const { referenceArea, ...others } = layerVisibility.peek()
-    //     layerVisibility.value = others 
-    // }
-    // // otherwise if it did not exist before, add it
-    // else if (!Object.keys(layerVisibility.peek()).includes("referenceArea")) {
-    //     layerVisibility.value = {
-    //         ...layerVisibility.peek(),
-    //         referenceArea: "visible"
-    //     }
-    // }
-})

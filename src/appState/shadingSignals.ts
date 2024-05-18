@@ -83,3 +83,5 @@ export const shadingPolygons = computed<Shading>(() => {
         features: features.filter(f => f !== null) as Shading['features']
     }
 })
+
+// calculate the 

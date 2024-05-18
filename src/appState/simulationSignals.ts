@@ -7,9 +7,6 @@
 
 import { batch, computed, effect, signal } from "@preact/signals-react";
 import { layerVisibility } from "./mapSignals";
-import buffer from "@turf/buffer";
-import area from "@turf/area";
-import { TreeLocationProperties } from "./tree.model";
 import { editAge, updateAllTreeAges } from "./treeLocationSignals";
 import { treeLocationFeatures } from "./geoJsonSignals";
 
@@ -136,45 +133,5 @@ effect(() => {
         // remove the option
         const { "canopyLayer": _, ...others } = layerVisibility.peek()
         layerVisibility.value = others
-    }
-})
-
-// define a model type for canopy
-interface CanopyProperties extends TreeLocationProperties {
-    canopyArea: number,
-    canopyWidth?: number,
-    error?: string
-
-}
-export type Canopy = GeoJSON.FeatureCollection<GeoJSON.Polygon, CanopyProperties>
-
-// now the existence of the 'canopyLayer' can be used to calculate the canopy only conditionally
-export const canopyLayerFeatures = computed<Canopy["features"]>(() => {
-    // if there is no need for a layer, return an empty array
-    if (!Object.keys(layerVisibility.value).includes('canopyLayer')) {
-        return []
-    } else {
-        // otherwise buffer the treeLocations
-        return treeLocationFeatures.value.map(tree => {
-            // tree buffer defaults to 1m 
-            const buffered = buffer(tree, tree.properties.canopyWidth || 1, {units: 'meters'})
-            
-            return {
-                ...buffered,
-                properties: {
-                    ...tree.properties,
-                    canopyArea: area(buffered),
-                    canopyWidth: tree.properties.canopyWidth,
-                    error: !tree.properties.canopyWidth ? `Tree ${tree.properties.id} has no canopy width set` : undefined
-                }
-            }
-        })
-    }
-})
-
-export const canopyLayer = computed<Canopy>(() => {
-    return {
-        type: 'FeatureCollection',
-        features: canopyLayerFeatures.value
     }
 })
