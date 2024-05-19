@@ -200,7 +200,7 @@ const TreeLineSource: React.FC = () => {
                 type="fill"
                 paint={{
                     'fill-color': 'darkgreen',
-                    'fill-opacity': 0.9
+                    'fill-opacity': 0.4
                 }}
             />
         </Source>
