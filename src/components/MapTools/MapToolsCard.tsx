@@ -33,7 +33,7 @@ const MapToolsCard: React.FC = () => {
                 <Box sx={{overflowY: 'scroll', p: 1}}>
                     
                     <Box display="flex" flexDirection="row">
-                        <MeasureButtons />
+                        {/* <MeasureButtons /> */}
                         <IconButton 
                             color="primary" 
                             onClick={() => fitReferenceArea()} 
