@@ -91,7 +91,7 @@ export const calculateMouseDistance = (e: MapMouseEvent, opts: {maxDist?: number
         .map((f, i) => ({feature: f, distance: treeDistances[i]}))
         .filter(({ distance }) => distance < maxDist)
         .sort((a, b) => a.distance - b.distance)
-        .slice(0, maxFeatures)
+        .slice(0, maxFeatures + 1)
 
     // construct the distance lines
     sortedTreeLocations.forEach(({feature, distance }) => {
