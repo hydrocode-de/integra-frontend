@@ -35,7 +35,7 @@ const DistanceMeasurementsSource: React.FC = () => {
                 paint={{
                     'line-color': 'grey',
                     'line-dasharray': [2, 2],
-                    'line-width': 1.5
+                    'line-width': 2
                 }}
             />
             <Layer 
@@ -44,7 +44,7 @@ const DistanceMeasurementsSource: React.FC = () => {
                 type="symbol"
                 layout={{
                     "text-field": ["get", "label"],
-                    "text-size": 15,
+                    "text-size": 16,
                     "text-allow-overlap": true,
                     "text-anchor": "top",
                     "symbol-placement": "line-center"
@@ -65,7 +65,7 @@ const DistanceMeasurementsSource: React.FC = () => {
                 paint={{
                     'line-color': 'grey',
                     'line-dasharray': [2, 2],
-                    'line-width': 1.5
+                    'line-width': 2
                 }}
             />
             <Layer 
@@ -74,7 +74,7 @@ const DistanceMeasurementsSource: React.FC = () => {
                 type="symbol"
                 layout={{
                     "text-field": ["get", "label"],
-                    "text-size": 15,
+                    "text-size": 16,
                     "text-allow-overlap": true,
                     "text-anchor": "top",
                     "symbol-placement": "line-center"
