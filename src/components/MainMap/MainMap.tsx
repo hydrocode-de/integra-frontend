@@ -64,10 +64,15 @@ const MainMap: React.FC<React.PropsWithChildren<{mapId: string}>> = ({ mapId, ch
             reuseMaps
             preserveDrawingBuffer
             initialViewState={{
-                longitude: 7.83,
-                latitude: 48.0,
-                zoom: 12,
-                pitch: 0,
+                longitude: viewState.value.longitude,
+                latitude: viewState.value.latitude,
+                zoom: viewState.value.zoom,
+                pitch: viewState.value.pitch,
+                // longitude: 7.83,
+                // latitude: 48.0,
+                // zoom: 12,
+                // pitch: 0,
+
             }}
             style={{width: '100%', height: '100%'}}
             //mapStyle="mapbox://styles/hydrocode-de/clnzu7dd1000b01pg2eqxcemy"
