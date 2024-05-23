@@ -1,12 +1,23 @@
-import { Alert, Box } from "@mui/material"
+import { Box } from "@mui/material"
+import { biomassSimulation } from "../../appState/biomassSimulationSignals"
+import Plot from "react-plotly.js"
+import range from "lodash.range"
 
 const BiomassResultCard: React.FC = () => {
     return <>
         <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center">
-            <img src="empty_state/empty-state-illustration.png" alt="empty state" />
-            <Alert severity="warning">
-                Diese Funktion ist noch in Entwicklung.
-            </Alert>
+            <Plot
+                layout={{width: 350, height: 250, title: "Biomasse"}}
+                data={[
+                    {
+                        type: 'scatter',
+                        mode: 'lines+markers',
+                        x: range(99),
+                        y: biomassSimulation.value.total
+                    }
+                ]}
+                config={{displayModeBar: false}}
+            />
         </Box>
     </>
 }
