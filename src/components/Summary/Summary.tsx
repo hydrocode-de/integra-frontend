@@ -2,6 +2,9 @@ import { Box, Divider, Typography } from "@mui/material";
 import MainMap from "../MainMap/MainMap";
 import TreeLineSource from "../MainMap/TreeLineSource";
 import SummaryTable from "./SummaryTable";
+import { referenceArea } from "../../appState/referenceAreaSignals";
+import { agriculturalArea } from "../../appState/treeLineSignals";
+import ReferenceAreaSource from "../MainMap/ReferenceAreaSource";
 
 const ItemPair = ({ label, value }: { label: string; value: string }) => {
   return (
@@ -21,6 +24,7 @@ const ItemPairVertical = ({ label, value }: { label: string; value: string }) =>
 };
 
 const Summary = () => {
+  // console.log(agriculturalArea.value.features[0].properties.area / 10000)
   return (
     <Box
       sx={{
@@ -51,6 +55,7 @@ const Summary = () => {
         <Box sx={{ width: 500, height: 500 }}>
           <MainMap mapId="summary">
             <TreeLineSource />
+            <ReferenceAreaSource />
           </MainMap>
         </Box>
         
@@ -71,8 +76,14 @@ const Summary = () => {
                 Flächenübersicht
               </Typography>
               <Box sx={{ pl: 1 }}>
-                <ItemPair label="Flächengröße (gesamt)" value="24 ha" />
-                <ItemPair label="Agroforst Nutzung" value="10 ha" />
+                <ItemPair
+                  label="Flächengröße (gesamt)"
+                  value={`${(referenceArea.value.features[0]?.properties?.area / 10000).toFixed(0)} ha`}
+                />
+                <ItemPair
+                  label="Agroforst Nutzung"
+                  value={`${(agriculturalArea.value.features[0]?.properties?.area / 10000).toFixed(0)} ha`}
+                />
                 <ItemPair label="Schutzgebiet" value="ja" />
               </Box>
               <Typography variant="h6" m={0} pt={3} pb={1}>
