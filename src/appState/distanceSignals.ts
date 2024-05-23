@@ -58,7 +58,7 @@ export const calculateMouseDistance = (e: MapMouseEvent, opts: {maxDist?: number
 
     // get the options and defaults
     const maxDist = opts.maxDist || 150
-    const maxFeatures = opts.maxFeatures || 3
+    const maxFeatures = opts.maxFeatures || 2
 
     // get the position of the mouse and a maxDist buffer around it
     const pos: GeoJSON.Feature<GeoJSON.Point> = {type: 'Feature', geometry: {type: 'Point', coordinates: [e.lngLat.lng, e.lngLat.lat]}, properties: {}}
