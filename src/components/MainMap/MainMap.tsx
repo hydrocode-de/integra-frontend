@@ -82,7 +82,7 @@ const MainMap: React.FC<React.PropsWithChildren<{ mapId: string }>> = ({ mapId, 
                   pitch: viewState.value.pitch,
                 }
               : {
-                  bounds: [
+                  bounds:  [
                     [bbox(referenceArea.value.features[0])[0], bbox(referenceArea.value.features[0])[1]],
                     [bbox(referenceArea.value.features[0])[2], bbox(referenceArea.value.features[0])[3]],
                   ],

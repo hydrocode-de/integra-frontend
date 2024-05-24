@@ -19,6 +19,7 @@ import ReferenceAreaSource from "../components/MainMap/ReferenceAreaSource";
 import ResultContent from "../layout/desktop/ResultContent";
 import ResultActionCard from "../components/Results/ResultActionCard";
 import { ActivePage, activePage } from "../appState/appViewSignals";
+import { referenceArea } from "../appState/referenceAreaSignals";
 
 const DesktopMain: React.FC = () => {
 
@@ -29,15 +30,18 @@ const DesktopMain: React.FC = () => {
   return (
     <Box sx={{ height: "100vh", display: "flex", flexDirection: "column" }}>
       <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static" color="transparent">
+        <AppBar position="static" color="transparent" style={{height:'72px'}}>
           <Toolbar sx={{ display: "flex", justifyContent: "center" }}>
             <Typography sx={{ position: "absolute", left: 16 }} variant="h6" component="div">
               INTEGRA
             </Typography>
+              {
+              referenceArea.value.features.length > 0 &&  
             <Tabs value={activePage.value} onChange={handleTabChange}>
               <Tab label="Karte" value="map" icon={<Map />} iconPosition="start" />
               <Tab label="Zusammenfassung" value="summary" icon={<Summarize />} iconPosition="start" />
             </Tabs>
+              }
             <Box sx={{ position: "absolute", right: 16 }}>
               <Box sx={{ display: "flex" }}>
                 {/* remove the Project select until the Data model is final */}
