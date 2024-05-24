@@ -1,10 +1,10 @@
 import ReactMap, { ViewStateChangeEvent, MapRef } from "react-map-gl";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useDrop } from "react-dnd";
 import mapboxgl from "mapbox-gl";
 
 // load the map signals to update the viewState
-import { mapBounds, viewState } from "../../appState/mapSignals";
+import { mapBounds, viewState, zoom } from "../../appState/mapSignals";
 
 // load the mapbox css
 import "mapbox-gl/dist/mapbox-gl.css";
@@ -59,6 +59,11 @@ const MainMap: React.FC<React.PropsWithChildren<{ mapId: string }>> = ({ mapId, 
       addNewTree(payload);
     },
   }));
+
+  // useEffect(() => {
+  //   console.log(zoom.value)
+  // }, [zoom.value])
+  
 
   return (
     <>
