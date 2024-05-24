@@ -10,9 +10,9 @@ export interface ViewState {
 }
 
 export const viewState = signal<ViewState>({
-    longitude: 7.83,
-    latitude: 47,
-    zoom: 9,
+    longitude: 10.4515,
+    latitude: 51.1657,
+    zoom: 6,
     bearing: 0,
     pitch: 0
 })

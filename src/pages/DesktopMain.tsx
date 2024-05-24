@@ -18,13 +18,12 @@ import MainActionCard from "../components/MainActionCard/MainActionCard";
 import ReferenceAreaSource from "../components/MainMap/ReferenceAreaSource";
 import ResultContent from "../layout/desktop/ResultContent";
 import ResultActionCard from "../components/Results/ResultActionCard";
+import { ActivePage, activePage } from "../appState/appViewSignals";
 
 const DesktopMain: React.FC = () => {
 
-  // create a signal for tabbar state
-  const [activeTabbar, setActiveTabbar] = useState("map");
-  const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
-    setActiveTabbar(newValue);
+  const handleTabChange = (event: React.SyntheticEvent, newValue: ActivePage) => {
+    activePage.value = newValue;
   };
 
   return (
@@ -35,7 +34,7 @@ const DesktopMain: React.FC = () => {
             <Typography sx={{ position: "absolute", left: 16 }} variant="h6" component="div">
               INTEGRA
             </Typography>
-            <Tabs value={activeTabbar} onChange={handleTabChange}>
+            <Tabs value={activePage.value} onChange={handleTabChange}>
               <Tab label="Karte" value="map" icon={<Map />} iconPosition="start" />
               <Tab label="Zusammenfassung" value="summary" icon={<Summarize />} iconPosition="start" />
             </Tabs>
@@ -50,7 +49,7 @@ const DesktopMain: React.FC = () => {
         </AppBar>
       </Box>
       
-      { activeTabbar === "map" ? (
+      { activePage.value === "map" ? (
       // This needs to be 100vh - 72px for header - 32px for footer
       <Box width="100vw" height="calc(100vh - 104px)" m="0" p="0" display="flex">
           {/* add the simulation slider */}
