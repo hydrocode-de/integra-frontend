@@ -5,7 +5,7 @@
 
 import { overpassJson } from "overpass-ts"
 import osmtogeojson from "osmtogeojson"
-import { effect, signal } from "@preact/signals-react"
+import { computed, effect, signal } from "@preact/signals-react"
 import cloneDeep from "lodash.clonedeep"
 import area from "@turf/area"
 import center from "@turf/center"
@@ -30,6 +30,10 @@ interface ReferenceAreaProperties {
 
 export type ReferenceArea = GeoJSON.FeatureCollection<GeoJSON.Polygon, ReferenceAreaProperties>
 export const referenceArea = signal<ReferenceArea>({type: 'FeatureCollection', features: []})
+
+export const referenceAreaHectar = computed(() => {
+    return area(referenceArea.value) / 10000
+})
 
 // add a effect to add the reference Area to the layer visibility
 effect(() => {
