@@ -174,3 +174,12 @@ export const updateTreePosition = (treeId: string, position: {lon: number, lat: 
     // update the signal
     rawTreeLocationSeedData.value = newTreeLocationSeeds
 }
+
+// delete a tree location again
+export const deleteTreeLocation = (treeId: string) => {
+    // create a new treeLocationSeed 
+    const updatedTreeLocationSeed = rawTreeLocationSeedData.peek().filter(t => t.id !== treeId)
+
+    // update the signal
+    rawTreeLocationSeedData.value = updatedTreeLocationSeed
+}
