@@ -6,29 +6,10 @@ import { Signal } from "@preact/signals-react";
 import { SpeciesProfileI, speciesProfile } from "../../appState/speciesProfileSignals";
 import StandortValueRange from "./StandortSlider";
 import NutzungsChecker from "./NutzungsChecker";
+import { treePalette } from "../../appState/appViewSignals";
+import DragBox from "../MainActionCard/DragBox";
+import { editAge } from "../../appState/treeLocationSignals";
 
-const treeZoneStyle = {
-  display: "flex",
-  flexDirection: "column",
-  px: "8px",
-  // bgcolor: "grey.100",
-  margin: "8px",
-  borderRadius: 2,
-  ":hover": {
-    bgcolor: "grey.200",
-  },
-};
-const treeZoneSelectedStyle = {
-  display: "flex",
-  flexDirection: "column",
-  px: "8px",
-  bgcolor: "grey.200",
-  margin: "8px",
-  borderRadius: 2,
-  ":hover": {
-    bgcolor: "grey.200",
-  },
-};
 
 const TreeSpeciesSelectionModal: React.FC<{ isOpen: Signal<boolean> }> = ({ isOpen }) => {
   const [selectedSpeciesProfile, setSelectedSpeciesProfile] = useState<SpeciesProfileI | undefined>(
@@ -50,53 +31,71 @@ const TreeSpeciesSelectionModal: React.FC<{ isOpen: Signal<boolean> }> = ({ isOp
           p: 4,
         }}
       >
-        <Typography sx={{ mb: 1 }} variant="h5">
-          Deine Baumarten
-        </Typography>
-        <Box
-          sx={{
-            border: "2px dashed",
-            borderColor: "grey.400",
-            borderRadius: 2,
-            bgcolor: "grey.100",
-            height: "100px",
-            display: "flex",
-          }}
-        >
-          <Typography
-            sx={{
-              textAlign: "center",
-              margin: "auto",
-            }}
-            color="GrayText"
-          >
-            Hier kannst du deine Baumarten platzieren
+        {/* Palette */}
+        <Box>
+          <Typography sx={{ mb: 1 }} variant="h5">
+            Deine Baumarten
           </Typography>
+          <Box
+            sx={{
+              border: "2px dashed",
+              borderColor: "grey.400",
+              borderRadius: 2,
+              bgcolor: "grey.100",
+              height: "80px",
+              display: "flex",
+              alignItems: "center",
+              padding: "1rem"
+            }}
+          >
+            { treePalette.value.map((tree, idx) => (
+              <DragBox key={idx}>
+                <DraggableTree treeType={tree} age={editAge.value} />
+              </DragBox>
+            )) }
+            <Typography
+              sx={{
+                textAlign: "center",
+                margin: "auto",
+              }}
+              color="GrayText"
+            >
+              Hier kannst du deine Baumarten platzieren
+            </Typography>
+          </Box>
         </Box>
-        <Typography sx={{ mb: 1, mt: 4 }} variant="h6" color="GrayText">
-          Entdecke weitere Baumarten
-        </Typography>
-        <Box
-          sx={{
-            borderRadius: 2,
-            height: "100px",
-            display: "flex",
-            alignItems: "center",
-          }}
-          component="div"
-        >
-          {speciesProfile.peek()?.map((species) => {
-            return (
-              <Box
-                sx={selectedSpeciesProfile?.latin_name === species.latin_name ? treeZoneSelectedStyle : treeZoneStyle}
-                onClick={() => setSelectedSpeciesProfile(species)}
-              >
-                <DraggableTree treeType={species.latin_name} age={50} />
+        
+        {/* Other Species */}
+        <Box>
+          <Typography sx={{ mb: 1, mt: 4 }} variant="h6" color="GrayText">
+            Entdecke weitere Baumarten
+          </Typography>
+          <Box
+            sx={{
+              borderRadius: 2,
+              height: "100px",
+              display: "flex",
+              alignItems: "center",
+            }}
+            component="div"
+          >
+            {speciesProfile.peek()?.map((species) => {
+              return (
+                <Box>
+                <DragBox 
+                  selected={species.latin_name === selectedSpeciesProfile?.latin_name}
+                  onClick={() => setSelectedSpeciesProfile(species)}
+                >
+                  <DraggableTree treeType={species.latin_name} age={50} />
+                </DragBox>
                 <Typography variant="caption">{species.german_name}</Typography>
-              </Box>
-            );
-          })}
+                </Box>
+              );
+            })}
+          </Box>
         </Box>
+
+        {/* Details */}
         <Box sx={{ display: "flex" }}>
           <Box sx={{ maxWidth: 500, pl: 2, pr: 4, borderRadius: 2, p: 2, bgcolor: "grey.100" }}>
             <Typography sx={{ mb: 2 }} variant="inherit">
@@ -262,7 +261,7 @@ const TreeSpeciesSelectionModal: React.FC<{ isOpen: Signal<boolean> }> = ({ isOp
                 ]}
               />
               <StandortValueRange
-                tooltipTitle="Anzahl möglicher Insekten"
+                tooltipTitle="Anzahl möglicher Insektenarte "
                 tooltipContent={`${selectedSpeciesProfile?.german_name} (${
                   selectedSpeciesProfile?.latin_name
                 }) versorgt bis zu ${selectedSpeciesProfile?.max_n_of_insect_species!}
@@ -271,7 +270,7 @@ const TreeSpeciesSelectionModal: React.FC<{ isOpen: Signal<boolean> }> = ({ isOp
                 max={30}
                 minValue={0} // if value is 0 it is executed as false (fix)
                 maxValue={selectedSpeciesProfile?.max_n_of_insect_species!}
-                label="Anzahl möglicher Insekten"
+                label="Anzahl möglicher Insektenarten"
                 marks={[
                   {
                     value: 0,
