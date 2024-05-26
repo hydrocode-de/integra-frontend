@@ -1,9 +1,9 @@
 import { useSignal, useSignalEffect } from "@preact/signals-react";
 import { activeTreeDetailId, setDetailId } from "../../appState/sideContentSignals";
-import { rawTreeFeatures, updateSingleTreeSeed } from "../../appState/treeLocationSignals";
+import { deleteTreeLocation, rawTreeFeatures, updateSingleTreeSeed } from "../../appState/treeLocationSignals";
 import { TreeLocation } from "../../appState/tree.model";
 import { Box, Card, CardActionArea, Chip, Collapse, IconButton, Rating, Slider, Tooltip, Typography } from "@mui/material";
-import { Close, ExpandLess, ExpandMore, VisibilityOutlined } from "@mui/icons-material";
+import { Close, ExpandLess, ExpandMore, VisibilityOutlined, DeleteOutline } from "@mui/icons-material";
 import { flyTo } from "../MainMap/MapObservableStore";
 import { simulationStep } from "../../appState/simulationSignals";
 
@@ -53,6 +53,14 @@ const SideTreeDetailCard: React.FC = () => {
             pitch: 45
         })
     }
+
+    const handleDelete = () => {
+        // delete the tree
+        deleteTreeLocation(tree.peek()!.properties.id)
+
+        // close the card
+        setDetailId({treeId: undefined})
+    }
     
     // if the tree is undefined, we do not need the card at all
     // because either another card, or nothing is shown in the side content
@@ -80,6 +88,9 @@ const SideTreeDetailCard: React.FC = () => {
 
                 <IconButton onClick={handleClose} size="small">
                     <Close />
+                </IconButton>
+                <IconButton onClick={handleDelete} size="small">
+                    <DeleteOutline />
                 </IconButton>
             </Box>
 
