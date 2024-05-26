@@ -5,6 +5,7 @@ import DraggableTree from "../TreeLines/DraggableTree"
 import { editAge, editTreeLineId } from "../../appState/treeLocationSignals"
 import TreeLinesOverview from "../TreeLines/TreeLinesOverview"
 import { nanoid } from "nanoid"
+import { treePalette } from "../../appState/appViewSignals"
 
 const DragBox: React.FC<React.PropsWithChildren> = ({children}) => (
     <Box
@@ -28,13 +29,12 @@ const DraggableElements: React.FC = () => {
 
         <Box display="flex" flexDirection="column">
             <Box onClick={() => (treeSelectionOpen.value = !treeSelectionOpen.peek())}   sx={{display:'flex', p:1, borderRadius:2, bgcolor:'grey.100', width:'100%'}}>
-                <DragBox>
-                    <DraggableTree treeType="Acer pseudoplatanus"  age={editAge.value} />
-                </DragBox>
-
-                <DragBox>
-                    <DraggableTree treeType="Prunus avium"  age={editAge.value} />
-                </DragBox>
+                {/* use the tree Palette to fill here */}
+                { treePalette.value.map((tree, idx) => (
+                    <DragBox key={idx}>
+                        <DraggableTree treeType={tree} age={editAge.value} />
+                    </DragBox>
+                )) }
             </Box>
 
 
