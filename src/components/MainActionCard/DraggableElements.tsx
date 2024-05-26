@@ -6,20 +6,9 @@ import { editAge, editTreeLineId } from "../../appState/treeLocationSignals"
 import TreeLinesOverview from "../TreeLines/TreeLinesOverview"
 import { nanoid } from "nanoid"
 import { treePalette } from "../../appState/appViewSignals"
+import DragBox from "./DragBox"
 
-const DragBox: React.FC<React.PropsWithChildren> = ({children}) => (
-    <Box
-        marginRight="5px"
-        borderRadius="4px"
-        border="5px solid rgba(128,128,128,0.1)" 
-        sx={{padding: '2px', backgroundColor: 'rgba(128,128,128,0.3)', maxWidth: '60px', maxHeight: '60px', minWidth: '60px', minHeight: '60px'}} 
-        display="flex" 
-        alignItems="center" 
-        justifyContent="center"
-    >
-        { children }
-    </Box>
-)
+
 const DraggableElements: React.FC = () => {
     // state to handle card state
     const treeSelectionOpen = useSignal<boolean>(false)
