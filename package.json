@@ -25,6 +25,7 @@
     "framer-motion": "^6.5.1",
     "localforage": "^1.10.0",
     "lodash.clonedeep": "^4.5.0",
+    "lodash.range": "^3.2.0",
     "mapbox-gl": "^2.15.0",
     "nanoid": "^5.0.3",
     "observable-hooks": "^4.2.3",
@@ -74,6 +75,7 @@
   },
   "devDependencies": {
     "@types/lodash.clonedeep": "^4.5.8",
+    "@types/lodash.range": "^3.2.9",
     "@types/mapbox__mapbox-gl-draw": "^1.4.5",
     "@types/mapbox__mapbox-gl-geocoder": "^5.0.0",
     "@types/mapbox-gl": "^2.7.17",
