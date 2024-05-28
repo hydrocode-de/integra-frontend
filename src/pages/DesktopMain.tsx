@@ -20,6 +20,8 @@ import ResultContent from "../layout/desktop/ResultContent";
 import ResultActionCard from "../components/Results/ResultActionCard";
 import { ActivePage, activePage } from "../appState/appViewSignals";
 import { referenceArea } from "../appState/referenceAreaSignals";
+import DistanceMeasurementsSource from "../components/MainMap/DistanceMeasurmentsSource";
+import MapToolsCard from "../components/MapTools/MapToolsCard";
 
 const DesktopMain: React.FC = () => {
 
@@ -39,16 +41,16 @@ const DesktopMain: React.FC = () => {
               referenceArea.value.features.length > 0 &&  
             <Tabs value={activePage.value} onChange={handleTabChange}>
               <Tab label="Karte" value="map" icon={<Map />} iconPosition="start" />
-              <Tab label="Zusammenfassung" value="summary" icon={<Summarize />} iconPosition="start" />
+              <Tab label="Zusammenfassung" value="summary" icon={<Summarize />} iconPosition="start" disabled={!hasData.value} />
             </Tabs>
-              }
-            <Box sx={{ position: "absolute", right: 16 }}>
+            <Box sx={{ marginRight: '16px' }}>
               <Box sx={{ display: "flex" }}>
                 {/* remove the Project select until the Data model is final */}
                 {/* <ProjectSelect /> */}
                 
               </Box>
             </Box>
+
           </Toolbar>
         </AppBar>
       </Box>
@@ -60,6 +62,7 @@ const DesktopMain: React.FC = () => {
           { hasData.value || simulationIsTouched.value ? <SimulationStepSlider /> : null}
 
           <SideContent>
+            <MapToolsCard />
             <MainActionCard />
             <SideTreeDetailCard />
           </SideContent>
@@ -70,6 +73,7 @@ const DesktopMain: React.FC = () => {
             <MapLayerSwitchButton />
             <TreeLineTooltip />
             <ReferenceAreaSource />
+            <DistanceMeasurementsSource />
           </MainMap>
 
           <ResultContent>
