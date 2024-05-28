@@ -1,4 +1,4 @@
-import { AppBar, Box, Tab, Tabs, Toolbar, Typography } from "@mui/material";
+import { AppBar, Box, Tab, Tabs, Toolbar, Typography, useMediaQuery } from "@mui/material";
 import {  Summarize, Map } from "@mui/icons-material";
 
 import MainMap from "../components/MainMap/MainMap";
@@ -9,7 +9,6 @@ import SimulationStepSlider from "../components/Simulation/SimulationStepSlider"
 import SideContent from "../layout/desktop/SideContent";
 import SideTreeDetailCard from "../components/TreeLines/SideTreeDetailCard";
 import Footer from "../layout/Footer";
-import { useState } from "react";
 import Summary from "../components/Summary/Summary";
 import TreeShadeSource from "../components/MainMap/TreeShadeSource";
 import { simulationIsTouched } from "../appState/simulationSignals";
@@ -29,8 +28,11 @@ const DesktopMain: React.FC = () => {
     activePage.value = newValue;
   };
 
+  const isPrinting = useMediaQuery('print')
+
   return (
     <Box sx={{ height: "100vh", display: "flex", flexDirection: "column" }}>
+      { isPrinting ? null : (
       <Box sx={{ flexGrow: 1 }}>
         <AppBar position="static" color="transparent" style={{height:'72px'}}>
           <Toolbar sx={{ display: "flex", justifyContent: "center" }}>
@@ -55,6 +57,7 @@ const DesktopMain: React.FC = () => {
           </Toolbar>
         </AppBar>
       </Box>
+      )}
       
       { activePage.value === "map" ? (
       // This needs to be 100vh - 72px for header - 32px for footer
@@ -84,7 +87,7 @@ const DesktopMain: React.FC = () => {
       ) : (
         <Summary />
       )}
-      <Footer />
+      {isPrinting ? null : <Footer /> }
     </Box>
   );
 };
