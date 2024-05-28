@@ -32,6 +32,7 @@ const Summary = () => {
         // height: "calc(100vh - 100px)",
         maxWidth: "1200px",
         margin: "auto",
+        p: 2
       }}
     >
       <Typography pt={5} pb={2} variant="h4">
