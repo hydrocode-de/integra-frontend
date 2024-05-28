@@ -38,11 +38,12 @@ const DesktopMain: React.FC = () => {
               INTEGRA
             </Typography>
               {
-              referenceArea.value.features.length > 0 &&  
-            <Tabs value={activePage.value} onChange={handleTabChange}>
-              <Tab label="Karte" value="map" icon={<Map />} iconPosition="start" />
-              <Tab label="Zusammenfassung" value="summary" icon={<Summarize />} iconPosition="start" disabled={!hasData.value} />
-            </Tabs>
+              referenceArea.value.features.length > 0 ? (  
+                <Tabs value={activePage.value} onChange={handleTabChange}>
+                  <Tab label="Karte" value="map" icon={<Map />} iconPosition="start" />
+                  <Tab label="Zusammenfassung" value="summary" icon={<Summarize />} iconPosition="start" disabled={!hasData.value} />
+                </Tabs>
+              ) : null }
             <Box sx={{ marginRight: '16px' }}>
               <Box sx={{ display: "flex" }}>
                 {/* remove the Project select until the Data model is final */}
