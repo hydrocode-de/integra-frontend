@@ -39,7 +39,7 @@ const DesktopMain: React.FC = () => {
               <Typography sx={{  marginLeft: '0px', }} variant="h6" component="div">
                 INTEGRA
               </Typography>
-              <Box />
+              <Box></Box>
             </Box>
             
             <Tabs value={activeTabbar} onChange={handleTabChange}>
