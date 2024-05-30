@@ -99,11 +99,11 @@ const SideTreeDetailCard: React.FC = () => {
                     {/* Place chips to inform if the Tree actually exists */}
                     { tree.value.properties.age! > 0 ? (
                         tree.value.properties.harvestAge! > tree.value.properties.age! ? (
-                            <Chip label="wächst" color="warning" variant="outlined" />
+                            <Chip label="In Wachstum" color="warning" variant="outlined" />
                         ) : (
                             <Chip label={`geerntet nach ${tree.value.properties.harvestAge} Jahren`} color="success" variant="outlined" />
                         )
-                    ) : <Chip label="in Planung" color="info" variant="outlined" /> }
+                    ) : <Chip label="In Planung" color="info" variant="outlined" /> }
 
                     {/* Basic info about the tree */}
                     <Box sx={{p: 1}}>
