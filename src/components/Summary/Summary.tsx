@@ -84,11 +84,10 @@ const Summary = () => {
               Standort
             </Typography>
             <Box sx={{ pl: 1 }}>
-              <ItemPairVertical label="Jährliche Niederschlagssumme" value="600mm" />
+              <ItemPairVertical label="Jährliche Niederschlagssumme" value="600 mm" />
               <ItemPairVertical label="Jahresmitteltemperatur" value="10,2 °C" />
-              <ItemPairVertical label="(Spät-)frostgefahr:" value="ja" />
               <ItemPairVertical label="Bodenart" value="Schluffton" />
-              <ItemPairVertical label="Bodennährstoff versorgung" value="nährstoffreich, basisch" />
+              <ItemPairVertical label="Bodennährstoffversorgung" value="nährstoffreich, basisch" />
             </Box>
           </Box>
         </Grid>
