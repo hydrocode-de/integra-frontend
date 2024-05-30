@@ -103,7 +103,7 @@ const Summary = () => {
                 <ItemPairVertical label="Nektarangebot" value="2335 ml" />
               </Box>
               <Box>
-                <ItemPairVertical label="Pollenangebot" value="4545 µm2" />
+                <ItemPairVertical label="Pollenangebot" value="4545 μm²" />
                 <ItemPairVertical label="Nistangebot" value="%" />
               </Box>
           </Box>
