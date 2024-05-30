@@ -49,8 +49,8 @@ const MainActionCard: React.FC = () => {
                 </Box>
             </CardActionArea>
 
-            <Collapse in={open.value}>
-                <Box component="div" display="flex" flexDirection="row" mt="1">
+            <Collapse in={open.value} sx={{width: '100%'}}>
+                <Box component="div" display="flex" flexDirection="row" mt={1} width="100%">
                     { actionMode === 'reference' ? <ReferenceAreaEditor /> : null }
                     { actionMode === 'addTree' ? <DraggableElements /> : null }
                     { actionMode === 'zoomIn' ? <ZoomBackCard /> : null }
