@@ -112,7 +112,7 @@ const SideTreeDetailCard: React.FC = () => {
                             <Typography variant="body1">{tree.value.properties.height?.toFixed(1)} m</Typography>
                         </Box>
                         <Box display="flex" flexDirection="row" justifyContent="space-between">
-                            <Typography variant="body2">Stamm Länge:</Typography>
+                            <Typography variant="body2">Stammlänge:</Typography>
                             <Typography variant="body1">{tree.value.properties.canopyHeight?.toFixed(1)} m</Typography>
                         </Box>
                     </Box>
