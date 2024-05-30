@@ -1,7 +1,8 @@
-import { Box, Card, CardHeader, Typography } from "@mui/material"
+import { Box, Card, CardContent, CardHeader, Typography } from "@mui/material"
 import { useSignal, useSignalEffect } from "@preact/signals-react"
 import { MapLayerMouseEvent, useMap } from "react-map-gl"
 import { TreeLocation } from "../../appState/tree.model"
+import { germanSpecies } from "../../appState/backendSignals"
 
 const TreeLineTooltip: React.FC = () => {
     // create a signal for the tooltip location
@@ -22,11 +23,25 @@ const TreeLineTooltip: React.FC = () => {
                 const f = e.features![0] as unknown as TreeLocation["features"][0]
                 if (f) {
                     content.value = (<>
-                        <CardHeader p={0} title={f.properties.treeType} subheader={`Age: ${f.properties.age} - Height: ${f.properties.height}`}  />
+                        <CardHeader p={0} 
+                            title={germanSpecies.peek()[f.properties.treeType]} 
+                            subheader={f.properties.treeType}  
+                        />
+                        <CardContent>
+                            <Box display="flex" width="100%" flexDirection="row" justifyContent="space-between">
+                                <strong>Alter</strong>
+                                <Typography variant="body2">{f.properties.age}</Typography>
+                            </Box>
+                            <Box display="flex" width="100%" flexDirection="row" justifyContent="space-between">
+                                <strong>Höhe</strong>
+                                <Typography variant="body2">{f.properties.height?.toFixed(1)}m</Typography>
+                            </Box>
+                        </CardContent>
                     </>)
                 }
             }
         }
+
         const onMouseLeave = (e: MapLayerMouseEvent) => {
             location.value = null
         }
