@@ -97,6 +97,14 @@ const TreeSpeciesSelectionModal: React.FC<{ isOpen: Signal<boolean> }> = ({ isOp
           </Box>
         </Box>
 
+        {/* insert a warning */}
+        { treePalette.value.length >= 4 ? (
+          <Alert severity="warning">
+            Mehr als 4 Baum- und Straucharten können in der Palette nicht gut dargestellt werden. 
+            Nutze jetzt 4 Arten und füge wenn du fertig bist weitere Arten hinzu.
+          </Alert>
+        ) : null }
+        
         {/* Other Species */}
         <Box>
           <Typography sx={{ mb: 1, mt: 4 }} variant="h6" color="GrayText">
