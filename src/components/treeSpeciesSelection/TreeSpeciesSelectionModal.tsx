@@ -1,4 +1,4 @@
-import { Box, IconButton, Modal, Typography } from "@mui/material";
+import { Alert, Box, IconButton, Modal, Typography } from "@mui/material";
 import React, {useState } from "react";
 import DraggableTree from "../TreeLines/DraggableTree";
 import { Close, EmojiNature, EuroRounded, ForestRounded } from "@mui/icons-material";
@@ -54,6 +54,10 @@ const TreeSpeciesSelectionModal: React.FC<{ isOpen: Signal<boolean> }> = ({ isOp
           <Typography sx={{ mb: 1 }} variant="h5">
             Deine Baumarten
           </Typography>
+          <Alert severity="info">
+            Hier kannst du Baum- und Straucharten von unten nach Standorteigenschaften auswählen und in die Palette ziehen.
+            Danach kannst du Sie auf der Karte zum Planen nutzen.
+          </Alert>
           <Box
             ref={dropPlatte}
             sx={{
