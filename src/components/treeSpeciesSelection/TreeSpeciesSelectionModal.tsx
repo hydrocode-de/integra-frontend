@@ -44,9 +44,11 @@ const TreeSpeciesSelectionModal: React.FC<{ isOpen: Signal<boolean> }> = ({ isOp
           transform: "translate(-50%, -50%)",
           width: "85%",
           maxWidth: "1200px",
+          maxHeight: 'calc(100vh - 30px)',
           bgcolor: "background.paper",
           borderRadius: 2,
           p: 4,
+          overflowY: 'auto'
         }}
       >
         {/* Palette */}
@@ -121,14 +123,14 @@ const TreeSpeciesSelectionModal: React.FC<{ isOpen: Signal<boolean> }> = ({ isOp
           >
             {speciesProfile.peek()?.filter(t => t.type === 'Baum').map((species) => {
               return (
-                <Box>
-                <DragBox 
-                  selected={species.latin_name === selectedSpeciesProfile?.latin_name}
-                  onClick={() => setSelectedSpeciesProfile(species)}
-                >
-                  <DraggableTree treeType={species.latin_name} age={50} />
-                </DragBox>
-                <Typography variant="caption">{species.german_name}</Typography>
+                <Box mr={2} sx={{maxWidth: '75px', lineHeight: 0.5}}>
+                  <DragBox 
+                    selected={species.latin_name === selectedSpeciesProfile?.latin_name}
+                    onClick={() => setSelectedSpeciesProfile(species)}
+                  >
+                    <DraggableTree treeType={species.latin_name} age={50} />
+                  </DragBox>
+                  <Typography variant="caption">{species.german_name}</Typography>
                 </Box>
               );
             })}
@@ -150,14 +152,14 @@ const TreeSpeciesSelectionModal: React.FC<{ isOpen: Signal<boolean> }> = ({ isOp
           >
             {speciesProfile.peek()?.filter(t => t.type === 'Strauch').map((species) => {
               return (
-                <Box>
-                <DragBox 
-                  selected={species.latin_name === selectedSpeciesProfile?.latin_name}
-                  onClick={() => setSelectedSpeciesProfile(species)}
-                >
-                  <DraggableTree treeType={species.latin_name} age={50} />
-                </DragBox>
-                <Typography variant="caption">{species.german_name}</Typography>
+                <Box mr={2} sx={{maxWidth: '75px', lineHeight: 0.5}}>
+                  <DragBox 
+                    selected={species.latin_name === selectedSpeciesProfile?.latin_name}
+                    onClick={() => setSelectedSpeciesProfile(species)}
+                  >
+                    <DraggableTree treeType={species.latin_name} age={50} />
+                  </DragBox>
+                  <Typography variant="caption">{species.german_name}</Typography>
                 </Box>
               );
             })}
@@ -165,7 +167,7 @@ const TreeSpeciesSelectionModal: React.FC<{ isOpen: Signal<boolean> }> = ({ isOp
         </Box>
 
         {/* Details */}
-        <Box sx={{ display: "flex" }}>
+        <Box mt={1} sx={{ display: "flex" }}>
           <Box sx={{ maxWidth: 500, pl: 2, pr: 4, borderRadius: 2, p: 2, bgcolor: "grey.100" }}>
             <Typography sx={{ mb: 2 }} variant="inherit">
               {selectedSpeciesProfile?.german_name} ({selectedSpeciesProfile?.latin_name})
@@ -255,7 +257,7 @@ const TreeSpeciesSelectionModal: React.FC<{ isOpen: Signal<boolean> }> = ({ isOp
                 },
               ]}
             />
-            <StandortValueRange
+            {/* <StandortValueRange
               tooltipTitle="Spätfrostresistenz"
               tooltipContent={`${selectedSpeciesProfile?.german_name} (${selectedSpeciesProfile?.latin_name}) hat eine Spätfrostresistenz von ${selectedSpeciesProfile?.late_frost_resistance_min} bis ${selectedSpeciesProfile?.late_frost_resistance_max}.`}
               min={0}
@@ -273,7 +275,7 @@ const TreeSpeciesSelectionModal: React.FC<{ isOpen: Signal<boolean> }> = ({ isOp
                   label: "10",
                 },
               ]}
-            />
+            /> */}
           </Box>
           <Box>
             <Box sx={{ borderRadius: 2, p: 2, bgcolor: "grey.100" }}>
