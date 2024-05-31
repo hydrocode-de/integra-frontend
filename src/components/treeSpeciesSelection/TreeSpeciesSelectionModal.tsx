@@ -96,7 +96,7 @@ const TreeSpeciesSelectionModal: React.FC<{ isOpen: Signal<boolean> }> = ({ isOp
             </Typography>
           </Box>
         </Box>
-        
+
         {/* Other Species */}
         <Box>
           <Typography sx={{ mb: 1, mt: 4 }} variant="h6" color="GrayText">
@@ -111,7 +111,36 @@ const TreeSpeciesSelectionModal: React.FC<{ isOpen: Signal<boolean> }> = ({ isOp
             }}
             component="div"
           >
-            {speciesProfile.peek()?.map((species) => {
+            {speciesProfile.peek()?.filter(t => t.type === 'Baum').map((species) => {
+              return (
+                <Box>
+                <DragBox 
+                  selected={species.latin_name === selectedSpeciesProfile?.latin_name}
+                  onClick={() => setSelectedSpeciesProfile(species)}
+                >
+                  <DraggableTree treeType={species.latin_name} age={50} />
+                </DragBox>
+                <Typography variant="caption">{species.german_name}</Typography>
+                </Box>
+              );
+            })}
+          </Box>
+        </Box>
+
+        <Box>
+          <Typography sx={{ mb: 1, mt: 4 }} variant="h6" color="GrayText">
+            Entdecke weitere Straucharten
+          </Typography>
+          <Box
+            sx={{
+              borderRadius: 2,
+              height: "100px",
+              display: "flex",
+              alignItems: "center",
+            }}
+            component="div"
+          >
+            {speciesProfile.peek()?.filter(t => t.type === 'Strauch').map((species) => {
               return (
                 <Box>
                 <DragBox 
