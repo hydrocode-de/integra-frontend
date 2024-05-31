@@ -73,6 +73,10 @@ export const treeSpecies = computed<TreeSpecies[]>(() =>
   })
 );
 
+export const germanSpecies = computed<{[treeType: string]: string}>(() => {
+  return Object.fromEntries(treeSpecies.value.map(species => ([species.latin_name, species.german_name || species.latin_name])))
+})
+
 interface IconImageStore {
   [iconId: string]: {
     icon: ImageBitmap;

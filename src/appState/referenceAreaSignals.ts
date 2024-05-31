@@ -5,7 +5,7 @@
 
 import { overpassJson } from "overpass-ts"
 import osmtogeojson from "osmtogeojson"
-import { effect, signal } from "@preact/signals-react"
+import { computed, effect, signal } from "@preact/signals-react"
 import cloneDeep from "lodash.clonedeep"
 import area from "@turf/area"
 import center from "@turf/center"
@@ -13,9 +13,10 @@ import bbox from "@turf/bbox"
 import intersect from "@turf/intersect"
 import bboxPolygon from "@turf/bbox-polygon"
 
-import { flyTo } from "../components/MainMap/MapObservableStore"
+import { fitBounds, flyTo } from "../components/MainMap/MapObservableStore"
 import { layerVisibility, mapBounds, zoom } from "./mapSignals"
 import { polygon } from "@turf/helpers"
+import buffer from "@turf/buffer"
 
 
 export type AreaSuggestions = GeoJSON.FeatureCollection<GeoJSON.Polygon>
@@ -30,6 +31,10 @@ interface ReferenceAreaProperties {
 
 export type ReferenceArea = GeoJSON.FeatureCollection<GeoJSON.Polygon, ReferenceAreaProperties>
 export const referenceArea = signal<ReferenceArea>({type: 'FeatureCollection', features: []})
+
+export const referenceAreaHectar = computed(() => {
+    return area(referenceArea.value) / 10000
+})
 
 // add a effect to add the reference Area to the layer visibility
 effect(() => {
@@ -178,4 +183,13 @@ export const createReferenceAreaFromSuggestion = (osm_id: string) => {
         center: {lat: areaCenter.geometry.coordinates[1], lng: areaCenter.geometry.coordinates[0]},
         pitch: 45
     })
+}
+
+// move the reference area into view
+export const fitReferenceArea = () => {
+    if (referenceArea.peek().features.length === 0) return
+    
+    // get the bounds with a 50m buffer and fit
+    const bounds = bbox(buffer(referenceArea.peek(), 50, {units: 'meters'}))
+    fitBounds([[bounds[0], bounds[1]], [bounds[2], bounds[3]]])
 }

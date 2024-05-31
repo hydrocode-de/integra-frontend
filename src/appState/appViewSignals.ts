@@ -11,3 +11,8 @@ export const treePalette = signal<string[]>([
     'Acer pseudoplatanus',
     'Prunus avium',
 ])
+
+export type ActivePage = 'map' | 'summary'
+
+export const activePage = signal<ActivePage>('map')
+

@@ -1,54 +1,56 @@
-import { Typography } from "@mui/material"
-import { activeTreeLineIds, editTreeLineId, treeFeatures } from "../../appState/treeLocationSignals"
-import { useSignal, useSignalEffect } from "@preact/signals-react"
+import { Avatar, List, ListItemAvatar, ListItemButton, ListItemText, Skeleton } from "@mui/material"
+import { calculatedTreeLineFeatures } from "../../appState/treeLineSignals"
+import { EditLocation, Forest } from "@mui/icons-material"
+import { editTreeLineId } from "../../appState/treeLocationSignals"
+import {  flyTo } from "../MainMap/MapObservableStore"
+import { center } from "@turf/turf"
 
-interface TreeLineSummary {
-    id: string
-    lineLength?: number
-    treeCount: number
-    averageAge?: number
-
-}
 
 const TreeLinesOverview: React.FC = () => {
-    // create a state to handle the line calculations
-    const treeLines = useSignal<TreeLineSummary[]>([])
+    // use a handler to select a new line, to add a flyTo map event
+    const handleSelect = (id: string) => {
+        // set the id of the tree line to edit
+        editTreeLineId.value = id
 
-    useSignalEffect(() => {
-        const lines: TreeLineSummary[] = []
-        const allTrees = treeFeatures.value
-
-        activeTreeLineIds.peek().forEach(lineId => {
-            const trees = allTrees.filter(t => t.properties.treeLineId === lineId)
-
-            lines.push({
-                id: lineId,
-                treeCount: trees.length,
-                averageAge: trees.reduce((acc, t) => acc + t.properties.age!, 0) / trees.length
-            })
-        })
-
-        treeLines.value = lines
-    })
+        // get the bounding box of the line
+        // const lineBox = bbox(calculatedTreeLineFeatures.peek().find(l => l.properties.id === id))
+        const lineCenter = center(calculatedTreeLineFeatures.value.find(l => l.properties.id === id)!)
+        
+        // fly to the line
+        // fitBounds([lineBox[0], lineBox[1], lineBox[2], lineBox[3]])
+        flyTo({center: {lon: lineCenter.geometry.coordinates[0], lat: lineCenter.geometry.coordinates[1]}})
+    }
 
     return <>
-        <Typography variant="body2">
-            aktuelle Reihe: { treeLines.value.map(l => l.id).includes(editTreeLineId.value) ? editTreeLineId.value : <i>neue Linie anlegen</i>}
-        </Typography>
-        {/* THIS LINE crashes the Application
-            You CANNOT loop over anything that was derived from a signal anymore
-            I don't know why, but that means we kind of have to remove signals altogether?!
-        */}
-        {/* { calculatedTreeLineFeatures.value.map(f => <div key={f.properties.id}>{f.properties.lineLength}</div>) } */}
-        {/* {treeLocations.value.features.map(l => <div key={l.id}>{l.id}:</div>)} */}
-        { treeLines.value.map(l => <div key={l.id}>Reihe <i>{l.id}</i>: {l.treeCount} Bäume ({l.averageAge?.toFixed(1)} Jahre)</div>) }
-        
-        {/* This line works just fine. We can see the signal beeing updated correctly and the UI 
-            responding to that. Just map, forEach over the state of the signal does not work anymore.
-            */}
-        {/* <pre><code>{ JSON.stringify(calculatedTreeLineFeatures.value, null, 2) }</code></pre> */}
-        {/* <pre><code>{ JSON.stringify(treeLines.value, null, 2) }</code></pre> */}
+        <List sx={{width: '100%', bgcolor: 'background.paper'}}>
+            { calculatedTreeLineFeatures.value.map((line, idx) => (
+                <ListItemButton 
+                    key={idx} 
+                    sx={{width: '100%'}} 
+                    onClick={() => handleSelect(line.properties.id)}
+                    selected={editTreeLineId.value === line.properties.id}
+                >
+                    <ListItemAvatar>
+                        <Avatar>
+                            {editTreeLineId.value === line.properties.id ? <EditLocation /> : <Forest /> }
+                        </Avatar>
+                    </ListItemAvatar>
 
+                    <ListItemText 
+                        primary={`Baumreihe ${idx + 1}`} 
+                        secondary={`${line.properties.treeCount} Bäume (${line.properties.lineLength?.toFixed(1)}m)`}
+                    />
+                </ListItemButton>
+            )) }
+            { !calculatedTreeLineFeatures.value.map(l => l.properties.id).includes(editTreeLineId.value) ? (
+                <ListItemButton selected>
+                    <ListItemAvatar>
+                        <Skeleton variant="circular" width={40} height={40} />
+                    </ListItemAvatar>
+                    <ListItemText primary="Neue Baumlinie" secondary="füge weitere Bäume hinzu, damit hier eine Reihe entsteht" />
+                </ListItemButton>
+            ) : null }
+        </List>
     </>
 }
 

@@ -1,9 +1,9 @@
 import { useSignal, useSignalEffect } from "@preact/signals-react";
 import { activeTreeDetailId, setDetailId } from "../../appState/sideContentSignals";
-import { rawTreeFeatures, updateSingleTreeSeed } from "../../appState/treeLocationSignals";
+import { deleteTreeLocation, rawTreeFeatures, updateSingleTreeSeed } from "../../appState/treeLocationSignals";
 import { TreeLocation } from "../../appState/tree.model";
 import { Box, Card, CardActionArea, Chip, Collapse, IconButton, Rating, Slider, Tooltip, Typography } from "@mui/material";
-import { Close, ExpandLess, ExpandMore, VisibilityOutlined } from "@mui/icons-material";
+import { Close, ExpandLess, ExpandMore, VisibilityOutlined, DeleteOutline } from "@mui/icons-material";
 import { flyTo } from "../MainMap/MapObservableStore";
 import { simulationStep } from "../../appState/simulationSignals";
 
@@ -53,6 +53,14 @@ const SideTreeDetailCard: React.FC = () => {
             pitch: 45
         })
     }
+
+    const handleDelete = () => {
+        // delete the tree
+        deleteTreeLocation(tree.peek()!.properties.id)
+
+        // close the card
+        setDetailId({treeId: undefined})
+    }
     
     // if the tree is undefined, we do not need the card at all
     // because either another card, or nothing is shown in the side content
@@ -81,6 +89,9 @@ const SideTreeDetailCard: React.FC = () => {
                 <IconButton onClick={handleClose} size="small">
                     <Close />
                 </IconButton>
+                <IconButton onClick={handleDelete} size="small">
+                    <DeleteOutline />
+                </IconButton>
             </Box>
 
             <Collapse in={open.value}>
@@ -88,11 +99,11 @@ const SideTreeDetailCard: React.FC = () => {
                     {/* Place chips to inform if the Tree actually exists */}
                     { tree.value.properties.age! > 0 ? (
                         tree.value.properties.harvestAge! > tree.value.properties.age! ? (
-                            <Chip label="wächst" color="warning" variant="outlined" />
+                            <Chip label="In Wachstum" color="warning" variant="outlined" />
                         ) : (
                             <Chip label={`geerntet nach ${tree.value.properties.harvestAge} Jahren`} color="success" variant="outlined" />
                         )
-                    ) : <Chip label="in Planung" color="info" variant="outlined" /> }
+                    ) : <Chip label="In Planung" color="info" variant="outlined" /> }
 
                     {/* Basic info about the tree */}
                     <Box sx={{p: 1}}>
@@ -101,7 +112,7 @@ const SideTreeDetailCard: React.FC = () => {
                             <Typography variant="body1">{tree.value.properties.height?.toFixed(1)} m</Typography>
                         </Box>
                         <Box display="flex" flexDirection="row" justifyContent="space-between">
-                            <Typography variant="body2">Stamm Länge:</Typography>
+                            <Typography variant="body2">Stammlänge:</Typography>
                             <Typography variant="body1">{tree.value.properties.canopyHeight?.toFixed(1)} m</Typography>
                         </Box>
                     </Box>

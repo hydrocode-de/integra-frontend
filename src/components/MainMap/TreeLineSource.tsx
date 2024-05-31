@@ -10,6 +10,8 @@ import { setDetailId } from "../../appState/sideContentSignals"
 import { ageToSize } from "../../appState/backendSignals"
 import { calculatedTreeLines, treeLocations } from "../../appState/geoJsonSignals"
 import { canopyLayer } from "../../appState/biomassSimulationSignals"
+import { calculateMouseDistance, mouseDistanceTrigger, treeLineDistanceTrigger } from "../../appState/distanceSignals"
+import { treeLineArea } from "../../appState/treeLineSignals"
 
 const TreeLineSource: React.FC = () => {
     // add a state to track if a tree location is currently dragged
@@ -102,6 +104,15 @@ const TreeLineSource: React.FC = () => {
         setDetailId({treeId: feature.properties.id })
     }
 
+    // handle the hovering of tree area
+    const handleLineAreaEnter = (e: MapLayerMouseEvent) => {
+        treeLineDistanceTrigger.value = true
+    }
+
+    const handleLineAreaLeave = (e: MapLayerMouseEvent) => {
+        treeLineDistanceTrigger.value = false
+    }
+
 
     // dragging functionality
     const handleDragStart = (e: MapLayerMouseEvent) => {
@@ -116,6 +127,9 @@ const TreeLineSource: React.FC = () => {
 
         // set the cursor to grabbing
         map.current!.getCanvas().style.cursor = 'grabbing'
+
+        // enable mouse measuring
+        mouseDistanceTrigger.value = true
     }
 
     const handleDragEnd = () => {
@@ -123,12 +137,16 @@ const TreeLineSource: React.FC = () => {
         setDraggedTree(null)
         map.current!.getCanvas().style.cursor = ''
         map.current!.getMap().dragPan.enable()
+
+        // disable mouse measuring
+        mouseDistanceTrigger.value = false
     }
 
     const handleDragMove = useCallback((e: MapMouseEvent) => {
         if (!(window as any).dragged) return
         // if (!draggedTree) return
         e.preventDefault()
+
         // move the tree location which is marked as active dragging
         updateTreePosition((window as any).dragged, { lon: e.lngLat.lng, lat: e.lngLat.lat })
     }, [draggedTree])
@@ -152,6 +170,8 @@ const TreeLineSource: React.FC = () => {
             map.current.on('mousedown', 'tree-locations', handleDragStart)
             map.current.on('mouseup', handleDragEnd)
             map.current.on('mousemove', handleDragMove)
+            map.current.on('mouseenter', 'tree-lines-area', handleLineAreaEnter)
+            map.current.on('mouseleave', 'tree-lines-area', handleLineAreaLeave)
         }
 
         // unsubscribe from events
@@ -167,10 +187,23 @@ const TreeLineSource: React.FC = () => {
             map.current!.off('mousedown', 'tree-locations', handleDragStart)
             map.current!.off('mouseup', handleDragEnd)
             map.current!.off('mousemove', handleDragMove)
+            map.current!.off('mouseenter', 'tree-lines-area', handleLineAreaEnter)
+            map.current!.off('mouseleave', 'tree-lines-area', handleLineAreaLeave)
         }
     }, [])  // eslint-disable-line react-hooks/exhaustive-deps
 
     return <>
+        <Source id="tree-lines-area" type="geojson" data={treeLineArea.value} generateId>
+            <Layer 
+                id="tree-lines-area"
+                source="tree-lines-area"
+                type="fill"
+                paint={{
+                    'fill-color': 'darkgreen',
+                    'fill-opacity': 0.4
+                }}
+            />
+        </Source>
         <Source id="calculated-tree-line" type="geojson" data={calculatedTreeLines.value}>
             <Layer id="calculated-tree-line" source="calculated-tree-lines" type="line" 
                 paint={{
@@ -193,15 +226,20 @@ const TreeLineSource: React.FC = () => {
                         'step',
                         ['zoom'],
                         0.15,
-                        //15, ['interpolate', ['linear'], ['get', 'height'], 0, 0.15, 25, 0.6],
-                        //16, ['interpolate', ['linear'], ['get', 'height'], 0, 0.15, 25, 0.7],
-                        17, ['interpolate', ['linear'], ['get', 'height'], 0, 0.15, 25, 0.5],
-                        18, ['interpolate', ['linear'], ['get', 'height'], 0, 0.15, 25, 0.7],
-                        19, ['interpolate', ['linear'], ['get', 'height'], 0, 0.15, 25, 1.4],
-                        19.5, ['interpolate', ['linear'], ['get', 'height'], 0, 0.15, 25, 1.5],
-                        20, ['interpolate', ['linear'], ['get', 'height'], 0, 0.15, 25, 2.5],
-                        21, ['interpolate', ['linear'], ['get', 'height'], 0, 0.15, 25, 4],
-                        22, ['interpolate', ['linear'], ['get', 'height'], 0, 0.15, 25, 6],
+                        15, ['interpolate', ['linear'], ['get', 'height'], 0, 0.15, 25, 0.17],
+                        16, ['interpolate', ['linear'], ['get', 'height'], 0, 0.15, 25, 0.18],
+                        17, ['interpolate', ['linear'], ['get', 'height'], 0, 0.15, 25, 0.2],
+                        18, ['interpolate', ['linear'], ['get', 'height'], 0, 0.15, 25, 0.5],
+                        18.5, ['interpolate', ['linear'], ['get', 'height'], 0, 0.15, 25, 1],
+                        19, ['interpolate', ['linear'], ['get', 'height'], 0, 0.15, 25, 1.5],
+                        19.5, ['interpolate', ['linear'], ['get', 'height'], 0, 0.15, 25, 2],
+                        20, ['interpolate', ['linear'], ['get', 'height'], 0, 0.15, 25, 2.3],
+                        20.3, ['interpolate', ['linear'], ['get', 'height'], 0, 0.15, 25, 2.5],
+                        20.6, ['interpolate', ['linear'], ['get', 'height'], 0, 0.15, 25, 2.9],
+                        21, ['interpolate', ['linear'], ['get', 'height'], 0, 0.15, 25, 3],
+                        21.3, ['interpolate', ['linear'], ['get', 'height'], 0, 0.15, 25, 3.5],
+                        21.6, ['interpolate', ['linear'], ['get', 'height'], 0, 0.15, 25, 4],
+                        22, ['interpolate', ['linear'], ['get', 'height'], 0, 0.15, 25, 4.5],
                     ],
                     'icon-allow-overlap': true
                 }}
