@@ -1,7 +1,7 @@
-import { Box, Modal, Typography } from "@mui/material";
+import { Box, IconButton, Modal, Typography } from "@mui/material";
 import React, {useState } from "react";
 import DraggableTree from "../TreeLines/DraggableTree";
-import { EmojiNature, EuroRounded, ForestRounded } from "@mui/icons-material";
+import { Close, EmojiNature, EuroRounded, ForestRounded } from "@mui/icons-material";
 import { Signal } from "@preact/signals-react";
 import { SpeciesProfileI, speciesProfile } from "../../appState/speciesProfileSignals";
 import StandortValueRange from "./StandortSlider";
@@ -9,12 +9,29 @@ import NutzungsChecker from "./NutzungsChecker";
 import { treePalette } from "../../appState/appViewSignals";
 import DragBox from "../MainActionCard/DragBox";
 import { editAge } from "../../appState/treeLocationSignals";
+import { useDrop } from "react-dnd";
 
 
 const TreeSpeciesSelectionModal: React.FC<{ isOpen: Signal<boolean> }> = ({ isOpen }) => {
   const [selectedSpeciesProfile, setSelectedSpeciesProfile] = useState<SpeciesProfileI | undefined>(
     speciesProfile.peek()?.[0]
   );
+
+  // drop zone for the tree species
+  const [, dropPlatte] = useDrop(() => ({
+    accept: 'tree',
+    drop: (item: any) => {
+      // filter out the current tree type, if it is already in the palette
+      const others = treePalette.peek().filter(t => t !== item.treeType)
+
+      // add the item to the end of the palette
+      treePalette.value = [...others, item.treeType]
+    }
+  }))
+
+  const handleRemoveTree = (tree: string) => {
+    treePalette.value = treePalette.peek().filter(t => t !== tree)
+  }
 
   console.log(speciesProfile.value);
   return (
@@ -25,7 +42,8 @@ const TreeSpeciesSelectionModal: React.FC<{ isOpen: Signal<boolean> }> = ({ isOp
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          width: "1200px",
+          width: "85%",
+          maxWidth: "1200px",
           bgcolor: "background.paper",
           borderRadius: 2,
           p: 4,
@@ -37,6 +55,7 @@ const TreeSpeciesSelectionModal: React.FC<{ isOpen: Signal<boolean> }> = ({ isOp
             Deine Baumarten
           </Typography>
           <Box
+            ref={dropPlatte}
             sx={{
               border: "2px dashed",
               borderColor: "grey.400",
@@ -49,9 +68,18 @@ const TreeSpeciesSelectionModal: React.FC<{ isOpen: Signal<boolean> }> = ({ isOp
             }}
           >
             { treePalette.value.map((tree, idx) => (
+              <Box sx={{position: 'relative'}}>
               <DragBox key={idx}>
                 <DraggableTree treeType={tree} age={editAge.value} />
               </DragBox>
+              <IconButton 
+                size="small" 
+                sx={{ position: "absolute", top:  '-16px', right: '-12px'}}
+                onClick={() => handleRemoveTree(tree)}
+              >
+                  <Close />
+                </IconButton>
+              </Box>
             )) }
             <Typography
               sx={{
