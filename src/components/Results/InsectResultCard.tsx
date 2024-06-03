@@ -45,7 +45,7 @@ const InsectResultCard: React.FC = () => {
                 config={{displayModeBar: false}}
             />
             
-            <Typography variant="h6">{insectPopulation.value.german_name} Aktität</Typography>
+            <Typography variant="h6">Blüh- bzw. Aktivitätszeitraum</Typography>
             <Plot 
                 style={{width: '100%'}}
                 layout={{
@@ -61,7 +61,7 @@ const InsectResultCard: React.FC = () => {
                     {
                         type: 'bar',
                         orientation: 'h',
-                        y: ['Larven', 'Blüten'],
+                        y: [insectPopulation.value.german_name, 'Blühabdeckung'],
                         x: [
                             insectPopulation.value.startMonth, 
                             Object.values(activeBlossomsMonths.value).findIndex(v => v > 0) + 1
@@ -74,7 +74,7 @@ const InsectResultCard: React.FC = () => {
                     {
                         type: 'bar',
                         orientation: 'h',
-                        y: ['Larven', 'Blüten'],
+                        y: [insectPopulation.value.german_name, 'Blühabdeckung'],
                         x: [
                             insectPopulation.value.endMonth - insectPopulation.value.startMonth,
                             12 - (Object.values(activeBlossomsMonths.value).reverse().findIndex(v => v > 0) + 1)
