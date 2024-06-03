@@ -40,7 +40,7 @@ const DraggableElements: React.FC = () => {
             </Box>
 
             <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center">
-                <Typography sx={{mt: 2}} variant="h6">Baureihen</Typography>
+                <Typography sx={{mt: 2}} variant="h6">Baumreihen</Typography>
                 <Button variant="contained" onClick={() => editTreeLineId.value = nanoid(8)}>Neu</Button>
             </Box>
             

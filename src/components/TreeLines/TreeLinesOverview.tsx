@@ -47,7 +47,7 @@ const TreeLinesOverview: React.FC = () => {
                     <ListItemAvatar>
                         <Skeleton variant="circular" width={40} height={40} />
                     </ListItemAvatar>
-                    <ListItemText primary="Neue Baumlinie" secondary="füge weitere Bäume hinzu, damit hier eine Reihe entsteht" />
+                    <ListItemText primary="Neue Baumreihe" secondary="füge weitere Bäume hinzu, damit hier eine Reihe entsteht" />
                 </ListItemButton>
             ) : null }
         </List>
