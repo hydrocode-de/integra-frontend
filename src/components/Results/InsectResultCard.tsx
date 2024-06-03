@@ -8,7 +8,7 @@ import { simulationStep } from "../../appState/simulationSignals"
 const InsectResultCard: React.FC = () => {
     return <>
         <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center">
-            <Typography variant="h6">unterstütze Larvenpopulation</Typography>
+            <Typography variant="h6">ANzahl unterstützer Larven</Typography>
             <Plot
                 style={{width: '100%'}}
                 layout={{
