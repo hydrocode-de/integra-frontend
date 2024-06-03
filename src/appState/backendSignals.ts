@@ -33,6 +33,20 @@ export interface TreeDataPoint {
   nectarPrune?: number;
   pollenPrune?: number;
 
+  // flowering data
+  flowering_1?: boolean;
+  flowering_2?: boolean;
+  flowering_3?: boolean;
+  flowering_4?: boolean;
+  flowering_5?: boolean;
+  flowering_6?: boolean;
+  flowering_7?: boolean;
+  flowering_8?: boolean;
+  flowering_9?: boolean;
+  flowering_10?: boolean;
+  flowering_11?: boolean;
+  flowering_12?: boolean;
+
   // DEV: the backend should be changed, until we do not need these anymore
   image?: string;
   filename?: string;
