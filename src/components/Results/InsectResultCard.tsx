@@ -9,7 +9,7 @@ import { Info } from "@mui/icons-material"
 const InsectResultCard: React.FC = () => {
     return <>
         <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center">
-        <Typography mt={1} variant="h6">Anzahl unterstützer Larven</Typography>
+        <Typography mt={1} variant="h6">Anzahl unterstützter Larven</Typography>
         <Box mt={1} px={1} width="100%" display="flex" flexDirection="row" justifyContent="space-between" alignItems="center">  
             <Select sx={{width: '100%'}} size="small" value={insectPopulationName.value} onChange={e => insectPopulationName.value = e.target.value}>
                 { allInsects.map(insect => (

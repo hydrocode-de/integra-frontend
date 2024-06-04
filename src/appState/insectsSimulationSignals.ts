@@ -19,14 +19,14 @@ interface InsectPopulation {
 // hard-code the insect data- change later
 export const allInsects: InsectPopulation[] = [
     {latin_name: 'Andrena cineraria', german_name: 'Graue Sandbiene', pollenPerLavae: 32.2, startMonth: 3, endMonth: 5},
-    {latin_name: 'Andrena haemorrhoa', german_name: 'Rotshopfige Sandbiene', pollenPerLavae: 20.1, startMonth: 3, endMonth: 7},
+    {latin_name: 'Andrena haemorrhoa', german_name: 'Rotschopfige Sandbiene', pollenPerLavae: 20.1, startMonth: 3, endMonth: 7},
     {latin_name: 'Andrena helvola', german_name: 'Sandbiene', pollenPerLavae: 29.6, startMonth: 3, endMonth: 8},
     {latin_name: 'Andrena nitida', german_name: 'Glänzende Düstersandbiene', pollenPerLavae: 28.9, startMonth: 3, endMonth: 11},
     {latin_name: 'Apis mellifera', german_name: 'Honigbiene', pollenPerLavae: 43.6, startMonth: 3, endMonth: 12},
     {latin_name: 'Bombus lapidarius', german_name: 'Steinhummel', pollenPerLavae: 56.8, startMonth: 3, endMonth: 6},
     {latin_name: 'Bombus pascuorum', german_name: 'Ackerhummel', pollenPerLavae: 56.8, startMonth: 3, endMonth: 10},
     {latin_name: 'Bombus terrestris', german_name: 'Erdhummel', pollenPerLavae: 61.7, startMonth: 3, endMonth: 6},
-    {latin_name: 'Colletes cunicularius', german_name: 'Fühlings-Seidenbiene', pollenPerLavae: 72, startMonth: 3, endMonth: 4},
+    {latin_name: 'Colletes cunicularius', german_name: 'Frühlings-Seidenbiene', pollenPerLavae: 72, startMonth: 3, endMonth: 4},
 ]
 
 // export the current insect population
