@@ -17,7 +17,7 @@ interface InsectPopulation {
 }
 
 // hard-code the insect data- change later
-const allInsects: InsectPopulation[] = [
+export const allInsects: InsectPopulation[] = [
     {latin_name: 'Andrena cineraria', german_name: 'Graue Sandbiene', pollenPerLavae: 32.2, startMonth: 3, endMonth: 5},
     {latin_name: 'Andrena haemorrhoa', german_name: 'Rotshopfige Sandbiene', pollenPerLavae: 20.1, startMonth: 3, endMonth: 7},
     {latin_name: 'Andrena helvola', german_name: 'Sandbiene', pollenPerLavae: 29.6, startMonth: 3, endMonth: 8},
