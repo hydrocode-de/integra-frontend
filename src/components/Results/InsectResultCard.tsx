@@ -1,14 +1,28 @@
-import { Box, Typography } from "@mui/material"
+import { Box, MenuItem, Select, Tooltip, Typography } from "@mui/material"
 import Plot from "react-plotly.js"
-import { activeBlossomsMonths, insectPopulation, insectPopulationName, insectsSimulation } from "../../appState/insectsSimulationSignals"
+import { activeBlossomsMonths, allInsects, insectPopulation, insectPopulationName, insectsSimulation } from "../../appState/insectsSimulationSignals"
 import { Data } from "plotly.js"
 import range from "lodash.range"
 import { simulationStep } from "../../appState/simulationSignals"
+import { Info } from "@mui/icons-material"
 
 const InsectResultCard: React.FC = () => {
     return <>
         <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center">
-            <Typography variant="h6">ANzahl unterstützer Larven</Typography>
+        <Typography mt={1} variant="h6">Anzahl unterstützer Larven</Typography>
+        <Box mt={1} px={1} width="100%" display="flex" flexDirection="row" justifyContent="space-between" alignItems="center">  
+            <Select sx={{width: '100%'}} size="small" value={insectPopulationName.value} onChange={e => insectPopulationName.value = e.target.value}>
+                { allInsects.map(insect => (
+                    <MenuItem key={insect.latin_name} value={insect.latin_name}>{insect.german_name} ({insect.pollenPerLavae} mm³ / Larve)</MenuItem>
+                )) }
+            </Select>
+            <Box ml={3}>
+                <Tooltip title="Dieser Wert ist ein theoretischer Wert der Ihnen die Einschätzung bzw. Vergleichbarkeit des Nahrungsangebots für Insektenlarven ermöglichen soll. Für die Berechnung wird angenommen, dass das gesamte Pollenvolumen des geplanten Systems ausschließlich von der ausgewählten Insektenart aufgebraucht wird, unabhängig von der Übereinstimmung des Blüh- bzw. Aktivitätszeitraums.">
+                    <Info color="info" />
+                </Tooltip>
+            </Box>
+        </Box>
+            
             <Plot
                 style={{width: '100%'}}
                 layout={{
@@ -50,12 +64,16 @@ const InsectResultCard: React.FC = () => {
                 style={{width: '100%'}}
                 layout={{
                     height: 200,
-                    margin: {t: 10, r: 15},
+                    margin: { t: 10 },
                     autosize: true,
                     showlegend: false,
                     barmode: 'stack',
-                    xaxis: {title: 'Monate', range: [0, 12]},
-                    yaxis: {rotation: 45},
+                    xaxis: {
+                        title: 'Monate', 
+                        range: [1, 12], tickvals: 
+                        range(1, 13), 
+                        ticktext: ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez']},
+                    yaxis: {tickangle: 0},
                 }}
                 data={[
                     {
@@ -69,7 +87,8 @@ const InsectResultCard: React.FC = () => {
                         marker: {
                             color: 'white',
                             line: {color: 'white'}
-                        }
+                        },
+                        hoverinfo: 'skip'
                     },
                     {
                         type: 'bar',
@@ -77,12 +96,27 @@ const InsectResultCard: React.FC = () => {
                         y: [insectPopulation.value.german_name, 'Blühabdeckung'],
                         x: [
                             insectPopulation.value.endMonth - insectPopulation.value.startMonth,
+                            0
+                        ],
+                        marker: {
+                            color: '#9ec3e5',
+                            line: {color: '#9ec3e5'}
+                        },
+                        hoverinfo: 'skip'
+                    },
+                    {
+                        type: 'bar',
+                        orientation: 'h',
+                        y: [insectPopulation.value.german_name, 'Blühabdeckung'],
+                        x: [
+                            0,
                             12 - (Object.values(activeBlossomsMonths.value).reverse().findIndex(v => v > 0) + 1)
                         ],
                         marker: {
-                            color: 'blue',
-                            line: {color: 'blue'}
-                        }
+                            color: '#c32f69',
+                            line: {color: '#c32f69'}
+                        },
+                        hoverinfo: 'skip'
                     }
                 ]}
                 config={{displayModeBar: false}}
