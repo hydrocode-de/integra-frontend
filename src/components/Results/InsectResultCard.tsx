@@ -44,7 +44,7 @@ const InsectResultCard: React.FC = () => {
                             fill: 'tonexty',
                             line: { width: 2},
                             stackgroup: 'one',
-                            hovertemplate: `${treeSpecies.peek().find(t => t.latin_name === treeType)!.german_name}<br>nach %{x} Jahren<br>pot. Anzahl Larven: %{y}<extra></extra>`,
+                            hovertemplate: `${treeSpecies.peek().find(t => t.latin_name === treeType)!.german_name}<br>nach %{x} Jahren<br>Anzahl Larven: %{y}<extra></extra>`,
 
                         } as Data
                     }),
@@ -57,7 +57,7 @@ const InsectResultCard: React.FC = () => {
                             size: 15,
                             color: 'black'
                         },
-                        hovertemplate: `Momentan (%{x} Jahre)<br>pot. Anzahl Larven: %{y}<extra></extra>`
+                        hovertemplate: `Momentan (%{x} Jahre)<br>Anzahl Larven: %{y}<extra></extra>`
                     }
                 ]}
                 config={{displayModeBar: false}}
@@ -78,6 +78,7 @@ const InsectResultCard: React.FC = () => {
                         range(3, 10).map(v => v + 0.5), 
                         ticktext: ['Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt',]},
                     yaxis: {tickangle: 0},
+                    
                 }}
                 data={[
                     {
