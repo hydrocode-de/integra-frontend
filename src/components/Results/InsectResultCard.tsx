@@ -68,15 +68,15 @@ const InsectResultCard: React.FC = () => {
                 style={{width: '100%'}}
                 layout={{
                     height: 200,
-                    margin: { t: 10, r: 10, l: insectPopulation.value.german_name.length < 12 ? 100 : 165 },
+                    margin: { t: 10, r: 10, l: insectPopulation.value.german_name.length < 12 ? 100 : 185 },
                     autosize: true,
                     showlegend: false,
                     barmode: 'stack',
                     xaxis: {
                         title: 'Monate', 
-                        range: [1, 12], tickvals: 
-                        range(1, 13), 
-                        ticktext: ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez']},
+                        range: [3, 10], tickvals: 
+                        range(3, 10).map(v => v + 0.5), 
+                        ticktext: ['Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt',]},
                     yaxis: {tickangle: 0},
                 }}
                 data={[
