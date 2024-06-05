@@ -68,7 +68,7 @@ const InsectResultCard: React.FC = () => {
                 style={{width: '100%'}}
                 layout={{
                     height: 200,
-                    margin: { t: 10, r: 10, l: 160 },
+                    margin: { t: 10, r: 10, l: insectPopulation.value.german_name.length < 12 ? 100 : 165 },
                     autosize: true,
                     showlegend: false,
                     barmode: 'stack',
