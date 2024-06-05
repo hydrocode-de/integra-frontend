@@ -1,11 +1,12 @@
 import { Box, MenuItem, Select, Typography } from "@mui/material"
 import { biomassProperty, biomassSimulation } from "../../appState/biomassSimulationSignals"
-import Plot, { PlotParams } from "react-plotly.js"
+import Plot from "react-plotly.js"
 import range from "lodash.range"
 import { simulationStep } from "../../appState/simulationSignals"
 import { useSignal } from "@preact/signals-react"
 import { referenceAreaHectar } from "../../appState/referenceAreaSignals"
 import { Data } from "plotly.js"
+import { treeSpecies } from "../../appState/backendSignals"
 
 // define color palettes for AGB and carbon plots
 const AGB_COLORS = ['#143601', '#1a4301', '#245501', '#538d22', '#73a942', '#aad576']
@@ -60,7 +61,7 @@ const BiomassResultCard: React.FC = () => {
                             mode: 'lines',
                             x: range(99),
                             y: values.map(v => biomassMode.value === 'total' ? v / 1000 : (v / 1000) / referenceAreaHectar.value),
-                            hovertemplate: `${treeType}<br>nach %{x} Jahren<br>Biomasse: %{y:.2f} ${biomassMode.value === 'total' ? 't' : 't / ha'}<extra></extra>`,
+                            hovertemplate: `${treeSpecies.peek().find(t => t.latin_name === treeType)!.german_name}<br>nach %{x} Jahren<br>Biomasse: %{y:.2f} ${biomassMode.value === 'total' ? 't' : 't / ha'}<extra></extra>`,
                             fill: 'tonexty',
                             line: { width: 2, color: biomassProperty.value === 'agb' ? AGB_COLORS[idx] : CARB_COLORS[idx] },
                             stackgroup: 'one'
