@@ -21,7 +21,7 @@ const ResultActionCard: React.FC = () => {
     return <>
         <Card sx={{
             mt: open.value ? '11px' : 0,
-            mr: open.value ? '45px' : '45px',
+            mr: open.value ? '5px' : '5px',
             p: open.value ? 1 : 1
         }}>
             {open.value ? (<>
