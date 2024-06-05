@@ -23,15 +23,16 @@ const ShadeResultCard: React.FC = () => {
                 <Typography variant="body1" mr={1}>
                     {`Landw. Fläche:    ${(area(agriculturalArea.value) / 10000).toFixed(1)} ha`}
                 </Typography>
-                <Tooltip title="Die landwirtschaftliche Fläche umfasst fie für landwirtschaftliche Zwecke nutzbare Fläche, abzüglich der von Baumstreifen beanspruchten Fläche.">
+                <Tooltip title="Die landwirtschaftliche Fläche umfasst die für landwirtschaftliche Zwecke nutzbare Fläche, abzüglich der von Baumstreifen beanspruchten Fläche.">
                         <Info fontSize="small" color="info" />
                     </Tooltip>
                 </Box>
 
             </Box>
-            <Box p={1} mt={1} display="block" width="100%">
+            <Box p={1} mt={1} mx="auto" display="block">
                 <Plot 
                     layout={{
+                        width: 400,
                         height: 350, 
                         showlegend: true,
                         margin: {t: 0, b: 15},
@@ -39,11 +40,12 @@ const ShadeResultCard: React.FC = () => {
                     }}
                     data={[{
                         type: 'pie',
+                        hole: 0.4,
                         values: [unshadedArea.value, shadedArea.value],
                         labels: ['Unbeschattet', 'Beschattet'],
                         //textinfo: 'label+value+percent',
-                        textinfo: 'label+value',
-                        texttemplate: '%{label}: %{value} ha',
+                        textinfo: 'none',
+                        // texttemplate: '%{label}: %{value} ha',
                         insidetextorientation: 'radial',
                         hovertemplate: '%{customdata[0]}<extra></extra>',
                         customdata: [
