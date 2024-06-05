@@ -8,6 +8,7 @@ import { treeLocationFeatures } from "./geoJsonSignals"
 import range from "lodash.range"
 import { loadClosestDataPoint } from "./backendSignals"
 
+
 interface InsectPopulation {
     latin_name: string,
     german_name: string,
@@ -27,6 +28,11 @@ export const allInsects: InsectPopulation[] = [
     {latin_name: 'Bombus pascuorum', german_name: 'Ackerhummel', pollenPerLavae: 56.8, startMonth: 3, endMonth: 10},
     {latin_name: 'Bombus terrestris', german_name: 'Erdhummel', pollenPerLavae: 61.7, startMonth: 3, endMonth: 6},
     {latin_name: 'Colletes cunicularius', german_name: 'Frühlings-Seidenbiene', pollenPerLavae: 72, startMonth: 3, endMonth: 4},
+    {latin_name: 'Lasioglossum laticeps', german_name: 'Breitkopf-Schmalbiene', pollenPerLavae: 11, startMonth: 3, endMonth: 6},
+    {latin_name: 'Megachile rotundata', german_name: 'Luzerne-Blattschneiderbiene', pollenPerLavae: 15.2, startMonth: 5, endMonth: 7},
+    {latin_name: 'Osmia bicornis', german_name: 'Rostrote Mauerbiene', pollenPerLavae: 28.8, startMonth: 4, endMonth: 6},
+    {latin_name: 'Osmia cornuta', german_name: 'Gehörnte Mauerbiene', pollenPerLavae: 52.2, startMonth: 3, endMonth: 4},
+    {latin_name: 'Xylocopa violacea', german_name: 'Große Blaue Holzbiene', pollenPerLavae: 207.1, startMonth: 3, endMonth: 6}
 ]
 
 // export the current insect population
