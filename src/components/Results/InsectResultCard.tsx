@@ -5,6 +5,7 @@ import { Data } from "plotly.js"
 import range from "lodash.range"
 import { simulationStep } from "../../appState/simulationSignals"
 import { Info } from "@mui/icons-material"
+import { treeSpecies } from "../../appState/backendSignals"
 
 const InsectResultCard: React.FC = () => {
     return <>
@@ -42,7 +43,9 @@ const InsectResultCard: React.FC = () => {
                             y: values.map(v => Math.round(v / insectPopulation.value.pollenPerLavae)),
                             fill: 'tonexty',
                             line: { width: 2},
-                            stackgroup: 'one'
+                            stackgroup: 'one',
+                            hovertemplate: `${treeSpecies.peek().find(t => t.latin_name === treeType)!.german_name}<br>nach %{x} Jahren<br>pot. Anzahl Larven: %{y}<extra></extra>`,
+
                         } as Data
                     }),
                     {
@@ -53,7 +56,8 @@ const InsectResultCard: React.FC = () => {
                         marker: {
                             size: 15,
                             color: 'black'
-                        }
+                        },
+                        hovertemplate: `Momentan (%{x} Jahre)<br>pot. Anzahl Larven: %{y}<extra></extra>`
                     }
                 ]}
                 config={{displayModeBar: false}}
