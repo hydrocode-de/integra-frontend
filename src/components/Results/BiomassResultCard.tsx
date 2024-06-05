@@ -1,6 +1,6 @@
 import { Box, MenuItem, Select, Typography } from "@mui/material"
 import { biomassProperty, biomassSimulation } from "../../appState/biomassSimulationSignals"
-import Plot, { PlotParams } from "react-plotly.js"
+import Plot from "react-plotly.js"
 import range from "lodash.range"
 import { simulationStep } from "../../appState/simulationSignals"
 import { useSignal } from "@preact/signals-react"
