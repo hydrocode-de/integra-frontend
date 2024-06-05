@@ -72,7 +72,7 @@ const DesktopMain: React.FC = () => {
           </SideContent>
 
           <MainMap mapId="desktop">
-            <NavigationControl position="bottom-right" visualizePitch />
+            <NavigationControl position="top-right" visualizePitch />
             <TreeLineSource />
             <TreeShadeSource /> 
             <TreeLineTooltip />

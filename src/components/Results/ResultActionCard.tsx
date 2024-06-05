@@ -20,8 +20,8 @@ const ResultActionCard: React.FC = () => {
     // otherwise, show stuff
     return <>
         <Card sx={{
-            mt: open.value ? '16px' : 0,
-            mr: open.value ? '16px' : 0,
+            mt: open.value ? '11px' : 0,
+            mr: open.value ? '45px' : '45px',
             p: open.value ? 1 : 1
         }}>
             {open.value ? (<>
