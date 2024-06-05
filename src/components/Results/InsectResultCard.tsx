@@ -3,7 +3,7 @@ import Plot from "react-plotly.js"
 import { activeBlossomsMonths, allInsects, insectPopulation, insectPopulationName, insectsSimulation } from "../../appState/insectsSimulationSignals"
 import { Data } from "plotly.js"
 import range from "lodash.range"
-import { simulationStep } from "../../appState/simulationSignals"
+import { seasonMonth, simulationStep } from "../../appState/simulationSignals"
 import { Info } from "@mui/icons-material"
 import { treeSpecies } from "../../appState/backendSignals"
 
@@ -78,6 +78,7 @@ const InsectResultCard: React.FC = () => {
                         range(3, 10).map(v => v + 0.5), 
                         ticktext: ['Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt',]},
                     yaxis: {tickangle: 0},
+                    yaxis2: {overlaying: 'y', side: 'right', showgrid: false, showline: false, showticklabels: false, zeroline: false, range:[0, 1]},
                     
                 }}
                 data={[
@@ -122,6 +123,14 @@ const InsectResultCard: React.FC = () => {
                             line: {color: '#c32f69'}
                         },
                         hoverinfo: 'skip'
+                    },
+                    {
+                        type: 'scatter',
+                        mode: 'lines',
+                        x: [seasonMonth.value + 0.5, seasonMonth.value + 0.5],
+                        y: [insectPopulation.value.german_name, 'Blühabdeckung'],
+                        line: {dash: 'dash', width: 2, color: 'grey'},
+                        yaxis: 'y2'
                     }
                 ]}
                 config={{displayModeBar: false}}
