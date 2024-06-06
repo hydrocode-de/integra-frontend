@@ -15,6 +15,7 @@ export interface TreeLineProperties {
     id: string,
     width: number,
     name?: string,
+    num?: number,
 }
 
 // define the interface for user-created treeLines
