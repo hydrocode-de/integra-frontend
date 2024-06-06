@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react"
 import { Source, Layer, useMap, MapLayerMouseEvent, MapMouseEvent } from "react-map-gl"
 
-import {  TreeLocation } from "../../appState/tree.model"
+import {  CalculatedTreeLine, TreeLocation } from "../../appState/tree.model"
 import { currentSeason } from "../../appState/simulationSignals"
 import { useSignal, useSignalEffect } from "@preact/signals-react"
 import { layerVisibility, zoom } from "../../appState/mapSignals"
@@ -104,6 +104,17 @@ const TreeLineSource: React.FC = () => {
         setDetailId({treeId: feature.properties.id })
     }
 
+    const handleLineClick = (e: MapLayerMouseEvent) => {
+        if (e.features!.length === 0) return
+
+        // get the feature
+        const line = e.features![0] as unknown as CalculatedTreeLine["features"][0]
+
+        // set the detail Id of this tree line to make the side content to adjust accordingly
+        // console.log(`click line id: ${line.properties.id}`)
+        setDetailId({lineId: line.properties.id})
+    }
+
     // handle the hovering of tree area
     const handleLineAreaEnter = (e: MapLayerMouseEvent) => {
         treeLineDistanceTrigger.value = true
@@ -172,6 +183,7 @@ const TreeLineSource: React.FC = () => {
             map.current.on('mousemove', handleDragMove)
             map.current.on('mouseenter', 'tree-lines-area', handleLineAreaEnter)
             map.current.on('mouseleave', 'tree-lines-area', handleLineAreaLeave)
+            map.current.on('click', 'tree-lines-area', handleLineClick)
         }
 
         // unsubscribe from events
@@ -189,6 +201,7 @@ const TreeLineSource: React.FC = () => {
             map.current!.off('mousemove', handleDragMove)
             map.current!.off('mouseenter', 'tree-lines-area', handleLineAreaEnter)
             map.current!.off('mouseleave', 'tree-lines-area', handleLineAreaLeave)
+            map.current!.off('click', 'tree-lines-area', handleLineClick)
         }
     }, [])  // eslint-disable-line react-hooks/exhaustive-deps
 
