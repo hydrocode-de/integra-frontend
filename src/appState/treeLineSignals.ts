@@ -26,8 +26,11 @@ const createMissingTreeLineProps = (tree: RawTreeLocation) => {
     // the the treeLineId in question
     const treeLineId = tree.treeLineId
 
+    // peek the length of the tree porps, to get the next number
+    const nextNumber = calculatedTreeLineProps.peek().length + 1
+
     // creaze the properties with defaults
-    const props = { id: treeLineId, width: 5, name: `TreeLine ${treeLineId}` }
+    const props = { id: treeLineId, width: 5, name: `Baumreihe ${nextNumber}`, num: nextNumber }
 
     // create the new state of the treelineprops
     const newTreeLineProps = [...calculatedTreeLineProps.peek(), {...props}]
