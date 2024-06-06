@@ -4,7 +4,6 @@ import {  Summarize, Map } from "@mui/icons-material";
 import MainMap from "../components/MainMap/MainMap";
 import TreeLineSource from "../components/MainMap/TreeLineSource";
 import TreeLineTooltip from "../components/MainMap/TreeLineTooltip";
-import MapLayerSwitchButton from "../components/MainMap/MapLayerSwitchButton";
 import SimulationStepSlider from "../components/Simulation/SimulationStepSlider";
 import SideContent from "../layout/desktop/SideContent";
 import SideTreeDetailCard from "../components/TreeLines/SideTreeDetailCard";
@@ -22,6 +21,7 @@ import { referenceArea } from "../appState/referenceAreaSignals";
 import DistanceMeasurementsSource from "../components/MainMap/DistanceMeasurmentsSource";
 import MapToolsCard from "../components/MapTools/MapToolsCard";
 import SideLineDetailCard from "../components/TreeLines/SideLineDetailCard";
+import { NavigationControl } from "react-map-gl";
 
 const DesktopMain: React.FC = () => {
 
@@ -74,9 +74,9 @@ const DesktopMain: React.FC = () => {
           </SideContent>
 
           <MainMap mapId="desktop">
+            <NavigationControl position="bottom-right" visualizePitch />
             <TreeLineSource />
             <TreeShadeSource /> 
-            <MapLayerSwitchButton />
             <TreeLineTooltip />
             <ReferenceAreaSource />
             <DistanceMeasurementsSource />
