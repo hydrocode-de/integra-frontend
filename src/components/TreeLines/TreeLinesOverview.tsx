@@ -4,6 +4,7 @@ import { EditLocation, Forest } from "@mui/icons-material"
 import { editTreeLineId } from "../../appState/treeLocationSignals"
 import {  flyTo } from "../MainMap/MapObservableStore"
 import { center } from "@turf/turf"
+import { setDetailId } from "../../appState/sideContentSignals"
 
 
 const TreeLinesOverview: React.FC = () => {
@@ -19,6 +20,9 @@ const TreeLinesOverview: React.FC = () => {
         // fly to the line
         // fitBounds([lineBox[0], lineBox[1], lineBox[2], lineBox[3]])
         flyTo({center: {lon: lineCenter.geometry.coordinates[0], lat: lineCenter.geometry.coordinates[1]}})
+
+        // finally, set the line as active line
+        setDetailId({lineId: id})
     }
 
     return <>
@@ -37,7 +41,7 @@ const TreeLinesOverview: React.FC = () => {
                     </ListItemAvatar>
 
                     <ListItemText 
-                        primary={`Baumreihe ${idx + 1}`} 
+                        primary={line.properties.name || 'Unbekannte Baumreihe' } 
                         secondary={`${line.properties.treeCount} Bäume (${line.properties.lineLength?.toFixed(1)}m)`}
                     />
                 </ListItemButton>

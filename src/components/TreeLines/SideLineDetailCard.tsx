@@ -57,7 +57,7 @@ const SideLineDetailCard: React.FC = () => {
                 <CardActionArea onClick={() => open.value = !open.peek()}>
                     <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" m={0}>
                         <Typography variant={open.value ? "h6" : "body1"} my="auto">
-                            Baumreihe
+                            { treeLine.value.properties.name || 'Unbekannte Baumreihe'}
                         </Typography>
                         { open.value ? <ExpandLess /> : <ExpandMore /> }
                     </Box>
@@ -89,6 +89,7 @@ const SideLineDetailCard: React.FC = () => {
                             max={15}
                             value={treeLine.value.properties.width}
                             onChange={(_, v) => setNewWidth(v as number)}
+                            valueLabelDisplay="auto"
                         />
                     </Box>
 
