@@ -7,7 +7,7 @@
  */
 import { computed, effect, signal } from "@preact/signals-react"
 import { CalculatedTreeLine, RawTreeLocation, TreeLineArea, TreeLineProperties } from "./tree.model"
-import { activeTreeLineIds, rawTreeLocationSeedData } from "./treeLocationSignals"
+import { rawTreeLocationSeedData } from "./treeLocationSignals"
 import { treeLocationFeatures } from "./geoJsonSignals"
 import center from "@turf/center"
 import distance from "@turf/distance"
@@ -39,12 +39,35 @@ const createMissingTreeLineProps = (tree: RawTreeLocation) => {
 effect(() => {
     // whenever rawTreeLocationSeedData changes, we need to check if there are new treeLineIds
     rawTreeLocationSeedData.value.forEach(tree => {
+        // get active lines
+        const activeLines = calculatedTreeLineProps.peek().map(l => l.id)
+        
         // check if the active treeLineIds contain the treeLineId already
-        if (!activeTreeLineIds.peek().includes(tree.treeLineId)) {
+        if (!activeLines.includes(tree.treeLineId)) {
+            console.log('Added missing treelineprops')
             createMissingTreeLineProps(tree)
         }
     })
 })
+
+// define a function to update the properties of a tree line
+export const updateTreeLineProps = (lineId: string, props: Partial<TreeLineProperties>) => {
+    // get the index of the line in question
+    const index = calculatedTreeLineProps.peek().findIndex(l => l.id === lineId)
+
+    // get the current properties
+    const currentProps = calculatedTreeLineProps.peek()[index]
+
+    // // update the properties
+    const newProps = {...currentProps, ...props, id: lineId}
+
+    // // update the signal
+    const newTreeLineProps = [...calculatedTreeLineProps.peek()]
+    newTreeLineProps[index] = newProps
+    // console.log(newTreeLineProps)
+    calculatedTreeLineProps.value = newTreeLineProps
+
+}
 
 // create calculatedTreeLineFeatures from the props. It is possible that we have props, that do not have 
 // trees anymore. These are just ignored here
@@ -56,8 +79,9 @@ export const calculatedTreeLineFeatures = computed<CalculatedTreeLine["features"
     const allLineProperties = calculatedTreeLineProps.value
 
     // for each activeTreeLineId and filter all trees that belong to this line
-    activeTreeLineIds.peek().forEach(lineId => {
-        const trees = allTrees.filter(tree => tree.properties.treeLineId === lineId)
+    allLineProperties.forEach(props => {
+    //activeTreeLineIds.peek().forEach(lineId => {
+        const trees = allTrees.filter(tree => tree.properties.treeLineId === props.id)
 
         if (trees.length < 2) return
         // construct the line from these features
@@ -79,9 +103,6 @@ export const calculatedTreeLineFeatures = computed<CalculatedTreeLine["features"
         // build the line stirng
         const line = lineString(orderedTrees.map(tree => tree.geometry.coordinates))
         
-        // get the properties of the line
-        const props = allLineProperties.find(l => l.id === lineId) || {id: lineId, width: 5, name: `TreeLine ${lineId}`}
-        
         // push the line to the treeLines
         treeLines.push({
             ...line,
@@ -95,6 +116,7 @@ export const calculatedTreeLineFeatures = computed<CalculatedTreeLine["features"
 
     return [...treeLines]
 })
+
 
 // build tree line Areas fron the calculatedTreeLineFeatures
 export const treeLineAreaFeatures = computed<TreeLineArea["features"]>(() => {

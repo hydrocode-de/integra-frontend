@@ -18,12 +18,12 @@ export const rawTreeLocationSeedData = signal<RawTreeLocation[]>([]);
 
 // as soon as the rawTreeLocationSeedData changes, we can compile a list of all existing treeLineIds
 // this could be extended to some basic metadata about these lines.
-export const activeTreeLineIds = computed<string[]>(() => {
-    // go for all unique treeLineIds in lines
-    const ids = rawTreeLocationSeedData.value.map(tree => tree.treeLineId).filter((value, index, self) => self.indexOf(value) === index)    
+// export const activeTreeLineIds = computed<string[]>(() => {
+//     // go for all unique treeLineIds in lines
+//     const ids = rawTreeLocationSeedData.value.map(tree => tree.treeLineId).filter((value, index, self) => self.indexOf(value) === index)    
 
-    return ids
-})
+//     return ids
+// })
 
 // turn the raw tree locations into a GeoJSON Features
 export const rawTreeFeatures = computed<TreeLocation["features"]>(() => {
