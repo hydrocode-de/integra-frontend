@@ -21,6 +21,7 @@ import { ActivePage, activePage } from "../appState/appViewSignals";
 import { referenceArea } from "../appState/referenceAreaSignals";
 import DistanceMeasurementsSource from "../components/MainMap/DistanceMeasurmentsSource";
 import MapToolsCard from "../components/MapTools/MapToolsCard";
+import SideLineDetailCard from "../components/TreeLines/SideLineDetailCard";
 
 const DesktopMain: React.FC = () => {
 
@@ -69,6 +70,7 @@ const DesktopMain: React.FC = () => {
             <MapToolsCard />
             <MainActionCard />
             <SideTreeDetailCard />
+            <SideLineDetailCard />
           </SideContent>
 
           <MainMap mapId="desktop">
