@@ -6,7 +6,7 @@ import { computed, signal } from "@preact/signals-react"
 import { simulationStep } from "./simulationSignals"
 import { treeLocationFeatures } from "./geoJsonSignals"
 import range from "lodash.range"
-import { loadClosestDataPoint } from "./backendSignals"
+import { loadClosestDataPoint, treeSpecies } from "./backendSignals"
 
 
 interface InsectPopulation {
@@ -34,6 +34,16 @@ export const allInsects: InsectPopulation[] = [
     {latin_name: 'Osmia cornuta', german_name: 'Gehörnte Mauerbiene', pollenPerLavae: 52.2, startMonth: 3, endMonth: 4},
     {latin_name: 'Xylocopa violacea', german_name: 'Große Blaue Holzbiene', pollenPerLavae: 207.1, startMonth: 3, endMonth: 6}
 ]
+
+// create a view on the insects, whenever the species change
+export const speciesToInsects = computed<{[species: string]: boolean[]}>(()=> {
+    const spec = Object.fromEntries(treeSpecies.value.map(species => {
+        return [species.latin_name, species.insects || []]
+    }))
+
+    console.log(spec)
+    return spec
+})
 
 // export the current insect population
 export const insectPopulationName = signal<string>('Bombus terrestris')
