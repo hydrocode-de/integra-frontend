@@ -33,7 +33,7 @@ const TreeSpeciesSelectionModal: React.FC<{ isOpen: Signal<boolean> }> = ({ isOp
     treePalette.value = treePalette.peek().filter(t => t !== tree)
   }
 
-  console.log(speciesProfile.value);
+  // console.log(speciesProfile.value);
   return (
     <Modal onClose={() => (isOpen.value = !isOpen.peek())} open={isOpen.value}>
       <Box
@@ -74,17 +74,17 @@ const TreeSpeciesSelectionModal: React.FC<{ isOpen: Signal<boolean> }> = ({ isOp
             }}
           >
             { treePalette.value.map((tree, idx) => (
-              <Box sx={{position: 'relative'}}>
-              <DragBox key={idx}>
-                <DraggableTree treeType={tree} age={editAge.value} />
-              </DragBox>
-              <IconButton 
-                size="small" 
-                sx={{ position: "absolute", top:  '-16px', right: '-12px'}}
-                onClick={() => handleRemoveTree(tree)}
-              >
-                  <Close />
-                </IconButton>
+              <Box sx={{position: 'relative'}} key={idx}>
+                <DragBox key={idx}>
+                  <DraggableTree treeType={tree} age={editAge.value} />
+                </DragBox>
+                <IconButton 
+                  size="small" 
+                  sx={{ position: "absolute", top:  '-16px', right: '-12px'}}
+                  onClick={() => handleRemoveTree(tree)}
+                >
+                    <Close />
+                  </IconButton>
               </Box>
             )) }
             <Typography
@@ -121,9 +121,9 @@ const TreeSpeciesSelectionModal: React.FC<{ isOpen: Signal<boolean> }> = ({ isOp
             }}
             component="div"
           >
-            {speciesProfile.peek()?.filter(t => t.type === 'Baum').map((species) => {
+            {speciesProfile.peek()?.filter(t => t.type === 'Baum').map((species, idx) => {
               return (
-                <Box mr={2} sx={{maxWidth: '75px', lineHeight: 0.5}}>
+                <Box mr={2} sx={{maxWidth: '75px', lineHeight: 0.5}} key={idx}>
                   <DragBox 
                     selected={species.latin_name === selectedSpeciesProfile?.latin_name}
                     onClick={() => setSelectedSpeciesProfile(species)}
@@ -150,9 +150,9 @@ const TreeSpeciesSelectionModal: React.FC<{ isOpen: Signal<boolean> }> = ({ isOp
             }}
             component="div"
           >
-            {speciesProfile.peek()?.filter(t => t.type === 'Strauch').map((species) => {
+            {speciesProfile.peek()?.filter(t => t.type === 'Strauch').map((species, idx) => {
               return (
-                <Box mr={2} sx={{maxWidth: '75px', lineHeight: 0.5}}>
+                <Box mr={2} sx={{maxWidth: '75px', lineHeight: 0.5}} key={idx}>
                   <DragBox 
                     selected={species.latin_name === selectedSpeciesProfile?.latin_name}
                     onClick={() => setSelectedSpeciesProfile(species)}
