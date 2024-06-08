@@ -1,15 +1,42 @@
 import { Box, MenuItem, Select, Tooltip, Typography } from "@mui/material"
 import Plot from "react-plotly.js"
-import { activeBlossomsMonths, allInsects, insectPopulation, insectPopulationName, insectsSimulation } from "../../appState/insectsSimulationSignals"
+import { activeBlossomsMonths, allInsects, insectPopulation, insectPopulationName, insectsSimulation, speciesToInsects } from "../../appState/insectsSimulationSignals"
 import { Data } from "plotly.js"
 import range from "lodash.range"
 import { seasonMonth, simulationStep } from "../../appState/simulationSignals"
 import { Info } from "@mui/icons-material"
 import { treeSpecies } from "../../appState/backendSignals"
+import { useComputed } from "@preact/signals-react"
+import { treeLocationFeatures } from "../../appState/geoJsonSignals"
 
 const InsectResultCard: React.FC = () => {
+    // aggregate the insects supported by the current system
+    const numberOfSpecies = useComputed(() => {
+        // filter the species currently planted
+        const species = treeLocationFeatures.value.map(f => f.properties.treeType)
+            .filter((specimen, idx, species) => species.indexOf(specimen) === idx)
+
+        // filter the insects table and map to matrix
+        const insects = Object.entries(speciesToInsects.value)
+            .filter(([s, _]) => species.includes(s))
+            .map(([_, insect]) => insect)
+        
+        // reduce the first dimension(rows) of the matrix (bitwise OR)
+        const abundantSpecies = range(insects[0].length).map(index => {
+            // map to the current column
+            return insects.map(insect => insect[index])
+                .reduce((prev, curr) => prev || curr, false)  // bitwise OR
+        })
+
+        // finally, we need the sum of that
+        return abundantSpecies.reduce((prev, curr) => prev + (curr ? 1 : 0), 0)
+    })
+
     return <>
         <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center">
+        <Box mt={1}>
+            {numberOfSpecies.value} Insektenarten
+        </Box>
         <Typography mt={1} variant="h6">Anzahl unterstützter Larven</Typography>
         <Box mt={1} px={1} width="100%" display="flex" flexDirection="row" justifyContent="space-between" alignItems="center">  
             <Select sx={{width: '100%'}} size="small" value={insectPopulationName.value} onChange={e => insectPopulationName.value = e.target.value}>
