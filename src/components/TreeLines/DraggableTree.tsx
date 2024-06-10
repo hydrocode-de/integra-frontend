@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react"
 import { useDrag } from "react-dnd"
 import { ageToSize, treeIconsLoaded, treeSpecies } from "../../appState/backendSignals"
-import { SEASON, currentSeason } from "../../appState/simulationSignals"
+import { SEASON, getSeason, seasonMonth } from "../../appState/simulationSignals"
 import { useSignalEffect } from "@preact/signals-react"
 
 
@@ -14,7 +14,7 @@ export interface TreeDropProperties {
 const DraggableTree: React.FC<TreeDropProperties> = ({ treeType, age }) => {
     // get the current source, given the age
     const [src, setSrc] = useState<string>('icons/default-tree.png')
-    const [season, setSeason] = useState<SEASON>(currentSeason.peek())
+    const [season, setSeason] = useState<SEASON>('summer')
     const [iconAbbrev, setIconAbbrev] = useState<string>('')
 
     // we need to translate from preact-signals to react useEffect by hand here
@@ -25,7 +25,12 @@ const DraggableTree: React.FC<TreeDropProperties> = ({ treeType, age }) => {
 
     // listen for changes in the season
     useSignalEffect(() => {
-        setSeason(currentSeason.value)
+        // listen to changes in the current month
+        const month = seasonMonth.value
+        
+        // determine the season and set to state
+        const currentSeason = getSeason(month, treeType, age)
+        setSeason(currentSeason)
     })
 
     useEffect(() => {
