@@ -20,7 +20,7 @@ const marks: Mark[] = [
 const monthToIndex = {
   Jan: 1,
   Feb: 2,
-  Mar: 3,
+  Mär: 3,
   Apr: 4,
   Mai: 5,
   Jun: 6,
