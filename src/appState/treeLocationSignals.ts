@@ -2,6 +2,8 @@ import { computed, signal } from "@preact/signals-react";
 import { RawTreeLocation, TreeLocation } from "./tree.model";
 import { loadClosestDataPoint, treeSpecies } from "./backendSignals"
 import { nanoid } from "nanoid";
+import { booleanWithin } from "@turf/turf";
+import { referenceArea } from "./referenceAreaSignals";
 
 /**
  * General workflow:
@@ -76,6 +78,14 @@ export const editTreeLineId = signal<string>(nanoid(8))
 
 // add a new tree after the user dropped it on the map
 export const addNewTree = (tree: {location: {lat: number, lng: number}, treeType: string}) => {
+    // only accept if this is inside the reference area
+    const prospectLocation: GeoJSON.Feature<GeoJSON.Point> = {type: 'Feature', geometry: {type: 'Point', coordinates: [tree.location.lng, tree.location.lat]}, properties: {}}
+    
+    if (!booleanWithin(prospectLocation, referenceArea.peek()['features'][0])) {
+        console.log('DEBUG: This location is outside the reference area')
+        return
+    }
+
     // get the next id
     const nextId = `s${rawTreeLocationSeedData.peek().length + 1}`
 
@@ -142,6 +152,13 @@ export const updateSingleTreeSeed = (treeId: string, opts: Partial<RawTreeLocati
 export const updateTreePosition = (treeId: string, position: {lon: number, lat: number}) => {
     // find the tree
     const tree = rawTreeLocationSeedData.peek().find(t => t.id === treeId)
+
+    // make sure we stay in bounds
+    const prospectLocation: GeoJSON.Feature<GeoJSON.Point> = {type: 'Feature', geometry: {type: 'Point', coordinates: [position.lon, position.lat]}, properties: {}}
+    if (!booleanWithin(prospectLocation, referenceArea.peek().features[0])) {
+        console.log('DEBUG: This location is outside the reference area')
+        return
+    }
 
     // this should never be undefined
     if (!tree) {
