@@ -4,7 +4,7 @@ import { activeBlossomsMonths, allInsects, insectPopulation, insectPopulationNam
 import { Data } from "plotly.js"
 import range from "lodash.range"
 import { seasonMonth, simulationStep } from "../../appState/simulationSignals"
-import { Info } from "@mui/icons-material"
+import { EmojiNature, Info } from "@mui/icons-material"
 import { treeSpecies } from "../../appState/backendSignals"
 import { useComputed } from "@preact/signals-react"
 import { treeLocationFeatures } from "../../appState/geoJsonSignals"
@@ -34,9 +34,6 @@ const InsectResultCard: React.FC = () => {
 
     return <>
         <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center">
-        <Box mt={1}>
-            {numberOfSpecies.value} Insektenarten
-        </Box>
         <Typography mt={1} variant="h6">Anzahl unterstützter Larven</Typography>
         <Box mt={1} px={1} width="100%" display="flex" flexDirection="row" justifyContent="space-between" alignItems="center">  
             <Select sx={{width: '100%'}} size="small" value={insectPopulationName.value} onChange={e => insectPopulationName.value = e.target.value}>
@@ -54,7 +51,7 @@ const InsectResultCard: React.FC = () => {
             <Plot
                 style={{width: '100%'}}
                 layout={{
-                    height: 250, 
+                    height: 200, 
                     margin: {t: 10, r: 15},
                     autosize: true,
                     showlegend: false,
@@ -94,7 +91,7 @@ const InsectResultCard: React.FC = () => {
             <Plot 
                 style={{width: '100%'}}
                 layout={{
-                    height: 200,
+                    height: 140,
                     margin: { t: 10, r: 10, l: insectPopulation.value.german_name.length < 12 ? 100 : 185 },
                     autosize: true,
                     showlegend: false,
@@ -162,7 +159,25 @@ const InsectResultCard: React.FC = () => {
                 ]}
                 config={{displayModeBar: false}}
             />
+        
+        <Typography variant="h6">Anzahl unterstützter Insektenarten</Typography>
+        <Box mt={1} width="100%" display="flex" mx={1} flexDirection="row" justifyContent="space-between" alignItems="center">
+            <Box />
+            <Box display="flex" flexDirection="row" alignItems="center" fontSize="1.5rem">
+                <Box mr={1}>
+                    <EmojiNature color="warning" />
+                </Box>
+                <Typography variant="h4" component="span" sx={{color: '#ed6c02'}}>{numberOfSpecies.value}</Typography>
+            </Box>
+            <Box mr={1}>
+                <Tooltip title="Dieser Wert bezeichnet die Anzahl an potentiell unterstützten Insektenarten, welche sich aus der in Ihrem System vorhandenen Baum- und Strauchartenzusammensetzung ergibt.">
+                    <Info color="info" />
+                </Tooltip>
+            </Box>
         </Box>
+
+        </Box>
+
     </>
 }
 
