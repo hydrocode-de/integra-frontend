@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react"
 import { useDrag } from "react-dnd"
-import { ageToSize, treeIconsLoaded, treeSpecies } from "../../appState/backendSignals"
+import { ageToSize, germanSpecies, treeIconsLoaded, treeSpecies } from "../../appState/backendSignals"
 import { SEASON, currentSeason } from "../../appState/simulationSignals"
 import { useSignalEffect } from "@preact/signals-react"
 import { Tooltip } from "@mui/material"
@@ -55,9 +55,6 @@ const DraggableTree: React.FC<TreeDropProperties> = ({ treeType, age }) => {
         updateSrc()
     }, [updateSrc, iconsLoaded])
 
-    // run only once on startup
-    //useEffect(() => updateSrc(), [])
-
     // get the drag and drop handler
     const [{ isDragging }, drag] = useDrag(() => ({
         type: 'tree',
@@ -67,10 +64,10 @@ const DraggableTree: React.FC<TreeDropProperties> = ({ treeType, age }) => {
             handlerId: monitor.getHandlerId(),
         }),
         
-    }))
+    }), [treeType])
 
     return <>
-        <Tooltip title={treeType}>
+        <Tooltip title={germanSpecies.value[treeType]}>
         <img src={src} ref={drag} style={{opacity: isDragging ? 0.4 : 0.9, width: '50px', height: '50px'}} alt="" />
         </Tooltip>
     </>
