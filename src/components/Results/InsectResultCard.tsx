@@ -92,69 +92,33 @@ const InsectResultCard: React.FC = () => {
                 style={{width: '100%', maxWidth: '400px', margin: 'auto'}}
                 layout={{
                     height: 140,
-                    margin: { t: 10, r: 10, l: insectPopulation.value.german_name.length < 12 ? 100 : 185 },
-                    autosize: true,
-                    showlegend: false,
-                    barmode: 'stack',
-                    xaxis: {
-                        title: 'Monate', 
-                        range: [3, 10], tickvals: 
-                        range(3, 10).map(v => v + 0.5), 
-                        ticktext: ['Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt',]},
-                    yaxis: {tickangle: 0},
+                    margin: {t: 10, r: 10, l: insectPopulation.value.german_name.length < 12 ? 105 : 185},
+                    xaxis: {tickvals: [3, 4, 5, 6, 7, 8, 9, 10], ticktext: ['Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt']},
                     yaxis2: {overlaying: 'y', side: 'right', showgrid: false, showline: false, showticklabels: false, zeroline: false, range:[0, 1]},
-                    
+                    xaxis2: {overlaying: 'x', side: 'bottom', showgrid: false, showline: false, showticklabels: false, zeroline: false, range:[3, 11]},
                 }}
                 data={[
                     {
-                        type: 'bar',
-                        orientation: 'h',
+                        type: 'heatmap',
+                        x: [3, 4, 5, 6, 7, 8, 9, 10].map(v => v + 0.5),
                         y: [insectPopulation.value.german_name, 'Blühabdeckung'],
-                        x: [
-                            insectPopulation.value.startMonth, 
-                            Object.values(activeBlossomsMonths.value).findIndex(v => v > 0) + 1
+                        z: [
+                            range(3, 11).map(m => insectPopulation.value.startMonth <= m && m <= insectPopulation.value.endMonth ? 0.5 : 0),
+                            activeBlossomsMonths.value.slice(2, 10).map(v => v > 0 ? 1 : 0)
                         ],
-                        marker: {
-                            color: 'white',
-                            line: {color: 'white'}
-                        },
-                        hoverinfo: 'skip'
-                    },
-                    {
-                        type: 'bar',
-                        orientation: 'h',
-                        y: [insectPopulation.value.german_name, 'Blühabdeckung'],
-                        x: [
-                            insectPopulation.value.endMonth - insectPopulation.value.startMonth,
-                            0
-                        ],
-                        marker: {
-                            color: '#9ec3e5',
-                            line: {color: '#9ec3e5'}
-                        },
-                        hoverinfo: 'skip'
-                    },
-                    {
-                        type: 'bar',
-                        orientation: 'h',
-                        y: [insectPopulation.value.german_name, 'Blühabdeckung'],
-                        x: [
-                            0,
-                            12 - (Object.values(activeBlossomsMonths.value).reverse().findIndex(v => v > 0) + 1)
-                        ],
-                        marker: {
-                            color: '#c32f69',
-                            line: {color: '#c32f69'}
-                        },
+                        colorscale: [[0, 'transparent'], [0.5, '#c32f69'], [1, '#9ec3e5']],
+                        showscale: false,
                         hoverinfo: 'skip'
                     },
                     {
                         type: 'scatter',
                         mode: 'lines',
-                        x: [seasonMonth.value + 0.5, seasonMonth.value + 0.5],
+                        hoverinfo: 'skip',
+                        x: [seasonMonth.value, seasonMonth.value],
                         y: [insectPopulation.value.german_name, 'Blühabdeckung'],
                         line: {dash: 'dash', width: 2, color: 'grey'},
-                        yaxis: 'y2'
+                        yaxis: 'y2',
+                        xaxis: 'x2'
                     }
                 ]}
                 config={{displayModeBar: false}}
