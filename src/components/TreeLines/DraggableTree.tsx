@@ -3,6 +3,7 @@ import { useDrag } from "react-dnd"
 import { ageToSize, treeIconsLoaded, treeSpecies } from "../../appState/backendSignals"
 import { SEASON, currentSeason } from "../../appState/simulationSignals"
 import { useSignalEffect } from "@preact/signals-react"
+import { Tooltip } from "@mui/material"
 
 
 export interface TreeDropProperties {
@@ -69,7 +70,9 @@ const DraggableTree: React.FC<TreeDropProperties> = ({ treeType, age }) => {
     }))
 
     return <>
+        <Tooltip title={treeType}>
         <img src={src} ref={drag} style={{opacity: isDragging ? 0.4 : 0.9, width: '50px', height: '50px'}} alt="" />
+        </Tooltip>
     </>
 }
 

@@ -6,7 +6,7 @@ import { Signal } from "@preact/signals-react";
 import { SpeciesProfileI, speciesProfile } from "../../appState/speciesProfileSignals";
 import StandortValueRange from "./StandortSlider";
 import NutzungsChecker from "./NutzungsChecker";
-import { treePalette } from "../../appState/appViewSignals";
+import { addTreeToPalette, removeTreeFromPalette, treePalette } from "../../appState/appViewSignals";
 import DragBox from "../MainActionCard/DragBox";
 import { editAge } from "../../appState/treeLocationSignals";
 import { useDrop } from "react-dnd";
@@ -22,15 +22,17 @@ const TreeSpeciesSelectionModal: React.FC<{ isOpen: Signal<boolean> }> = ({ isOp
     accept: 'tree',
     drop: (item: any) => {
       // filter out the current tree type, if it is already in the palette
-      const others = treePalette.peek().filter(t => t !== item.treeType)
+      // const others = treePalette.value.filter(t => t !== item.treeType)
 
-      // add the item to the end of the palette
-      treePalette.value = [...others, item.treeType]
+      // // add the item to the end of the palette
+      // treePalette.value = [...others, item.treeType]
+      addTreeToPalette(item.treeType)
     }
   }))
 
   const handleRemoveTree = (tree: string) => {
-    treePalette.value = treePalette.peek().filter(t => t !== tree)
+    // treePalette.value = treePalette.peek().filter(t => t !== tree)
+    removeTreeFromPalette(tree)
   }
 
   // console.log(speciesProfile.value);
@@ -75,7 +77,7 @@ const TreeSpeciesSelectionModal: React.FC<{ isOpen: Signal<boolean> }> = ({ isOp
           >
             { treePalette.value.map((tree, idx) => (
               <Box sx={{position: 'relative'}} key={idx}>
-                <DragBox key={idx}>
+                <DragBox>
                   <DraggableTree treeType={tree} age={editAge.value} />
                 </DragBox>
                 <IconButton 
