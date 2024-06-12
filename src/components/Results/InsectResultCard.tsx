@@ -49,7 +49,7 @@ const InsectResultCard: React.FC = () => {
         </Box>
             
             <Plot
-                style={{width: '100%', maxWidth: '330px', margin: 'auto'}}
+                style={{width: '100%', maxWidth: '400px', margin: 'auto'}}
                 layout={{
                     height: 200, 
                     margin: {t: 10, r: 15},
@@ -89,7 +89,7 @@ const InsectResultCard: React.FC = () => {
             
             <Typography variant="h6">Blüh- bzw. Aktivitätszeitraum</Typography>
             <Plot 
-                style={{width: '100%', maxWidth: '330px', margin: 'auto'}}
+                style={{width: '100%', maxWidth: '400px', margin: 'auto'}}
                 layout={{
                     height: 140,
                     margin: { t: 10, r: 10, l: insectPopulation.value.german_name.length < 12 ? 100 : 185 },
