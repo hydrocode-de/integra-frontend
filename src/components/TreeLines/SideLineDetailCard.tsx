@@ -80,13 +80,22 @@ const SideLineDetailCard: React.FC = () => {
                             <Typography variant="body2">Länge:</Typography>
                             <Typography variant="body1">{ treeLine.value.properties.lineLength?.toFixed(1) } m</Typography>
                         </Box>
+                        <Box display="flex" flexDirection="row" justifyContent="space-between">
+                            <Typography variant="body2">Breite des Baumstreifens:</Typography>
+                            <Typography variant="body1">{ treeLine.value.properties.width } m</Typography>
+                        </Box>
                     </Box>
 
                     <Box p={1} mt={1}>
-                        <Typography variant="h6">Breite</Typography>
                         <Slider
                             min={1}
                             max={15}
+                            marks={[
+                                {value: 1, label: '1 m'}, 
+                                {value: 5, label: '5m'}, 
+                                {value: 10, label: '10 m'},
+                                {value: 15, label: '15 m'}
+                            ]}
                             value={treeLine.value.properties.width}
                             onChange={(_, v) => setNewWidth(v as number)}
                             valueLabelDisplay="auto"
