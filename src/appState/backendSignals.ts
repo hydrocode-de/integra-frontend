@@ -65,7 +65,8 @@ interface TreeSpecies {
   shape: string,
   latin_name: string,
   german_name?: string,
-  icon_abbrev?: string
+  icon_abbrev?: string,
+  insects?: boolean[];
 }
 
 interface TreeData extends TreeSpecies {
