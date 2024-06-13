@@ -94,24 +94,24 @@ export const insectsSimulation = computed<InsectsSimulation>(() => {
 })
 
 // derive which months are active given the tree population
-export const activeBlossomsMonths = computed<{[month: number]: number}>(() => {
+export const activeBlossomsMonths = computed<number[]>(() => {
     // subscribe to changes in the tree locations
     const trees = treeLocationFeatures.value
 
     // build the result container
-    const result: {[month: number]: number} = {}
-    range(1, 12).forEach(month => result[month] = 0)
+    const result: number[] = Array(12).fill(0)
     
     // go for each tree
     trees.forEach(tree => {
         // get for each month
-        range(1, 12).forEach(month => {
+        range(0, 12).forEach(index => {
             // check if this specific tree has blossoms in this month
-            if (!!(tree.properties as any)[`flowering_${month}`]) {
-                result[month] += 1
+            if (!!(tree.properties as any)[`flowering_${index + 1}`]) {
+                result[index] += 1
             }
         })
     })
+    console.log(result)
     // return the result
     return result
 })

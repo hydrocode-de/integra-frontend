@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react"
 import { Source, Layer, useMap, MapLayerMouseEvent, MapMouseEvent } from "react-map-gl"
 
 import {  CalculatedTreeLine, TreeLocation } from "../../appState/tree.model"
-import { currentSeason } from "../../appState/simulationSignals"
+import { getSeason, seasonMonth } from "../../appState/simulationSignals"
 import { useSignal, useSignalEffect } from "@preact/signals-react"
 import { layerVisibility, zoom } from "../../appState/mapSignals"
 import { updateTreePosition } from "../../appState/treeLocationSignals"
@@ -21,12 +21,16 @@ const TreeLineSource: React.FC = () => {
     const [treeLocationData, setTreeLocationData] = useState<TreeLocation>({type: "FeatureCollection", features: []})
 
     useSignalEffect(() => {
-        // get the season
-        const season = currentSeason.value
+        // get the current month
+        const month = seasonMonth.value
         
         const newFeatures = treeLocations.value.features.map(f => {
+            // get the tree size
             const size = ageToSize(f.properties.age!)
             
+            // get the current season
+            const season = getSeason(month, f.properties.treeType, f.properties.age!)
+
             return {
                 ...f,
                 properties: {

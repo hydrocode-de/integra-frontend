@@ -9,6 +9,8 @@ import { batch, computed, effect, signal } from "@preact/signals-react";
 import { layerVisibility } from "./mapSignals";
 import { editAge, updateAllTreeAges } from "./treeLocationSignals";
 import { treeLocationFeatures } from "./geoJsonSignals";
+import { loadClosestDataPoint } from "./backendSignals";
+import range from "lodash.range";
 
 // the iteration is too important, so we make it private to this module
 const step = signal<number>(0)
@@ -35,16 +37,50 @@ effect(() => {
 
 // season
 export const seasonMonth = signal<number>(6)
-
 export type SEASON = "flowering" | "summer" | "autumn" | "winter"
-export const currentSeason = computed<SEASON>(() => {
-    const mon = seasonMonth.value
 
-    if ([12, 1, 2].includes(mon)) return "winter"
-    if ([3, 4, 5].includes(mon)) return "flowering"
-    if ([6, 7, 8].includes(mon)) return "summer"
-    return "autumn"
-})
+export const getSeason = ( month: number, treeType: string, age: number): SEASON => {
+    // october and november are always autumn
+    if ([10, 11].includes(month)) return "autumn"
+
+    // december is always winter
+    if (month === 12) return "winter"
+
+    // otherwise we default to summer
+    let season: SEASON = "summer"
+
+    // in any other case, we check the flowering data
+    const treeData = loadClosestDataPoint(treeType, age)
+
+    // flag is flowering is over
+    let wasFlowering = false
+
+    // not sure how to break a loop correctly, so we need another flag
+    let didMatch = false
+
+    range(1, 10).forEach(m => {
+        if (didMatch) return
+        // set the flowering flag to true
+        if (!!treeData[`flowering_${m}` as keyof typeof treeData]) {
+            wasFlowering = true
+            // if this is the month, return the flowering season
+            if (m === month && !didMatch) { 
+                didMatch = true
+                season = "flowering"
+            }
+        }
+        
+        // now it can only be summer or winter if the months match
+        if (m === month && !didMatch) {
+            didMatch = true
+            season = wasFlowering ? "summer" : "winter"
+        }
+    })
+
+    // if we reach this point, something went wrong
+    return season
+    
+}
 
 // use a function to go to the next season month to handle the order correctly
 // this can then later implement the half-months
