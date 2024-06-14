@@ -1,4 +1,4 @@
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import { Paper, TableContainer, } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useSignalEffect } from "@preact/signals-react";
 import { useState } from "react";
@@ -15,7 +15,6 @@ const columns: GridColDef[] = [
   { field: 'nectar', headerName: 'Nektarangebot', minWidth: 150},
 
 ]
-
 
 interface Row {
   art: string,
