@@ -4,7 +4,7 @@ import {  Summarize, Map } from "@mui/icons-material";
 import MainMap from "../components/MainMap/MainMap";
 import TreeLineSource from "../components/MainMap/TreeLineSource";
 import TreeLineTooltip from "../components/MainMap/TreeLineTooltip";
-import SimulationStepSlider from "../components/Simulation/SimulationStepSlider";
+import SimulationStepSliderCard from "../components/Simulation/SimulationStepSliderCard";
 import SideContent from "../layout/desktop/SideContent";
 import SideTreeDetailCard from "../components/TreeLines/SideTreeDetailCard";
 import Footer from "../layout/Footer";
@@ -64,7 +64,7 @@ const DesktopMain: React.FC = () => {
       // This needs to be 100vh - 72px for header - 32px for footer
       <Box width="100vw" height="calc(100vh - 104px)" m="0" p="0" display="flex">
           {/* add the simulation slider */}
-          { hasData.value || simulationIsTouched.value ? <SimulationStepSlider /> : null}
+          { hasData.value || simulationIsTouched.value ? <SimulationStepSliderCard /> : null}
 
           <SideContent>
             <MapToolsCard />

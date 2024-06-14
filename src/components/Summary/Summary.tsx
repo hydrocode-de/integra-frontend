@@ -7,7 +7,7 @@ import { simulationStep } from "../../appState/simulationSignals";
 import { changeStaticData, summaryData } from "../../appState/summarySignals";
 import { useState } from "react";
 import { useSignal } from "@preact/signals-react";
-import SimulationStepSlider from "../Simulation/SimulationStepSlider";
+import SimulationStepSliderCard from "../Simulation/SimulationStepSliderCard";
 
 const ItemPair = ({ label, value }: { label: string; value: string }) => {
   return (
@@ -82,7 +82,7 @@ const Summary = () => {
             anchorEl={popoverAnchor}
             anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
           >
-            <SimulationStepSlider />
+            <SimulationStepSliderCard />
           </Popover>
           <Typography variant="h6" component="span">
             Jahren ({new Date().getFullYear() + simulationStep.value.current }).

@@ -33,7 +33,7 @@ const monthToIndex = {
 };
 
 
-const SimulationStepSlider: React.FC = () => {
+const SimulationStepSliderCard: React.FC = () => {
   // state to handle card state
   const open = useSignal<boolean>(true);
 
@@ -106,4 +106,4 @@ const SimulationStepSlider: React.FC = () => {
   );
 };
 
-export default SimulationStepSlider;
+export default SimulationStepSliderCard;
