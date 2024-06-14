@@ -6,8 +6,7 @@ import ReferenceAreaSource from "../MainMap/ReferenceAreaSource";
 import { simulationStep } from "../../appState/simulationSignals";
 import { changeStaticData, summaryData } from "../../appState/summarySignals";
 import { useState } from "react";
-import { useSignal } from "@preact/signals-react";
-import SimulationStepSliderCard from "../Simulation/SimulationStepSliderCard";
+import SimulationStepSlider from "../Simulation/SimulationStepSlider";
 
 const ItemPair = ({ label, value }: { label: string; value: string }) => {
   return (
@@ -76,13 +75,15 @@ const Summary = () => {
           <Button variant="outlined" color="success" style={{marginLeft: '1rem', marginRight: '1rem'}} onClick={e => setPopoverAnchor(e.currentTarget)}>
             {simulationStep.value.current}
           </Button>
-          <Popover 
+          <Popover
             open={Boolean(popoverAnchor)} 
             onClose={() => setPopoverAnchor(null)} 
             anchorEl={popoverAnchor}
             anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
           >
-            <SimulationStepSliderCard />
+            <Box width="450px" px={2} pb={1} pt={2} >
+              <SimulationStepSlider noMonthSlider />
+            </Box>
           </Popover>
           <Typography variant="h6" component="span">
             Jahren ({new Date().getFullYear() + simulationStep.value.current }).
