@@ -1,10 +1,13 @@
-import { Box, Divider, Grid, Typography } from "@mui/material";
+import { Box, Button, Divider, FormControl, Grid, Input, InputAdornment, Typography } from "@mui/material";
 import MainMap from "../MainMap/MainMap";
 import TreeLineSource from "../MainMap/TreeLineSource";
 import SummaryTable from "./SummaryTable";
 import { referenceArea } from "../../appState/referenceAreaSignals";
 import { agriculturalArea } from "../../appState/treeLineSignals";
 import ReferenceAreaSource from "../MainMap/ReferenceAreaSource";
+import { simulationStep } from "../../appState/simulationSignals";
+import { changeStaticData, summaryData } from "../../appState/summarySignals";
+import { useEffect, useState } from "react";
 
 const ItemPair = ({ label, value }: { label: string; value: string }) => {
   return (
@@ -23,8 +26,40 @@ const ItemPairVertical = ({ label, value }: { label: string; value: string }) =>
   );
 };
 
+const TextEditItemPairVertical = ({ label, value, onChange, }: { label: string; value?: string, onChange: (value: string) => void }) => {
+  // set component state
+  const [val, setVal] = useState<string>(value || '')
+  const [edit, setEdit] = useState<boolean>(false)
+
+  const onEditFinish = () => {
+    setEdit(false)
+    onChange(val)
+  }
+  return (
+    <Box >
+      <Typography variant="subtitle2">{label}</Typography>
+      { edit ? (
+        <FormControl>
+          <Input 
+            value={val} 
+            placeholder="nicht gewählt" 
+            onChange={e => setVal(e.target.value)} 
+            endAdornment={
+              <InputAdornment position="end">
+                <Button onClick={onEditFinish}>OK</Button>
+              </InputAdornment>
+            }
+          />
+        </FormControl>
+      ) : (
+        <Typography pb={1} style={{cursor: 'pointer'}} onClick={() => setEdit(true)}>{val || <i>nicht gewählt</i> }</Typography>
+      ) }
+      
+    </Box>
+  );
+}
+
 const Summary = () => {
-  // console.log(agriculturalArea.value.features[0].properties.area / 10000)
   return (<>
     <Grid container sx={{maxWidth: "1200px", margin: "auto", boxSizing: 'border-box'}} spacing={3}>
       <Grid item xs={12}>
@@ -33,7 +68,7 @@ const Summary = () => {
         </Typography>
         <Divider />
         <Typography pt={3} variant="h6">
-          Übersicht
+          Diese Zusammenfassung bezieht sich auf ihre Planung nach {simulationStep.value.current} Jahren ({new Date().getFullYear() + simulationStep.value.current }).
         </Typography>
         <Typography color={"textSecondary"} sx={{ maxWidth: 600,pb: 1 }}>
           Hier sehen Sie eine Übersicht der geplanten Fläche.
@@ -60,11 +95,11 @@ const Summary = () => {
             <Box sx={{ pl: 1 }}>
               <ItemPair
                 label="Flächengröße (gesamt)"
-                value={`${(referenceArea.value.features[0]?.properties?.area / 10000).toFixed(0)} ha`}
+                value={`${(summaryData.value?.referenceArea)?.toFixed(0)} ha`}
               />
               <ItemPair
                 label="Agroforst Nutzung"
-                value={`${(agriculturalArea.value.features[0]?.properties?.area / 10000).toFixed(0)} ha`}
+                value={`${(summaryData.value?.agriculturalArea)?.toFixed(0)} ha`}
               />
               <ItemPair label="Schutzgebiet" value="ja" />
             </Box>
@@ -72,8 +107,16 @@ const Summary = () => {
               Nutzungsart
             </Typography>
             <Box sx={{ pl: 1 }}>
-              <ItemPairVertical label="Landwirtschaft" value="Feldfrucht mit Raps und Winterweizen" />
-              <ItemPairVertical label="Forstwirtschaft" value="Kurzumtrieb" />
+              <TextEditItemPairVertical 
+                label="Landwirtschaft" 
+                value={summaryData.value?.agriculturalUse} 
+                onChange={v => changeStaticData('agriculturalUse', v)} 
+              />
+              <TextEditItemPairVertical 
+                label="Forstwirtschaft"
+                value={summaryData.value?.forestryUse}
+                onChange={v => changeStaticData('forestryUse', v)}
+              />
             </Box>
           </Box>
         </Grid>
@@ -84,10 +127,26 @@ const Summary = () => {
               Standort
             </Typography>
             <Box sx={{ pl: 1 }}>
-              <ItemPairVertical label="Jährliche Niederschlagssumme" value="600 mm" />
-              <ItemPairVertical label="Jahresmitteltemperatur" value="10,2 °C" />
-              <ItemPairVertical label="Bodenart" value="Schluffton" />
-              <ItemPairVertical label="Bodennährstoffversorgung" value="nährstoffreich, basisch" />
+              <TextEditItemPairVertical
+                label="Jährliche Niederschlagssumme"
+                value={summaryData.value?.precipitationSum}
+                onChange={v => changeStaticData('precipitationSum', v)}
+              />
+              <TextEditItemPairVertical
+                label="Jahresmitteltemperatur"
+                value={summaryData.value?.averageTemperature}
+                onChange={v => changeStaticData('averageTemperature', v)}
+              />
+              <TextEditItemPairVertical
+                label="Bodenart"
+                value={summaryData.value?.soilType}
+                onChange={v => changeStaticData('soilType', v)}
+              />
+              <TextEditItemPairVertical
+                label="Bodennährstoffversorgung"
+                value={summaryData.value?.soilNutrient}
+                onChange={v => changeStaticData('soilNutrient', v)}
+              />
             </Box>
           </Box>
         </Grid>
