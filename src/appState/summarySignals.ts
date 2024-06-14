@@ -25,6 +25,8 @@ interface SummaryData extends StaticSummaryData {
     agriculturalArea: number,
     agb: number,
     carbon: number,
+    nectar: number,
+    pollen: number
 }
 
 export const changeStaticData = (label: keyof SummaryData, value: string) => {
@@ -49,12 +51,24 @@ export const summaryData = computed<SummaryData | undefined>(() => {
         .filter(t => t.properties.age! > 0 && (!t.properties.harvestAge || t.properties.age! < t.properties.harvestAge))
         .reduce((prev, curr) => prev + (curr.properties.carbon || 0), 0)
 
+    // calculate nectar
+    const nectar = treeLocationFeatures.value
+        .filter(t => t.properties.age! > 0 && (!t.properties.harvestAge || t.properties.age! < t.properties.harvestAge))
+        .reduce((prev, curr) => prev + (curr.properties.nectar || 0), 0)
+    
+    // calculate pollen
+    const pollen = treeLocationFeatures.value
+        .filter(t => t.properties.age! > 0 && (!t.properties.harvestAge || t.properties.age! < t.properties.harvestAge))
+        .reduce((prev, curr) => prev + (curr.properties.pollen || 0), 0)
+
     // in any other case, return the summary data
     return {
         referenceArea: referenceAreaHectar.peek(),
         agriculturalArea: area(agriculturalArea.value) / 10000,
         agb,
         carbon,
+        nectar,
+        pollen,
         ...staticData.value
     }
 })

@@ -199,10 +199,16 @@ const Summary = () => {
               </Box>
               <Box>
                 <ItemPairVertical label="Blühabdeckung" value="10%" />
-                <ItemPairVertical label="Nektarangebot" value="2335 ml" />
+                <ItemPairVertical 
+                  label="Nektarangebot" 
+                  value={`${summaryData.value?.nectar?.toFixed(0) || '0'} ml`}
+                />
               </Box>
               <Box>
-                <ItemPairVertical label="Pollenangebot" value="4545 μm²" />
+                <ItemPairVertical 
+                  label="Pollenangebot" 
+                  value={`${summaryData.value?.pollen.toFixed(0) || '0'} mm³` }
+                />
                 <ItemPairVertical label="Nistangebot" value="%" />
               </Box>
           </Box>
