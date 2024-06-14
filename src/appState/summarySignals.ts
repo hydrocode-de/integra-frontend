@@ -7,6 +7,7 @@ import { activePage } from "./appViewSignals";
 import { referenceAreaHectar } from "./referenceAreaSignals";
 import { agriculturalArea } from "./treeLineSignals";
 import { area } from "@turf/turf";
+import { treeLocationFeatures } from "./geoJsonSignals";
 
 interface StaticSummaryData {
     agriculturalUse?: string,
@@ -22,7 +23,7 @@ const staticData = signal<StaticSummaryData>({})
 interface SummaryData extends StaticSummaryData {
     referenceArea: number,
     agriculturalArea: number,
-
+    agb: number
 }
 
 export const changeStaticData = (label: keyof SummaryData, value: string) => {
@@ -37,10 +38,14 @@ export const summaryData = computed<SummaryData | undefined>(() => {
     // if the main tab is not on the summary, return undefined
     if (activePage.value !== 'summary') return undefined
 
+    // calculate above ground biomass
+    const agb = treeLocationFeatures.value.reduce((prev, curr) => prev + (curr.properties.agb || 0), 0)
+
     // in any other case, return the summary data
     return {
         referenceArea: referenceAreaHectar.peek(),
         agriculturalArea: area(agriculturalArea.value) / 10000,
+        agb,
         ...staticData.value
     }
 })

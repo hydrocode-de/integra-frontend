@@ -1,13 +1,13 @@
-import { Box, Button, Divider, FormControl, Grid, Input, InputAdornment, Typography } from "@mui/material";
+import { Box, Button, Divider, FormControl, Grid, Input, InputAdornment, Popover, Typography } from "@mui/material";
 import MainMap from "../MainMap/MainMap";
 import TreeLineSource from "../MainMap/TreeLineSource";
 import SummaryTable from "./SummaryTable";
-import { referenceArea } from "../../appState/referenceAreaSignals";
-import { agriculturalArea } from "../../appState/treeLineSignals";
 import ReferenceAreaSource from "../MainMap/ReferenceAreaSource";
 import { simulationStep } from "../../appState/simulationSignals";
 import { changeStaticData, summaryData } from "../../appState/summarySignals";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useSignal } from "@preact/signals-react";
+import SimulationStepSlider from "../Simulation/SimulationStepSlider";
 
 const ItemPair = ({ label, value }: { label: string; value: string }) => {
   return (
@@ -60,6 +60,8 @@ const TextEditItemPairVertical = ({ label, value, onChange, }: { label: string; 
 }
 
 const Summary = () => {
+  const [popoverAnchor, setPopoverAnchor] = useState<HTMLButtonElement | null>(null)
+
   return (<>
     <Grid container sx={{maxWidth: "1200px", margin: "auto", boxSizing: 'border-box'}} spacing={3}>
       <Grid item xs={12}>
@@ -67,8 +69,27 @@ const Summary = () => {
           Mein Agroforstsystem
         </Typography>
         <Divider />
+        <Box pt={3} display="flex" flexDirection="row" justifyContent="start" alignItems="center">
+          <Typography variant="h6" component="span">
+            Diese Zusammenfassung bezieht sich auf ihre Planung nach
+          </Typography>
+          <Button variant="outlined" color="success" style={{marginLeft: '1rem', marginRight: '1rem'}} onClick={e => setPopoverAnchor(e.currentTarget)}>
+            {simulationStep.value.current}
+          </Button>
+          <Popover 
+            open={Boolean(popoverAnchor)} 
+            onClose={() => setPopoverAnchor(null)} 
+            anchorEl={popoverAnchor}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+          >
+            <SimulationStepSlider />
+          </Popover>
+          <Typography variant="h6" component="span">
+            Jahren ({new Date().getFullYear() + simulationStep.value.current }).
+          </Typography>
+        </Box>
         <Typography pt={3} variant="h6">
-          Diese Zusammenfassung bezieht sich auf ihre Planung nach {simulationStep.value.current} Jahren ({new Date().getFullYear() + simulationStep.value.current }).
+            
         </Typography>
         <Typography color={"textSecondary"} sx={{ maxWidth: 600,pb: 1 }}>
           Hier sehen Sie eine Übersicht der geplanten Fläche.
@@ -154,7 +175,7 @@ const Summary = () => {
         <Grid item xs={12} pt={1}>
           <Box sx={{ bgcolor: "grey.100", borderRadius: 2, p: 1, flexGrow: 1}} display="flex" flexDirection="row" justifyContent="space-between">
             <Box>
-                <ItemPairVertical label="Oberirdische Biomasse" value="3256 kg" />
+                <ItemPairVertical label="Oberirdische Biomasse" value={`${(summaryData.value?.agb || 0 / 1000 / 1000).toFixed(1)} t`} />
                 <ItemPairVertical label="Kohlenstoffspeicher" value="1567 kg" />
               </Box>
               <Box>
