@@ -58,6 +58,18 @@ const TextEditItemPairVertical = ({ label, value, onChange, }: { label: string; 
   );
 }
 
+const formatWeight = (weight: number, threshold: number = 4500): string => {
+  if (weight < threshold) {
+    return `${weight.toFixed(1)} kg`
+  } else if (weight > 100000) {
+    return `${(weight / 1000).toFixed(0)} t`
+  } 
+  else {
+    return `${(weight / 1000).toFixed(1)} t`
+  
+  }
+}
+
 const Summary = () => {
   const [popoverAnchor, setPopoverAnchor] = useState<HTMLButtonElement | null>(null)
 
@@ -176,8 +188,14 @@ const Summary = () => {
         <Grid item xs={12} pt={1}>
           <Box sx={{ bgcolor: "grey.100", borderRadius: 2, p: 1, flexGrow: 1}} display="flex" flexDirection="row" justifyContent="space-between">
             <Box>
-                <ItemPairVertical label="Oberirdische Biomasse" value={`${(summaryData.value?.agb || 0 / 1000 / 1000).toFixed(1)} t`} />
-                <ItemPairVertical label="Kohlenstoffspeicher" value="1567 kg" />
+                <ItemPairVertical 
+                  label="Oberirdische Biomasse" 
+                  value={formatWeight(summaryData.value?.agb || 0)} 
+                />
+                <ItemPairVertical 
+                  label="Kohlenstoffspeicher" 
+                  value={formatWeight(summaryData.value?.carbon || 0)} 
+                />
               </Box>
               <Box>
                 <ItemPairVertical label="Blühabdeckung" value="10%" />

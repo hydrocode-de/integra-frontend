@@ -23,7 +23,8 @@ const staticData = signal<StaticSummaryData>({})
 interface SummaryData extends StaticSummaryData {
     referenceArea: number,
     agriculturalArea: number,
-    agb: number
+    agb: number,
+    carbon: number,
 }
 
 export const changeStaticData = (label: keyof SummaryData, value: string) => {
@@ -39,13 +40,21 @@ export const summaryData = computed<SummaryData | undefined>(() => {
     if (activePage.value !== 'summary') return undefined
 
     // calculate above ground biomass
-    const agb = treeLocationFeatures.value.reduce((prev, curr) => prev + (curr.properties.agb || 0), 0)
+    const agb = treeLocationFeatures.value
+        .filter(t => t.properties.age! > 0 && (!t.properties.harvestAge || t.properties.age! < t.properties.harvestAge))
+        .reduce((prev, curr) => prev + (curr.properties.agb || 0), 0)
+
+    // calculate carbon
+    const carbon = treeLocationFeatures.value
+        .filter(t => t.properties.age! > 0 && (!t.properties.harvestAge || t.properties.age! < t.properties.harvestAge))
+        .reduce((prev, curr) => prev + (curr.properties.carbon || 0), 0)
 
     // in any other case, return the summary data
     return {
         referenceArea: referenceAreaHectar.peek(),
         agriculturalArea: area(agriculturalArea.value) / 10000,
         agb,
+        carbon,
         ...staticData.value
     }
 })
