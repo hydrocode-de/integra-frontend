@@ -7,6 +7,7 @@ import { simulationStep } from "../../appState/simulationSignals";
 import { changeStaticData, summaryData } from "../../appState/summarySignals";
 import { useState } from "react";
 import SimulationStepSlider from "../Simulation/SimulationStepSlider";
+import TextEditField from "./TextEditField";
 
 const ItemPair = ({ label, value }: { label: string; value: string }) => {
   return (
@@ -25,35 +26,12 @@ const ItemPairVertical = ({ label, value }: { label: string; value: string }) =>
   );
 };
 
-const TextEditItemPairVertical = ({ label, value, onChange, }: { label: string; value?: string, onChange: (value: string) => void }) => {
-  // set component state
-  const [val, setVal] = useState<string>(value || '')
-  const [edit, setEdit] = useState<boolean>(false)
 
-  const onEditFinish = () => {
-    setEdit(false)
-    onChange(val)
-  }
+const TextEditItemPairVertical= ({ label, value, onChange, }: { label: string; value?: string, onChange: (value: string) => void }) => {
   return (
     <Box >
       <Typography variant="subtitle2">{label}</Typography>
-      { edit ? (
-        <FormControl>
-          <Input 
-            value={val} 
-            placeholder="nicht gewählt" 
-            onChange={e => setVal(e.target.value)} 
-            endAdornment={
-              <InputAdornment position="end">
-                <Button onClick={onEditFinish}>OK</Button>
-              </InputAdornment>
-            }
-          />
-        </FormControl>
-      ) : (
-        <Typography pb={1} style={{cursor: 'pointer'}} onClick={() => setEdit(true)}>{val || <i>nicht gewählt</i> }</Typography>
-      ) }
-      
+      <TextEditField value={value || ''} onChange={onChange} />
     </Box>
   );
 }
@@ -76,9 +54,13 @@ const Summary = () => {
   return (<>
     <Grid container sx={{maxWidth: "1200px", margin: "auto", boxSizing: 'border-box'}} spacing={3}>
       <Grid item xs={12}>
-        <Typography pt={5} pb={2} variant="h4">
-          Mein Agroforstsystem
-        </Typography>
+        <TextEditField 
+          value={summaryData.value?.systemTitle || 'Mein Agroforstsystem'}
+          onChange={v => changeStaticData('systemTitle', v)}
+          pt={5}
+          pb={2}
+          variant="h4"
+        />
         <Divider />
         <Box pt={3} display="flex" flexDirection="row" justifyContent="start" alignItems="center">
           <Typography variant="h6" component="span">

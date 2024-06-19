@@ -10,6 +10,7 @@ import { area } from "@turf/turf";
 import { treeLocationFeatures } from "./geoJsonSignals";
 
 interface StaticSummaryData {
+    systemTitle: string
     agriculturalUse?: string,
     forestryUse?: string,
     precipitationSum?: string,
@@ -18,7 +19,7 @@ interface StaticSummaryData {
     soilNutrient?: string
 }
 
-const staticData = signal<StaticSummaryData>({})
+const staticData = signal<StaticSummaryData>({systemTitle: 'Mein Agroforstsystem'})
 
 interface SummaryData extends StaticSummaryData {
     referenceArea: number,
