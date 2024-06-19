@@ -123,11 +123,11 @@ const Summary = () => {
               </Box>
               <Box>
                 <Typography variant="subtitle2">Bodenfeuchte:</Typography>
-                <Typography pb={1}>{' NOT IMPLEMENTED'}</Typography>
+                <Typography pb={1}>{summaryData.value?.soilMoisture}</Typography>
               </Box>
               <Box>
                 <Typography variant="subtitle2">Boden-pH</Typography>
-                <Typography pb={1}>{'NOT IMPLEMENTED'}</Typography>
+                <Typography pb={1}>{summaryData.value?.soilpH}</Typography>
               </Box>
             </Box>
           </Box>

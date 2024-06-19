@@ -16,13 +16,18 @@ interface StaticSummaryData {
     precipitationSum?: string,
     averageTemperature?: string,
     soilType?: string,
+    soilMoisture?: string,
+    soilpH?: string
 }
 
 const staticData = signal<StaticSummaryData>({
     systemTitle: 'Mein Agroforstsystem',
     precipitationSum: '600 mm',
     averageTemperature: '10,3 °C',
-    soilType: 'Schluffton'
+    soilType: 'Schluffton',
+    soilMoisture: 'mittel',
+    soilpH: '7 (neutral)'
+    
 })
 
 interface SummaryData extends StaticSummaryData {
