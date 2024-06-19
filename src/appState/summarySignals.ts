@@ -19,7 +19,11 @@ interface StaticSummaryData {
     soilNutrient?: string
 }
 
-const staticData = signal<StaticSummaryData>({systemTitle: 'Mein Agroforstsystem'})
+const staticData = signal<StaticSummaryData>({
+    systemTitle: 'Mein Agroforstsystem',
+    precipitationSum: '600 mm',
+    averageTemperature: '10,3 °C',
+})
 
 interface SummaryData extends StaticSummaryData {
     referenceArea: number,

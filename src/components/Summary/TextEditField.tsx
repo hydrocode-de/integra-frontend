@@ -4,10 +4,11 @@ import { useState } from "react"
 // use the Typography props
 interface TextEditFieldProps extends Omit<TypographyProps, 'onChange'> {
     value: string,
-    onChange?: (value: string) => void
+    onChange?: (value: string) => void,
+    placehoder?: string,
 }
 
-const TextEditField: React.FC<TextEditFieldProps> = ({onChange, value, pb, style, ...props}) => {
+const TextEditField: React.FC<TextEditFieldProps> = ({onChange, value, placehoder, pb, style, ...props}) => {
     // track the changed value
     const [val, setVal] = useState<string>(value)
     const [edit, setEdit] = useState<boolean>(false)
@@ -22,7 +23,7 @@ const TextEditField: React.FC<TextEditFieldProps> = ({onChange, value, pb, style
         <FormControl>
             <Input 
                 value={val}
-                placeholder="nicht gewählt"
+                placeholder={placehoder || 'nicht gewählt'}
                 onChange={e => setVal(e.target.value)}
                 endAdornment={
                     <InputAdornment position="end">
@@ -38,7 +39,7 @@ const TextEditField: React.FC<TextEditFieldProps> = ({onChange, value, pb, style
             onClick={() => setEdit(true)}
             {...props}
         >
-            {value}
+            {value || placehoder || 'nicht gewählt'}
         </Typography>
     )}
     </>

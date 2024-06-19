@@ -1,4 +1,4 @@
-import { Box, Button, Divider, FormControl, Grid, Input, InputAdornment, Popover, Typography } from "@mui/material";
+import { Box, Button, Divider,  Grid, Popover, Typography } from "@mui/material";
 import MainMap from "../MainMap/MainMap";
 import TreeLineSource from "../MainMap/TreeLineSource";
 import SummaryTable from "./SummaryTable";
@@ -9,44 +9,6 @@ import { useState } from "react";
 import SimulationStepSlider from "../Simulation/SimulationStepSlider";
 import TextEditField from "./TextEditField";
 
-const ItemPair = ({ label, value }: { label: string; value: string }) => {
-  return (
-    <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-      <Typography variant="subtitle2">{label}</Typography>
-      <Typography justifySelf={"end"}>{value}</Typography>
-    </Box>
-  );
-};
-const ItemPairVertical = ({ label, value }: { label: string; value: string }) => {
-  return (
-    <Box>
-      <Typography variant="subtitle2">{label}</Typography>
-      <Typography pb={1}>{value}</Typography>
-    </Box>
-  );
-};
-
-
-const TextEditItemPairVertical= ({ label, value, onChange, }: { label: string; value?: string, onChange: (value: string) => void }) => {
-  return (
-    <Box >
-      <Typography variant="subtitle2">{label}</Typography>
-      <TextEditField value={value || ''} onChange={onChange} />
-    </Box>
-  );
-}
-
-const formatWeight = (weight: number, threshold: number = 4500): string => {
-  if (weight < threshold) {
-    return `${weight.toFixed(1)} kg`
-  } else if (weight > 100000) {
-    return `${(weight / 1000).toFixed(0)} t`
-  } 
-  else {
-    return `${(weight / 1000).toFixed(1)} t`
-  
-  }
-}
 
 const Summary = () => {
   const [popoverAnchor, setPopoverAnchor] = useState<HTMLButtonElement | null>(null)
@@ -83,12 +45,7 @@ const Summary = () => {
             Jahren ({new Date().getFullYear() + simulationStep.value.current }).
           </Typography>
         </Box>
-        <Typography pt={3} variant="h6">
-            
-        </Typography>
-        <Typography color={"textSecondary"} sx={{ maxWidth: 600,pb: 1 }}>
-          Hier sehen Sie eine Übersicht der geplanten Fläche.
-        </Typography>
+
       </Grid>
       
       
@@ -104,96 +61,92 @@ const Summary = () => {
       <Grid container xs={12} lg={6} p={1} mt={1} alignItems="stretch">
         
         <Grid item xs={6} p={1}>
-          <Box sx={{ bgcolor: "grey.100", borderRadius: 2, p: 1, flexGrow: 1}}>
+          <Box sx={{ bgcolor: "grey.100", borderRadius: 2, p: 1, flexGrow: 1, boxSizing: 'border-box'}}>
             <Typography variant="h6" m={0} pb={1}>
               Flächenübersicht
             </Typography>
             <Box sx={{ pl: 1 }}>
-              <ItemPair
-                label="Flächengröße (gesamt)"
-                value={`${(summaryData.value?.referenceArea)?.toFixed(0)} ha`}
-              />
-              <ItemPair
-                label="Agroforst Nutzung"
-                value={`${(summaryData.value?.agriculturalArea)?.toFixed(0)} ha`}
-              />
-              <ItemPair label="Schutzgebiet" value="ja" />
+              <Box>
+                <Typography variant="subtitle2">Gesamtfläche:</Typography>
+                <Typography pb={1}>{`${(summaryData.value?.referenceArea)?.toFixed(0)} ha`}</Typography>
+              </Box>
+              <Box>
+                <Typography variant="subtitle2">Acker-/Weidefläche:</Typography>
+                <Typography pb={1}>{`${(summaryData.value?.agriculturalArea)?.toFixed(0)} ha`}</Typography>
+              </Box>
             </Box>
+
             <Typography variant="h6" m={0} pt={3} pb={1}>
               Nutzungsart
             </Typography>
             <Box sx={{ pl: 1 }}>
-              <TextEditItemPairVertical 
-                label="Landwirtschaft" 
-                value={summaryData.value?.agriculturalUse} 
-                onChange={v => changeStaticData('agriculturalUse', v)} 
+              <Typography variant="subtitle2">Feldnutzung:</Typography>
+              <TextEditField
+                value={summaryData.value?.agriculturalUse!} 
+                onChange={v => changeStaticData('agriculturalUse', v)}
+                placehoder="Weide, Raps, ..."
               />
-              <TextEditItemPairVertical 
-                label="Forstwirtschaft"
-                value={summaryData.value?.forestryUse}
-                onChange={v => changeStaticData('forestryUse', v)}
-              />
+              </Box>
+              <Box sx={{ pl: 1 }}>
+                <Typography variant="subtitle2">Gehölznutzung:</Typography>
+                <TextEditField
+                  value={summaryData.value?.forestryUse!}
+                  onChange={v => changeStaticData('forestryUse', v)}
+                  placehoder="Kurzumtrieb, Wertholz, ..."
+                />
             </Box>
           </Box>
         </Grid>
-
+        
         <Grid item xs={6} p={1}>
           <Box sx={{ bgcolor: "grey.100", borderRadius: 2, p: 1, flexGrow: 1}}>
             <Typography variant="h6" m={0} pb={1}>
-              Standort
+              Klima
             </Typography>
-            <Box sx={{ pl: 1 }}>
-              <TextEditItemPairVertical
-                label="Jährliche Niederschlagssumme"
-                value={summaryData.value?.precipitationSum}
-                onChange={v => changeStaticData('precipitationSum', v)}
-              />
-              <TextEditItemPairVertical
-                label="Jahresmitteltemperatur"
-                value={summaryData.value?.averageTemperature}
-                onChange={v => changeStaticData('averageTemperature', v)}
-              />
-              <TextEditItemPairVertical
-                label="Bodenart"
-                value={summaryData.value?.soilType}
-                onChange={v => changeStaticData('soilType', v)}
-              />
-              <TextEditItemPairVertical
-                label="Bodennährstoffversorgung"
-                value={summaryData.value?.soilNutrient}
-                onChange={v => changeStaticData('soilNutrient', v)}
-              />
+            <Box pl={1}>
+              <Box>
+                <Typography variant="subtitle2">Jährl. Niederschlagssumme:</Typography>
+                <Typography pb={1}>{summaryData.value?.precipitationSum}</Typography>
+              </Box>
+              <Box>
+                <Typography variant="subtitle2">Jahresmitteltemperatur:</Typography>
+                <Typography pb={1}>{summaryData.value?.averageTemperature}</Typography>
+              </Box>
             </Box>
           </Box>
-        </Grid>
 
-        <Grid item xs={12} pt={1}>
-          <Box sx={{ bgcolor: "grey.100", borderRadius: 2, p: 1, flexGrow: 1}} display="flex" flexDirection="row" justifyContent="space-between">
-            <Box>
-                <ItemPairVertical 
-                  label="Oberirdische Biomasse" 
-                  value={formatWeight(summaryData.value?.agb || 0)} 
-                />
-                <ItemPairVertical 
-                  label="Kohlenstoffspeicher" 
-                  value={formatWeight(summaryData.value?.carbon || 0)} 
-                />
+          <Box sx={{ bgcolor: "grey.100", borderRadius: 2, p: 1, flexGrow: 1, mt: 2}}>
+            <Typography variant="h6" m={0} pb={1}>
+              Boden
+            </Typography>
+            <Box pl={1}>
+              <Box>
+                <Typography variant="subtitle2">Vorherrschende Bodenart:</Typography>
+                <Typography pb={1}>{summaryData.value?.soilType}</Typography>
               </Box>
               <Box>
-                <ItemPairVertical label="Blühabdeckung" value="10%" />
-                <ItemPairVertical 
-                  label="Nektarangebot" 
-                  value={`${summaryData.value?.nectar?.toFixed(0) || '0'} ml`}
-                />
+                <Typography variant="subtitle2">Bodenfeuchte:</Typography>
+                <Typography pb={1}>{' NOT IMPLEMENTED'}</Typography>
               </Box>
               <Box>
-                <ItemPairVertical 
-                  label="Pollenangebot" 
-                  value={`${summaryData.value?.pollen.toFixed(0) || '0'} mm³` }
-                />
-                <ItemPairVertical label="Nistangebot" value="%" />
+                <Typography variant="subtitle2">Boden-pH</Typography>
+                <Typography pb={1}>{'NOT IMPLEMENTED'}</Typography>
               </Box>
+            </Box>
           </Box>
+
+          <Box sx={{ bgcolor: "grey.100", borderRadius: 2, p: 1, flexGrow: 1, mt: 2}}>
+            <Typography variant="h6" m={0} pb={1}>
+              Schutzgebiet
+            </Typography>
+            <Box pl={1}>
+              <Box>
+                {/* <Typography variant="subtitle2">Vorherrschende Bodenart:</Typography> */}
+                <Typography pb={1}>{'NOT IMPLEMENTED'}</Typography>
+              </Box>
+            </Box>
+          </Box>
+
         </Grid>
 
       </Grid>
