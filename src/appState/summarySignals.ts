@@ -12,17 +12,17 @@ import { treeLocationFeatures } from "./geoJsonSignals";
 interface StaticSummaryData {
     systemTitle: string
     agriculturalUse?: string,
-    forestryUse?: string,
+    forestryUse?: string[],
     precipitationSum?: string,
     averageTemperature?: string,
     soilType?: string,
-    soilNutrient?: string
 }
 
 const staticData = signal<StaticSummaryData>({
     systemTitle: 'Mein Agroforstsystem',
     precipitationSum: '600 mm',
     averageTemperature: '10,3 °C',
+    soilType: 'Schluffton'
 })
 
 interface SummaryData extends StaticSummaryData {
@@ -34,7 +34,7 @@ interface SummaryData extends StaticSummaryData {
     pollen: number
 }
 
-export const changeStaticData = (label: keyof SummaryData, value: string) => {
+export const changeStaticData = (label: keyof SummaryData, value: string | string[]) => {
     staticData.value = {
         ...staticData.peek(),
         [label]: value

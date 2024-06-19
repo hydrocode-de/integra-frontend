@@ -8,12 +8,13 @@ import { changeStaticData, summaryData } from "../../appState/summarySignals";
 import { useState } from "react";
 import SimulationStepSlider from "../Simulation/SimulationStepSlider";
 import TextEditField from "./TextEditField";
+import ForestrySelect from "./ForestrySelect";
 
 
 const Summary = () => {
   const [popoverAnchor, setPopoverAnchor] = useState<HTMLButtonElement | null>(null)
 
-  return (<>
+  return (<>  
     <Grid container sx={{maxWidth: "1200px", margin: "auto", boxSizing: 'border-box'}} spacing={3}>
       <Grid item xs={12}>
         <TextEditField 
@@ -89,16 +90,12 @@ const Summary = () => {
               </Box>
               <Box sx={{ pl: 1 }}>
                 <Typography variant="subtitle2">Gehölznutzung:</Typography>
-                <TextEditField
-                  value={summaryData.value?.forestryUse!}
-                  onChange={v => changeStaticData('forestryUse', v)}
-                  placehoder="Kurzumtrieb, Wertholz, ..."
-                />
+                <ForestrySelect />
             </Box>
           </Box>
         </Grid>
         
-        <Grid item xs={6} p={1}>
+        <Grid item xs={6} p={1} justifyContent="space-between">
           <Box sx={{ bgcolor: "grey.100", borderRadius: 2, p: 1, flexGrow: 1}}>
             <Typography variant="h6" m={0} pb={1}>
               Klima
