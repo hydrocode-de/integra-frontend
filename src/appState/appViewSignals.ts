@@ -26,7 +26,7 @@ export const removeTreeFromPalette = (treeType: string) => {
     console.log(treePalette.value)
 }
 
-export type ActivePage = 'map' | 'summary'
+export type ActivePage = 'map' | 'summary' | 'glossary'
 
 export const activePage = signal<ActivePage>('map')
 

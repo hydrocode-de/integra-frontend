@@ -22,6 +22,7 @@ import DistanceMeasurementsSource from "../components/MainMap/DistanceMeasurment
 import MapToolsCard from "../components/MapTools/MapToolsCard";
 import SideLineDetailCard from "../components/TreeLines/SideLineDetailCard";
 import { NavigationControl } from "react-map-gl";
+import Glossary from "../components/Glossary/Glossary";
 
 const DesktopMain: React.FC = () => {
 
@@ -45,6 +46,7 @@ const DesktopMain: React.FC = () => {
                 <Tabs value={activePage.value} onChange={handleTabChange}>
                   <Tab label="Karte" value="map" icon={<Map />} iconPosition="start" />
                   <Tab label="Zusammenfassung" value="summary" icon={<Summarize />} iconPosition="start" disabled={!hasData.value} />
+                  <Tab label="Glossar" value="glossary" icon={<Summarize />} iconPosition="start" />
                 </Tabs>
               ) : null }
             <Box sx={{ marginRight: '16px' }}>
@@ -86,9 +88,16 @@ const DesktopMain: React.FC = () => {
             <ResultActionCard />
           </ResultContent>
         </Box>
-      ) : (
+      ) : null }
+      
+      { activePage.value === "summary" ? (
         <Summary />
-      )}
+      ) : null }
+
+      { activePage.value === "glossary" ? (
+        <Glossary />
+      ) : null }
+
       {isPrinting ? null : <Footer /> }
     </Box>
   );
