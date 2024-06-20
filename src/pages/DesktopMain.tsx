@@ -1,5 +1,5 @@
 import { AppBar, Box, Tab, Tabs, Toolbar, Typography, useMediaQuery } from "@mui/material";
-import {  Summarize, Map } from "@mui/icons-material";
+import {  Summarize, Map, HelpCenter } from "@mui/icons-material";
 
 import MainMap from "../components/MainMap/MainMap";
 import TreeLineSource from "../components/MainMap/TreeLineSource";
@@ -46,7 +46,7 @@ const DesktopMain: React.FC = () => {
                 <Tabs value={activePage.value} onChange={handleTabChange}>
                   <Tab label="Karte" value="map" icon={<Map />} iconPosition="start" />
                   <Tab label="Zusammenfassung" value="summary" icon={<Summarize />} iconPosition="start" disabled={!hasData.value} />
-                  <Tab label="Glossar" value="glossary" icon={<Summarize />} iconPosition="start" />
+                  <Tab label="Glossar" value="glossary" icon={<HelpCenter />} iconPosition="start" />
                 </Tabs>
               ) : null }
             <Box sx={{ marginRight: '16px' }}>
