@@ -136,7 +136,7 @@ export const insectPhanologicalMonths = computed<number[]>(() => {
     treeTypes.forEach(treeType => {
         // get the insect data
         const insects = allSpecies.find(species => species.type === treeType)?.insects || []
-
+        console.log(insects)
         // for every true insect, we need to increase the counter at the respective months
         insects.forEach((isAbundant, index) => {
             if (isAbundant) {

@@ -8,6 +8,7 @@ import { EmojiNature, Info } from "@mui/icons-material"
 import { treeSpecies } from "../../appState/backendSignals"
 import { useComputed } from "@preact/signals-react"
 import { treeLocationFeatures } from "../../appState/geoJsonSignals"
+import InsectPhanologyPlot from "./InsectResult/InsectPhanologyPlot"
 
 const InsectResultCard: React.FC = () => {
     // aggregate the insects supported by the current system
@@ -47,45 +48,48 @@ const InsectResultCard: React.FC = () => {
                 </Tooltip>
             </Box>
         </Box>
-            
-            <Plot
-                style={{width: '100%', maxWidth: '400px', margin: 'auto'}}
-                layout={{
-                    height: 200, 
-                    margin: {t: 10, r: 15},
-                    autosize: true,
-                    showlegend: false,
-                    xaxis: {title: 'Jahre', range: [0, 100]},
-                    yaxis: {title: 'Anzahl Larven'},
-                }}
-                data={[
-                    ...Object.entries(insectsSimulation.value).filter(([key, _]) => key !=='total').map(([treeType, values], idx) =>{
-                        return {
-                            type: 'scatter',
-                            mode: 'lines',
-                            x: range(99),
-                            y: values.map(v => Math.round(v / insectPopulation.value.pollenPerLavae)),
-                            fill: 'tonexty',
-                            line: { width: 2},
-                            stackgroup: 'one',
-                            hovertemplate: `${treeSpecies.peek().find(t => t.latin_name === treeType)!.german_name}<br>nach %{x} Jahren<br>Anzahl Larven: %{y}<extra></extra>`,
 
-                        } as Data
-                    }),
-                    {
+        <Box maxWidth="400px" width="100%" mx="auto">
+            <InsectPhanologyPlot />
+        </Box> 
+        <Plot
+            style={{width: '100%', maxWidth: '400px', margin: 'auto'}}
+            layout={{
+                height: 200, 
+                margin: {t: 10, r: 15},
+                autosize: true,
+                showlegend: false,
+                xaxis: {title: 'Jahre', range: [0, 100]},
+                yaxis: {title: 'Anzahl Larven'},
+            }}
+            data={[
+                ...Object.entries(insectsSimulation.value).filter(([key, _]) => key !=='total').map(([treeType, values], idx) =>{
+                    return {
                         type: 'scatter',
-                        mode: 'markers',
-                        x: [simulationStep.value.current],
-                        y: [Math.round(insectsSimulation.value.total[simulationStep.value.current] / insectPopulation.value.pollenPerLavae)],
-                        marker: {
-                            size: 15,
-                            color: 'black'
-                        },
-                        hovertemplate: `Momentan (%{x} Jahre)<br>Anzahl Larven: %{y}<extra></extra>`
-                    }
-                ]}
-                config={{displayModeBar: false}}
-            />
+                        mode: 'lines',
+                        x: range(99),
+                        y: values.map(v => Math.round(v / insectPopulation.value.pollenPerLavae)),
+                        fill: 'tonexty',
+                        line: { width: 2},
+                        stackgroup: 'one',
+                        hovertemplate: `${treeSpecies.peek().find(t => t.latin_name === treeType)!.german_name}<br>nach %{x} Jahren<br>Anzahl Larven: %{y}<extra></extra>`,
+
+                    } as Data
+                }),
+                {
+                    type: 'scatter',
+                    mode: 'markers',
+                    x: [simulationStep.value.current],
+                    y: [Math.round(insectsSimulation.value.total[simulationStep.value.current] / insectPopulation.value.pollenPerLavae)],
+                    marker: {
+                        size: 15,
+                        color: 'black'
+                    },
+                    hovertemplate: `Momentan (%{x} Jahre)<br>Anzahl Larven: %{y}<extra></extra>`
+                }
+            ]}
+            config={{displayModeBar: false}}
+        />
             
             <Typography variant="h6">Blüh- bzw. Aktivitätszeitraum</Typography>
             <Plot 
