@@ -36,22 +36,32 @@ const DesktopMain: React.FC = () => {
       { isPrinting ? null : (
       <Box sx={{ flexGrow: 1 }}>
         <AppBar position="static" color="transparent" style={{height:'72px'}}>
-          <Toolbar sx={{ display: "flex", justifyContent: "center" }}>
-            <Typography sx={{ position: "absolute", left: 16 }} variant="h6" component="div">
-              INTEGRA
-            </Typography>
-              {
-              referenceArea.value.features.length > 0 ? (  
-                <Tabs value={activePage.value} onChange={handleTabChange}>
-                  <Tab label="Karte" value="map" icon={<Map />} iconPosition="start" />
-                  <Tab label="Zusammenfassung" value="summary" icon={<Summarize />} iconPosition="start" disabled={!hasData.value} />
-                </Tabs>
-              ) : null }
-            <Box sx={{ marginRight: '16px' }}>
-              <Box sx={{ display: "flex" }}>
-                {/* remove the Project select until the Data model is final */}
-                {/* <ProjectSelect /> */}
-                
+          <Toolbar style={{minHeight: '72px'}}>
+            <Box width="100%" m={0} p={0} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center">
+  
+              <Box display="flex" flexDirection="row" alignItems="center">
+                <img style={{height: '56px', width: 'auto'}} src="icons/logo.png" alt="Integra Logo" />
+                <Typography ml={1} variant="h6" component="div">
+                  AGROFORST-PLANUNGSTOOL
+                </Typography>
+              </Box>
+
+              <Box>
+                {
+                referenceArea.value.features.length > 0 ? (  
+                  <Tabs value={activePage.value} onChange={handleTabChange}>
+                    <Tab label="Karte" value="map" icon={<Map />} iconPosition="start" />
+                    <Tab label="Zusammenfassung" value="summary" icon={<Summarize />} iconPosition="start" disabled={!hasData.value} />
+                  </Tabs>
+                ) : null }
+              </Box>
+
+              <Box sx={{ marginRight: '16px' }}>
+                <Box sx={{ display: "flex" }}>
+                  {/* remove the Project select until the Data model is final */}
+                  {/* <ProjectSelect /> */}
+                  
+                </Box>
               </Box>
             </Box>
 
