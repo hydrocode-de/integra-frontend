@@ -58,7 +58,7 @@ const DesktopMain: React.FC = () => {
                 ) : null }
               </Box>
 
-              <Box sx={{ marginRight: '16px' }}>
+              <Box sx={{ marginRight: '16px', minWidth: '300px' }}>
                 <Box sx={{ display: "flex" }}>
                   {/* remove the Project select until the Data model is final */}
                   {/* <ProjectSelect /> */}
