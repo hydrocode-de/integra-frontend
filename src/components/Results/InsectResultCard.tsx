@@ -9,6 +9,7 @@ import { treeSpecies } from "../../appState/backendSignals"
 import { useComputed } from "@preact/signals-react"
 import { treeLocationFeatures } from "../../appState/geoJsonSignals"
 import InsectPhanologyPlot from "./InsectResult/InsectPhanologyPlot"
+import InsectLarvaePlot from "./InsectResult/InsectLarvaePlot"
 
 const InsectResultCard: React.FC = () => {
     // aggregate the insects supported by the current system
@@ -35,63 +36,33 @@ const InsectResultCard: React.FC = () => {
 
     return <>
         <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center">
-        <Box maxWidth="400px" width="100%" mx="auto">
-            <Typography variant="h6" mt={1}>Anzahl unterstützter Bienenarten</Typography>
-            <InsectPhanologyPlot />
-        </Box> 
-        
-        
-        <Typography mt={1} variant="h6">Anzahl unterstützter Larven</Typography>
-        <Box mt={1} px={1} width="100%" display="flex" flexDirection="row" justifyContent="space-between" alignItems="center">  
-            <Select sx={{width: '100%'}} size="small" value={insectPopulationName.value} onChange={e => insectPopulationName.value = e.target.value}>
-                { allInsects.map(insect => (
-                    <MenuItem key={insect.latin_name} value={insect.latin_name}>{insect.german_name} ({insect.pollenPerLavae} mm³ / Larve)</MenuItem>
-                )) }
-            </Select>
-            <Box ml={3}>
-                <Tooltip title="Dieser Wert ist ein theoretischer Wert der Ihnen die Einschätzung bzw. Vergleichbarkeit des Nahrungsangebots für Insektenlarven ermöglichen soll. Für die Berechnung wird angenommen, dass das gesamte Pollenvolumen des geplanten Systems ausschließlich von der ausgewählten Insektenart aufgebraucht wird, unabhängig von der Übereinstimmung des Blüh- bzw. Aktivitätszeitraums.">
-                    <Info color="info" />
-                </Tooltip>
-            </Box>
-        </Box>
-        <Plot
-            style={{width: '100%', maxWidth: '400px', margin: 'auto'}}
-            layout={{
-                height: 200, 
-                margin: {t: 10, r: 15},
-                autosize: true,
-                showlegend: false,
-                xaxis: {title: 'Jahre', range: [0, 100]},
-                yaxis: {title: 'Anzahl Larven'},
-            }}
-            data={[
-                ...Object.entries(insectsSimulation.value).filter(([key, _]) => key !=='total').map(([treeType, values], idx) =>{
-                    return {
-                        type: 'scatter',
-                        mode: 'lines',
-                        x: range(99),
-                        y: values.map(v => Math.round(v / insectPopulation.value.pollenPerLavae)),
-                        fill: 'tonexty',
-                        line: { width: 2},
-                        stackgroup: 'one',
-                        hovertemplate: `${treeSpecies.peek().find(t => t.latin_name === treeType)!.german_name}<br>nach %{x} Jahren<br>Anzahl Larven: %{y}<extra></extra>`,
+            <Box maxWidth="400px" width="100%" mx="auto">
+                {/* Phaenology */}
+                <Typography variant="h6" mt={1}>Anzahl unterstützter Bienenarten</Typography>
+                <InsectPhanologyPlot />
 
-                    } as Data
-                }),
-                {
-                    type: 'scatter',
-                    mode: 'markers',
-                    x: [simulationStep.value.current],
-                    y: [Math.round(insectsSimulation.value.total[simulationStep.value.current] / insectPopulation.value.pollenPerLavae)],
-                    marker: {
-                        size: 15,
-                        color: 'black'
-                    },
-                    hovertemplate: `Momentan (%{x} Jahre)<br>Anzahl Larven: %{y}<extra></extra>`
-                }
-            ]}
-            config={{displayModeBar: false}}
-        />
+                {/* Larvae */}
+                <Typography mt={1} variant="h6">Anzahl unterstützter Larven</Typography>
+                <Box mt={0.5} px={1} width="100%" display="flex" flexDirection="row" justifyContent="space-between" alignItems="center">  
+                    <Select sx={{width: '100%'}} size="small" value={insectPopulationName.value} onChange={e => insectPopulationName.value = e.target.value}>
+                        { allInsects.map(insect => (
+                            <MenuItem key={insect.latin_name} value={insect.latin_name}>{insect.german_name} ({insect.pollenPerLavae} mm³ / Larve)</MenuItem>
+                        )) }
+                    </Select>
+                    <Box ml={3}>
+                        <Tooltip title="Dieser Wert ist ein theoretischer Wert der Ihnen die Einschätzung bzw. Vergleichbarkeit des Nahrungsangebots für Insektenlarven ermöglichen soll. Für die Berechnung wird angenommen, dass das gesamte Pollenvolumen des geplanten Systems ausschließlich von der ausgewählten Insektenart aufgebraucht wird, unabhängig von der Übereinstimmung des Blüh- bzw. Aktivitätszeitraums.">
+                            <Info color="info" />
+                        </Tooltip>
+                    </Box>
+                </Box>
+                <InsectLarvaePlot />
+
+                
+            </Box> 
+        
+        
+        
+        
             
             <Typography variant="h6">Blüh- bzw. Aktivitätszeitraum</Typography>
             <Plot 
