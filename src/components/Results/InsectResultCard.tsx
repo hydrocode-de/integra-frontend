@@ -17,7 +17,7 @@ const InsectResultCard: React.FC = () => {
                 <InsectPhanologyPlot />
 
                 {/* Larvae */}
-                <Typography variant="h6">Anzahl unterstützter Larven</Typography>
+                <Typography variant="h6">Anzahl unterstützter Larven pro Jahr</Typography>
                 <Box mt={0.5} px={1} width="100%" display="flex" flexDirection="row" justifyContent="space-between" alignItems="center">  
                     <Select sx={{width: '100%'}} size="small" value={insectPopulationName.value} onChange={e => insectPopulationName.value = e.target.value}>
                         { allInsects.map(insect => (
