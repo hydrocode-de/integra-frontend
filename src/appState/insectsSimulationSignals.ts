@@ -46,7 +46,7 @@ export const speciesToInsects = computed<{[species: string]: boolean[]}>(()=> {
         return [species.latin_name, species.insects || []]
     }))
 
-    console.log(spec)
+    // console.log(spec)
     return spec
 })
 
@@ -116,9 +116,31 @@ export const activeBlossomsMonths = computed<number[]>(() => {
             }
         })
     })
-    console.log(result)
+    // console.log(result)
     // return the result
     return result
+})
+
+// calculate the total number of bee species
+export const totalBeeSpecies = computed<number>(() => {
+    // filter the species currently planted
+    const species = treeLocationFeatures.value.map(f => f.properties.treeType)
+        .filter((specimen, idx, species) => species.indexOf(specimen) === idx)
+
+    // filter the insects table and map to matrix
+    const insects = Object.entries(speciesToInsects.value)
+        .filter(([s, _]) => species.includes(s))
+        .map(([_, insect]) => insect)
+
+    // reduce the first dimension(rows) of the matrix (bitwise OR)
+    const abundantSpecies = range(insects[0].length).map(index => {
+        // map to the current column
+        return insects.map(insect => insect[index])
+            .reduce((prev, curr) => prev || curr, false)  // bitwise OR
+    })
+
+    // finally, we need the sum of that
+    return abundantSpecies.reduce((prev, curr) => prev + (curr ? 1 : 0), 0)
 })
 
 // derive the insect abundance for each species and month based on the trees we have
