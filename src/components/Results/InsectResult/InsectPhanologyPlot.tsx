@@ -9,15 +9,20 @@ const InsectPhanologyPlot: React.FC = () => {
         <Plot 
             style={{width: '100%'}}
             layout={{
-                height: 200,
+                height: 230,
                 margin: {t: 10, r: 15},
                 autosize: true,
                 showlegend: false,
                 xaxis: {
+                    title: 'Monat',
                     tickvals: [3, 4, 5, 6, 7, 8, 9, 10],
                     ticktext: ['Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt'],
                 },
-                yaxis: {title: 'Anzahl Bienenarten'},
+                yaxis: {
+                    title: 'Anzahl Bienenarten',
+                    tickvals: [0, 10, 20, 30, 40, 50],
+                    range: [0, 50]
+                },
                 yaxis2: {overlaying: 'y', side: 'right', showgrid: false, showline: false, showticklabels: false, zeroline: false, range:[0, 1]}
 
             }}
@@ -33,11 +38,11 @@ const InsectPhanologyPlot: React.FC = () => {
                         color: 'orange'
                     },
                     fill: 'tozeroy',
-                    hovertemplate: 'Anzahl Insekten: %{y}<extra></extra>'
+                    hovertemplate: 'Anzahl Bienenarten: %{y}<extra></extra>'
                 },
                 {
                     type: 'scatter',
-                    mode: 'markers',
+                    mode: 'lines',
                     x: [seasonMonth.value, seasonMonth.value],
                     y: [0, 1],
                     line: {

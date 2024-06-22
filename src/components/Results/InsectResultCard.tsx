@@ -35,6 +35,12 @@ const InsectResultCard: React.FC = () => {
 
     return <>
         <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center">
+        <Box maxWidth="400px" width="100%" mx="auto">
+            <Typography variant="h6" mt={1}>Anzahl unterstützter Bienenarten</Typography>
+            <InsectPhanologyPlot />
+        </Box> 
+        
+        
         <Typography mt={1} variant="h6">Anzahl unterstützter Larven</Typography>
         <Box mt={1} px={1} width="100%" display="flex" flexDirection="row" justifyContent="space-between" alignItems="center">  
             <Select sx={{width: '100%'}} size="small" value={insectPopulationName.value} onChange={e => insectPopulationName.value = e.target.value}>
@@ -48,10 +54,6 @@ const InsectResultCard: React.FC = () => {
                 </Tooltip>
             </Box>
         </Box>
-
-        <Box maxWidth="400px" width="100%" mx="auto">
-            <InsectPhanologyPlot />
-        </Box> 
         <Plot
             style={{width: '100%', maxWidth: '400px', margin: 'auto'}}
             layout={{
