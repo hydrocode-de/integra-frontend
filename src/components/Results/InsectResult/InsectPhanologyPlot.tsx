@@ -9,7 +9,7 @@ const InsectPhanologyPlot: React.FC = () => {
         <Plot 
             style={{width: '100%'}}
             layout={{
-                height: 230,
+                height: 200,
                 margin: {t: 10, r: 15},
                 autosize: true,
                 showlegend: false,
@@ -19,7 +19,7 @@ const InsectPhanologyPlot: React.FC = () => {
                     ticktext: ['Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt'],
                 },
                 yaxis: {
-                    title: 'Anzahl Bienenarten',
+                    title: 'Anzahl Arten',
                     tickvals: [0, 10, 20, 30, 40, 50],
                     range: [0, 50]
                 },
