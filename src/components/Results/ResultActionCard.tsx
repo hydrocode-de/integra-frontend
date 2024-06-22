@@ -30,7 +30,7 @@ const ResultActionCard: React.FC = () => {
                         <Tab label="Biomasse" value="biomass" />
                         <Tab label="Schatten" value="shade" />
                         <Tab label="Blüten" value="blossoms" disabled />
-                        <Tab label="Insekten" value="insects" />
+                        <Tab label="Bienen" value="insects" />
                     </Tabs>
                     <Button size="small" variant="text" onClick={() => open.value = false}>
                         <ExpandLess />
