@@ -1,12 +1,15 @@
-import { Alert, Box } from "@mui/material"
+import { Box, Typography } from "@mui/material"
+import BlossomsPerSpeciesPlot from "./BlossomsResult/BlossomsPerSpeciesPlot"
 
 const BlossomResultCard: React.FC = () => {
     return <>
         <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center">
-            <img src="empty_state/empty-state-illustration.png" alt="empty state" />
-            <Alert severity="warning">
-                Diese Funktion ist noch in Entwicklung.
-            </Alert>
+            <Box maxWidth="400px" width="100%" mx="auto">
+                {/* Phaenology */}
+                <Typography variant="h6" mt={0.5}>Blühangebot nach Art</Typography>
+                <BlossomsPerSpeciesPlot />
+                
+            </Box>
         </Box>
     </>
 }
