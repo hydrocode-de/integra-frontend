@@ -1,6 +1,7 @@
 import { Box, MenuItem, Select, Typography } from "@mui/material"
 import BlossomsPerSpeciesPlot from "./BlossomsResult/BlossomsPerSpeciesPlot"
 import { BlossomVariable, blossomVariable, setBlossomVariable } from "../../appState/blossomSimulationSignals"
+import ActiveMonthsPerSpeciesPlot from "./BlossomsResult/ActiveMonthsPerSpeciesPlot"
 
 const BlossomOptions: {value: BlossomVariable, label: String}[] = [
     {value: 'blossoms', label: 'Blütenanzahl'},
@@ -11,6 +12,10 @@ const BlossomResultCard: React.FC = () => {
     return <>
         <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center">
             <Box maxWidth="400px" width="100%" mx="auto">
+                {/* Active Months */}
+                <Typography variant="h6" mt={0.5}>Blühzeitpunkt</Typography>
+                <ActiveMonthsPerSpeciesPlot />
+                
                 {/* Phaenology */}
                 <Typography variant="h6" mt={0.5}>Blühangebot nach Art</Typography>
                 <Box mt={0.5} px={1} width="100%" display="flex" flexDirection="row" justifyContent="space-between" alignItems="center">
