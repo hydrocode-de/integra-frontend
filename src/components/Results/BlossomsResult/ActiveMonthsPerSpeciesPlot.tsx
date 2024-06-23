@@ -9,7 +9,7 @@ const ActiveMonthsPerSpeciesPlot: React.FC = () => {
             style={{width: '100%'}}
             layout={{
                 height: 200,
-                margin: {t: 10, r: 15},
+                margin: {t: 10, r: 15, l: 100},
                 showlegend: false,
                 xaxis: {
                     title: 'Monat',
@@ -29,23 +29,23 @@ const ActiveMonthsPerSpeciesPlot: React.FC = () => {
                         ...Object.keys(activeBlossomsMonths.value).filter(k => k !== 'total').map(lat => germanSpecies.value[lat])
                     ],
                     z: [
-                        activeBlossomsMonths.value['total'].slice(2, 10).map(v => v > 0 ? 0.5 : 0),
+                        activeBlossomsMonths.value['total'].slice(2, 10).map(v => v > 0 ? 1.1 : 0),
                         ...Object.entries(activeBlossomsMonths.value)
                             .filter(([key, _])=> key !== 'total')
-                            .map(([_, months], idx) => months.slice(2, 10).map(v => v > 0 ? idx + 1 : 0))
+                            .map(([_, months], idx) => months.slice(2, 10).map(v => v > 0 ? (idx + 1) / 10 + 0.1 : 0))
                     ],
                     showscale: false,
                     hoverinfo: 'skip',
                     colorscale: [
                         [0, 'transparent'],
-                        [0.5, 'black'],
-                        [1, 'orange'],
-                        [2, 'yellow'],
-                        [3, 'green'],
-                        [4, 'blue'],
-                        [5, 'purple'],
-                        [6, 'brown'],
-                        [7, 'red'],
+                        [0.2, 'orange'],
+                        [0.3, 'yellow'],
+                        [0.4, 'green'],
+                        [0.5, 'blue'],
+                        [0.6, 'purple'],
+                        [0.7, 'brown'],
+                        [0.8, 'red'],
+                        [1, 'black'],
                     ]
                 },
                 {
