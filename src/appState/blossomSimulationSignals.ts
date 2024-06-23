@@ -4,7 +4,8 @@
 
 import { computed, signal } from "@preact/signals-react";
 import { treeLocationFeatures } from "./geoJsonSignals";
-import { simulationTimeSteps, treeDatabase } from "./backendSignals";
+import { simulationTimeSteps, treeDatabase, treeSpecies } from "./backendSignals";
+import range from "lodash.range";
 
 // the actual signal for the current variable is local
 export type BlossomVariable = 'blossoms' | 'pollen' | 'nectar'
@@ -56,5 +57,41 @@ export const blossomVarSimulation = computed<BlossomVarSimulation>(() => {
     })
 
     // return result
+    return result
+})
+
+// export the active months for each tree Species
+interface BlossomMonths {
+    total: number[]
+    [treeSpecies: string]: number[]
+}
+export const activeBlossomsMonths = computed<BlossomMonths>(() => {
+    // create a result container
+    const result: BlossomMonths = {
+        total: Array(12).fill(0)
+    }
+
+    // get the tree locations
+    const trees = treeLocationFeatures.value
+    if (trees.length === 0) return result
+    
+    // get the species
+    const species = [...new Set(trees.map(tree => tree.properties.treeType))]
+
+    // create empty arrays for each species
+    species.forEach(sp => result[sp] = Array(12).fill(0))
+
+    // for each tree, add the active months
+    trees.forEach(tree => {
+        range(0, 12).forEach(index => {
+            // check if this tree has blossoms in this month
+            if (!!(tree.properties as any)[`flowering_${index + 1}`]) {
+                result[tree.properties.treeType][index] += 1
+                result['total'][index] += 1
+            }
+        })
+    })
+
+    // return the result container
     return result
 })
