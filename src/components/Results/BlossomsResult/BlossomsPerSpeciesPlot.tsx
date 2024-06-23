@@ -1,9 +1,15 @@
 import Plot from "react-plotly.js"
-import { blossomVarSimulation } from "../../../appState/blossomSimulationSignals"
+import { blossomVarSimulation, blossomVariable } from "../../../appState/blossomSimulationSignals"
 import { germanSpecies, simulationTimeSteps, treeSpecies } from "../../../appState/backendSignals"
 import { Data } from "plotly.js"
 import { simulationStep } from "../../../appState/simulationSignals"
 
+
+const BlossomVarTranslation = {
+    blossoms: 'Anzahl Blüten',
+    nectar: 'Nektar (mm³)',
+    pollen: 'Pollen (mm³)'
+}
 const BlossomsPerSpeciesPlot: React.FC = () => {
     return <>
         <Plot
@@ -14,7 +20,7 @@ const BlossomsPerSpeciesPlot: React.FC = () => {
                 autosize: true,
                 showlegend: false,
                 xaxis: {title: 'Jahre', range: [0, 100]},
-                yaxis: {title: 'Anzahl Blüten'}
+                yaxis: {title: BlossomVarTranslation[blossomVariable.value]}
             }}
             data={[
                 ...Object.entries(blossomVarSimulation.value).filter(([key, _]) => key !== 'total').map(([treeType, values], idx) => {
@@ -26,7 +32,7 @@ const BlossomsPerSpeciesPlot: React.FC = () => {
                         fill: 'tonexty',
                         stackgroup: 'one',
                         line: { width: 2 },
-                        hovertemplate: `${germanSpecies.peek()[treeType]}<br>nach %{x} Jahren<br>Anzahl Blüten: %{y}<extra></extra>`
+                        hovertemplate: `${germanSpecies.peek()[treeType]}<br>nach %{x} Jahren<br>${BlossomVarTranslation[blossomVariable.value]}: %{y}<extra></extra>`
                     } as Data
                 }),
                 {
@@ -35,7 +41,7 @@ const BlossomsPerSpeciesPlot: React.FC = () => {
                     x: [simulationStep.value.current],
                     y: [blossomVarSimulation.value.total[simulationTimeSteps.value.filter(t => t <= simulationStep.value.current).length]],
                     marker: {color: 'black', size: 15},
-                    hovertemplate: `Momentan (%{x} Jahre)<br>Anzahl Blüten: %{y}<extra></extra>`
+                    hovertemplate: `Momentan (%{x} Jahre)<br>${BlossomVarTranslation[blossomVariable.value]}: %{y}<extra></extra>`
                 }
                 
             ]}
