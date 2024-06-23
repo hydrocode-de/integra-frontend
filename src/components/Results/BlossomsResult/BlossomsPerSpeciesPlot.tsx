@@ -19,8 +19,14 @@ const BlossomsPerSpeciesPlot: React.FC = () => {
                 margin: {t: 10, r: 15},
                 autosize: true,
                 showlegend: false,
-                xaxis: {title: 'Jahre', range: [0, 100]},
-                yaxis: {title: BlossomVarTranslation[blossomVariable.value]}
+                xaxis: {
+                    //title: 'Jahre', 
+                    range: [0, 100],
+                    tickvals: [10, 30, 50, 80],
+                    ticktext: ['10 Jahre', '30 Jahre', '50 Jahre', '80 Jahre']
+                },
+                yaxis: {title: BlossomVarTranslation[blossomVariable.value]},
+                xaxis2: {overlaying: 'x', side: 'top', showgrid: false, showline: false, showticklabels: false, zeroline: false, range: [0, 100]},
             }}
             data={[
                 ...Object.entries(blossomVarSimulation.value).filter(([key, _]) => key !== 'total').map(([treeType, values], idx) => {
@@ -41,7 +47,9 @@ const BlossomsPerSpeciesPlot: React.FC = () => {
                     x: [simulationStep.value.current],
                     y: [blossomVarSimulation.value.total[simulationTimeSteps.value.filter(t => t <= simulationStep.value.current).length]],
                     marker: {color: 'black', size: 15},
-                    hovertemplate: `Momentan (%{x} Jahre)<br>${BlossomVarTranslation[blossomVariable.value]}: %{y}<extra></extra>`
+                    hovertemplate: `Momentan (%{x} Jahre)<br>${BlossomVarTranslation[blossomVariable.value]}: %{y}<extra></extra>`,
+                    xaxis: 'x2'
+
                 }
                 
             ]}
