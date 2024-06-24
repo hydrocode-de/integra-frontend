@@ -4,8 +4,11 @@
 
 import { computed, signal } from "@preact/signals-react";
 import { treeLocationFeatures } from "./geoJsonSignals";
-import { simulationTimeSteps, treeDatabase, treeSpecies } from "./backendSignals";
+import { germanSpecies, simulationTimeSteps, treeDatabase, treeSpecies } from "./backendSignals";
 import range from "lodash.range";
+import { seasonMonth } from "./simulationSignals";
+import { buffer } from "@turf/turf";
+import { appView } from "./appViewSignals";
 
 // the actual signal for the current variable is local
 export type BlossomVariable = 'blossoms' | 'pollen' | 'nectar'
@@ -94,4 +97,40 @@ export const activeBlossomsMonths = computed<BlossomMonths>(() => {
 
     // return the result container
     return result
+})
+
+// explicitly set the buffer width
+const bufferWidth = Number(process.env.REACT_APP_BLOSSOM_WIDTH) || 2.5
+// export a GeoJSON signal for the blossoms
+export const blossomIndicatorArea = computed<GeoJSON.FeatureCollection<GeoJSON.Polygon>>(() => {
+    // create a container for the features
+    const features: GeoJSON.Feature<GeoJSON.Polygon>[] = []
+    
+    // only do something if the blossoms tab is active
+    if (appView.value === "blossoms") {
+        // get the tree locations and the current seasonMonth to react to these signals
+        const trees = treeLocationFeatures.value
+        const month = seasonMonth.value
+
+        // map the trees into the features
+        trees.forEach(tree => {
+            // only create a feature if the tree is currently flowering
+            if (!!(tree.properties as any)[`flowering_${month}`]) {
+                // create the feature
+                features.push({
+                    ...buffer(tree.geometry, bufferWidth, {units: 'meters'}),
+                    properties: {
+                        german_name: germanSpecies.peek()[tree.properties.treeType],
+                        age: tree.properties.age,
+                    }
+                })
+            }
+        })
+    }
+
+    // return the GeoJSON
+    return {
+        type: 'FeatureCollection',
+        features
+    }
 })
