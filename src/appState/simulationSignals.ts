@@ -84,15 +84,15 @@ export const getSeason = ( month: number, treeType: string, age: number): SEASON
 
 // use a function to go to the next season month to handle the order correctly
 // this can then later implement the half-months
-export const nextSeasonMonth = () => {
-    const currentMonth = seasonMonth.value
-    if (currentMonth === 12) {
-        seasonMonth.value = 1
-    } else {
-        seasonMonth.value = currentMonth + 1
+// export const nextSeasonMonth = () => {
+//     const currentMonth = seasonMonth.value
+//     if (currentMonth === 12) {
+//         seasonMonth.value = 1
+//     } else {
+//         seasonMonth.value = currentMonth + 1
     
-    }
-}
+//     }
+// }
 
 // public handler to set the simulation duration directly
 /**
