@@ -10,8 +10,8 @@ const BLossomsLocationsSource: React.FC = () => {
                 beforeId="tree-locations"
                 type="fill"
                 paint={{
-                    'fill-color': 'purple',
-                    'fill-outline-color': 'purple',
+                    'fill-color': '#DF77C1',
+                    'fill-outline-color': '#DF77C1',
                     'fill-opacity': 0.5,
                 
                 }}
