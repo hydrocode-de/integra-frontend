@@ -23,7 +23,7 @@ const InsectActivityPlot: React.FC = () => {
                         range(3, 11).map(m => insectPopulation.value.startMonth <= m && m <= insectPopulation.value.endMonth ? 0.5 : 0),
                         activeBlossomsMonths.value.slice(2, 10).map(v => v > 0 ? 1 : 0)
                     ],
-                    colorscale: [[0, 'transparent'], [0.5, '#c32f69'], [1, '#9ec3e5']],
+                    colorscale: [[0, 'transparent'], [0.5, '#c32f69'], [1, '#9B86C5']],
                     showscale: false,
                     hoverinfo: 'skip'
                 },
