@@ -9,7 +9,7 @@ const InsectPhanologyPlot: React.FC = () => {
         <Plot 
             style={{width: '100%'}}
             layout={{
-                height: 200,
+                height: 250,
                 margin: {t: 10, r: 15},
                 autosize: true,
                 showlegend: false,
