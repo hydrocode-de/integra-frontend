@@ -21,28 +21,28 @@ export const setBlossomVariable = (variable: BlossomVariable) => {
 }
 
 interface BlossomVarSimulation {
+    total: number[],
     [treeSpecies: string]: number[]
 }
 // whenever the tree-types change, export the blossom species
 export const blossomVarSimulation = computed<BlossomVarSimulation>(() => {
+    // get the time steps
+    const steps = simulationTimeSteps.value
+
     // create a result container
-    const result: BlossomVarSimulation = {}
+    const result: BlossomVarSimulation = {
+        total: Array(steps.length).fill(0),
+    }
 
     // get the tree locations
     const trees = treeLocationFeatures.value
     if (trees.length === 0) return result
-
-    // get the time steps
-    const steps = simulationTimeSteps.value
 
     // get the currently available species
     const species = [...new Set(trees.map(tree => tree.properties.treeType))]
 
     // create emty arrays for each species
     species.forEach(sp => result[sp] = Array(steps.length).fill(0))
-
-    // add an empty array for the total timeseries
-    result['total'] = Array(steps.length).fill(0)
 
     // for each time step, aggregate the data
     steps.forEach((step, idx) => {
