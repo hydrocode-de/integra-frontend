@@ -7,6 +7,7 @@ const BLossomsLocationsSource: React.FC = () => {
             <Layer 
                 id="blossom-indicator-area"
                 source="blossom-indicator-area"
+                beforeId="tree-locations"
                 type="fill"
                 paint={{
                     'fill-color': 'purple',
