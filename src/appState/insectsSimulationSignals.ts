@@ -7,6 +7,7 @@ import { simulationStep } from "./simulationSignals"
 import { treeLocationFeatures } from "./geoJsonSignals"
 import range from "lodash.range"
 import { loadClosestDataPoint, treeSpecies } from "./backendSignals"
+import { activeTreeTypes } from "./treeLocationSignals"
 
 
 interface InsectPopulation {
@@ -16,6 +17,10 @@ interface InsectPopulation {
     startMonth: number,
     endMonth: number
 }
+
+// Due to the lack of time, we add this data here hard-coded instead of calling it from the backend
+// the order matches the boolean insect abundance array of TreeSpecies and indicates the phanological months
+export const insectPhano = [[5, 6], [3, 3], [4, 4], [3, 6], [3, 3], [4, 6], [3, 6], [5, 6], [4, 5], [3, 5], [5, 5], [3, 6], [5, 5], [3, 6], [5, 5], [3, 5], [5, 6], [3, 5], [3, 7], [3, 8], [4, 4], [5, 5], [3, 4], [4, 4], [3, 6], [3, 10], [3, 4], [3, 11], [4, 6], [3, 3], [3, 6], [5, 5], [4, 4], [3, 3], [3, 6], [3, 3], [3, 6], [4, 6], [4, 4], [4, 5], [4, 6], [3, 5], [3, 3], [3, 3], [3, 3], [3, 4], [5, 6], [5, 5], [4, 4], [3, 12], [4, 6], [6, 6], [3, 6], [3, 6], [4, 6], [3, 8], [3, 6], [3, 6], [5, 5], [3, 6], [5, 5], [5, 5], [5, 5], [5, 5], [5, 6], [3, 4], [6, 6], [5, 5], [6, 6], [5, 5], [6, 6], [4, 6], [5, 5], [4, 5], [5, 6], [4, 6], [6, 6], [4, 6], [4, 6], [6, 6], [6, 6], [1, 6], [5, 6], [5, 6], [5, 5], [6, 6], [6, 6], [5, 5], [6, 6], [6, 6], [3, 9], [5, 6], [4, 6], [3, 6], [3, 6], [5, 6], [5, 5], [5, 6], [3, 6], [4, 4], [3, 6], [5, 5], [3, 5], [3, 5], [3, 6], [4, 5], [4, 6], [4, 6], [4, 6], [5, 5], [4, 6], [5, 5], [4, 5], [4, 6], [6, 6], [6, 6], [3, 6], [6, 6], [4, 5], [4, 5], [5, 5], [4, 4], [3, 5], [3, 3], [3, 4], [4, 6], [6, 6], [3, 4], [5, 5], [5, 5], [6, 6], [6, 6], [4, 4], [5, 5], [6, 6], [5, 5], [3, 6]]
 
 // hard-code the insect data- change later
 export const allInsects: InsectPopulation[] = [
@@ -41,7 +46,7 @@ export const speciesToInsects = computed<{[species: string]: boolean[]}>(()=> {
         return [species.latin_name, species.insects || []]
     }))
 
-    console.log(spec)
+    // console.log(spec)
     return spec
 })
 
@@ -111,7 +116,61 @@ export const activeBlossomsMonths = computed<number[]>(() => {
             }
         })
     })
-    console.log(result)
+    // console.log(result)
+    // return the result
+    return result
+})
+
+// calculate the total number of bee species
+export const totalBeeSpecies = computed<number>(() => {
+    // filter the species currently planted
+    const species = treeLocationFeatures.value.map(f => f.properties.treeType)
+        .filter((specimen, idx, species) => species.indexOf(specimen) === idx)
+
+    // filter the insects table and map to matrix
+    const insects = Object.entries(speciesToInsects.value)
+        .filter(([s, _]) => species.includes(s))
+        .map(([_, insect]) => insect)
+
+    // reduce the first dimension(rows) of the matrix (bitwise OR)
+    const abundantSpecies = range(insects[0].length).map(index => {
+        // map to the current column
+        return insects.map(insect => insect[index])
+            .reduce((prev, curr) => prev || curr, false)  // bitwise OR
+    })
+
+    // finally, we need the sum of that
+    return abundantSpecies.reduce((prev, curr) => prev + (curr ? 1 : 0), 0)
+})
+
+// derive the insect abundance for each species and month based on the trees we have
+export const insectPhanologicalMonths = computed<number[]>(() => {
+    // react to changes in the tree locations -> we need a list of all species
+    const treeTypes = activeTreeTypes.value
+
+    // we peek into the species to get the insect months
+    const allSpecies = treeSpecies.peek()
+
+    // container for the results
+    const result: number[] = Array(12).fill(0)
+
+    // for each active type, get all species
+    treeTypes.forEach(treeType => {
+        // get the insect data
+        const insects = allSpecies.find(species => species.latin_name === treeType)?.insects || []
+
+        // for every true insect, we need to increase the counter at the respective months
+        insects.forEach((isAbundant, index) => {
+            if (isAbundant) {
+                // TODO: this should maybe be imlplemented as a matrix operation
+                // especially if we implement the tree ages and / or the blossoms for each tree age / month
+                range(insectPhano[index][0], insectPhano[index][1] + 1).forEach(month => {
+                    result[month - 1] += 1
+                })
+            }
+        })
+    })
+
     // return the result
     return result
 })
