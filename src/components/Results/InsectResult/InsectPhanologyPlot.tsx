@@ -35,7 +35,7 @@ const InsectPhanologyPlot: React.FC = () => {
                     y: insectPhanologicalMonths.value.slice(2, 10),
                     line: {
                         width: 2,
-                        color: 'orange'
+                        color: '#876EB9'
                     },
                     fill: 'tozeroy',
                     hovertemplate: 'Anzahl Bienenarten: %{y}<extra></extra>'
