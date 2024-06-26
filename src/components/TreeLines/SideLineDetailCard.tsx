@@ -2,15 +2,13 @@ import { useSignal, useSignalEffect } from "@preact/signals-react"
 import { CalculatedTreeLine } from "../../appState/tree.model";
 import { activeTreeLineId, setDetailId } from "../../appState/sideContentSignals";
 import { calculatedTreeLineFeatures, updateTreeLineProps } from "../../appState/treeLineSignals";
-import { Box, Card, CardActionArea, Collapse, IconButton, Slider, Typography } from "@mui/material";
-import { Close, ExpandLess, ExpandMore, VisibilityOutlined } from "@mui/icons-material";
+import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Box, Card, CardActionArea, Collapse, IconButton, Slider, Typography } from "@mui/material";
+import { Close,  ExpandMore, VisibilityOutlined } from "@mui/icons-material";
 import { center } from "@turf/turf";
 import { flyTo } from "../MainMap/MapObservableStore";
+import { activeCard, handleCardToggle } from "../../appState/appViewSignals";
 
 const SideLineDetailCard: React.FC = () => {
-    // state to track if the card is open
-    const open = useSignal<boolean>(true);
-
     // get a copy of the treeline
     const treeLine = useSignal<CalculatedTreeLine["features"][0] | undefined>(undefined)
 
@@ -18,6 +16,11 @@ const SideLineDetailCard: React.FC = () => {
     useSignalEffect(() => {
         if (activeTreeLineId.value) {
             treeLine.value = calculatedTreeLineFeatures.value.filter(line => line.properties.id === activeTreeLineId.peek())[0]
+
+            // if the card is not open, open it
+            if (activeCard.peek() !== 'line-detail') {
+                handleCardToggle('line-detail')
+            }
         } else {
             treeLine.value = undefined
         }
@@ -44,33 +47,17 @@ const SideLineDetailCard: React.FC = () => {
     if (!treeLine.value) return null
 
     return <>
-        <Card sx={{
-            mt: open.value ? '16px' : 0,
-            ml: open.value ? '16px' : 0,
-            p: open.value ? 2 : 1
-        }}>
-            <Box display="flex">
-                <IconButton onClick={handleView} size="small">
-                    <VisibilityOutlined />
-                </IconButton>
+        <Accordion
+            expanded={activeCard.value === 'line-detail'}
+            onChange={() => handleCardToggle('line-detail')}
+            disableGutters
+        >
+            <AccordionSummary expandIcon={<ExpandMore />}>
+                { treeLine.value.properties.name || 'Unbekannte Baumreihe'}
+            </AccordionSummary>
 
-                <CardActionArea onClick={() => open.value = !open.peek()}>
-                    <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" m={0}>
-                        <Typography variant={open.value ? "h6" : "body1"} my="auto">
-                            { treeLine.value.properties.name || 'Unbekannte Baumreihe'}
-                        </Typography>
-                        { open.value ? <ExpandLess /> : <ExpandMore /> }
-                    </Box>
-                </CardActionArea>
-
-                <IconButton onClick={handleClose} size="small">
-                    <Close />
-                </IconButton>
-            </Box>
-
-            <Collapse in={open.value}>
-                <Box sx={{overflowY: 'scroll', p: 1}}>
-
+            <AccordionDetails>
+                <Box>
                     <Box p={1}>
                         <Box display="flex" flexDirection="row" justifyContent="space-between">
                             <Typography variant="body2">Anzahl Bäume:</Typography>
@@ -101,10 +88,19 @@ const SideLineDetailCard: React.FC = () => {
                             valueLabelDisplay="auto"
                         />
                     </Box>
-
                 </Box>
-            </Collapse>
-        </Card>
+            </AccordionDetails>
+
+            <AccordionActions>
+                <IconButton onClick={handleView} size="small">
+                    <VisibilityOutlined />
+                </IconButton>
+
+                <IconButton onClick={handleClose} size="small">
+                    <Close />
+                </IconButton>
+            </AccordionActions>
+        </Accordion>  
     </>
 }
 

@@ -13,21 +13,6 @@ const SideTreeDetailCard: React.FC = () => {
     // get a copy of the tree
     const tree = useSignal<TreeLocation["features"][0] | undefined>(undefined)
 
-    // For now, we use a mix of pollen, nectar and blossoms, like an overall rating
-    // const pollenRating = useSignal<number>(0)
-    // const nectarRating = useSignal<number>(0)
-    // const blossomsRating = useSignal<number>(0)
-
-    // // for now hard-code the limits, can be requested from supabase one day
-    // useSignalEffect(() => {
-    //     // pollenRating is the relative amount of pollen compared to the max of 140.000.000.000.000, rescaled to 0-5
-    //     pollenRating.value = tree.value?.properties.pollen! / 140000000000000 * 5 || 0
-    //     // nectarRating is the relative amount of nectar compared to the max of 12.000, rescaled to 0-5
-    //     nectarRating.value = tree.value?.properties.nectar! / 12000 * 5 || 0
-    //     //blossomsRating is the relative amount of blossoms compared to the max of 4.000.000, rescaled to 0-5
-    //     blossomsRating.value = tree.value?.properties.blossoms! / 4000000 * 5 || 0
-    // })
-
     // listen to changes in the activeTreeDetailId signal
     useSignalEffect(() => {
         if (activeTreeDetailId.value) {
