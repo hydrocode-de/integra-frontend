@@ -34,7 +34,7 @@ const DraggableElements: React.FC = () => {
 
             <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center">
                 <Typography sx={{mt: 2}} variant="h6">Angelegte Strukturen</Typography>
-                <Button variant="contained" onClick={() => editTreeLineId.value = nanoid(8)}>Neu</Button>
+                <Button variant="contained" color="success" onClick={() => editTreeLineId.value = nanoid(8)}>Neu</Button>
             </Box>
             <TreeLinesOverview /> 
 
