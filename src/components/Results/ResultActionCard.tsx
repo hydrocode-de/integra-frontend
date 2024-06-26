@@ -29,8 +29,8 @@ const ResultActionCard: React.FC = () => {
                     <Tabs value={appView.value} onChange={(_, value) => appView.value = value as AppView}>
                         <Tab label="Biomasse" value="biomass" />
                         <Tab label="Schatten" value="shade" />
-                        <Tab label="Blüten" value="blossoms" disabled />
-                        <Tab label="Bienen" value="insects" />
+                        <Tab label="Blüten" value="blossoms" />
+                        <Tab label="Insekten" value="insects" />
                     </Tabs>
                     <Button size="small" variant="text" onClick={() => open.value = false}>
                         <ExpandLess />

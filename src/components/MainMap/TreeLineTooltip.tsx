@@ -3,6 +3,35 @@ import { useSignal, useSignalEffect } from "@preact/signals-react"
 import { MapLayerMouseEvent, useMap } from "react-map-gl"
 import { TreeLocation } from "../../appState/tree.model"
 import { germanSpecies } from "../../appState/backendSignals"
+import { AppView, appView } from "../../appState/appViewSignals"
+
+const abbreviateNumber = (value: number) => {
+    if (value < 1e3) return value.toString()
+    if (value < 1e6) return (value / 1e3).toFixed(1) + 'k'
+    if (value < 1e9) return (value / 1e6).toFixed(1) + 'M'
+}
+const renderContent = (tree: TreeLocation["features"][0], viewState: AppView) => {
+    if (viewState === "biomass" || viewState === "shade") return <>
+        <Box display="flex" width="100%" flexDirection="row" justifyContent="space-between">
+            <strong>Alter</strong>
+            <Typography variant="body2">{tree.properties.age}</Typography>
+        </Box>
+        <Box display="flex" width="100%" flexDirection="row" justifyContent="space-between">
+            <strong>Höhe</strong>
+            <Typography variant="body2">{tree.properties.height?.toFixed(1)}m</Typography>
+        </Box>
+    </>
+    else if (viewState === "blossoms" || viewState === "insects") return <>
+        <Box display="flex" width="100%" flexDirection="row" justifyContent="space-between">
+            <strong>Alter</strong>
+            <Typography variant="body2">{tree.properties.age}</Typography>
+        </Box>
+        <Box display="flex" width="100%" flexDirection="row" justifyContent="space-between">
+            <strong>Blütenanzahl</strong>
+            <Typography variant="body2">{abbreviateNumber(tree.properties.blossoms!)}</Typography>
+        </Box>
+    </>
+}
 
 const TreeLineTooltip: React.FC = () => {
     // create a signal for the tooltip location
@@ -28,14 +57,7 @@ const TreeLineTooltip: React.FC = () => {
                             subheader={f.properties.treeType}  
                         />
                         <CardContent>
-                            <Box display="flex" width="100%" flexDirection="row" justifyContent="space-between">
-                                <strong>Alter</strong>
-                                <Typography variant="body2">{f.properties.age}</Typography>
-                            </Box>
-                            <Box display="flex" width="100%" flexDirection="row" justifyContent="space-between">
-                                <strong>Höhe</strong>
-                                <Typography variant="body2">{f.properties.height?.toFixed(1)}m</Typography>
-                            </Box>
+                            { renderContent(f, appView.value) }
                         </CardContent>
                     </>)
                 }

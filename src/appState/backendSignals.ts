@@ -76,6 +76,7 @@ interface TreeData extends TreeSpecies {
 // export a signal of all treeSpecies
 // for now, we do not export it, to control how data is injected here
 const treeData = signal<TreeData[]>([]);
+export const treeDatabase = computed<TreeData[]>(() => treeData.value);
 
 // compute some derived signals
 export const treeTypes = computed<string[]>(() =>
@@ -217,6 +218,21 @@ supabase.from("full_dataset_json").select('*')
   treeData.value = data
 })
 
+// download the discrete time steps for the full dataset from the database
+const rawTimeSteps = signal<number[]>([]);
+export const simulationTimeSteps = computed<number[]>(() => rawTimeSteps.value);
+
+supabase.from('data_timesteps').select('*')
+// .then(response => {
+//   console.log(response)
+//   return response
+// })
+.then(r => {
+  return r.data as {age: number}[]
+})
+.then(data => {
+  rawTimeSteps.value = data.map(d => d.age)
+})
 
 /**
  * Adding shades data

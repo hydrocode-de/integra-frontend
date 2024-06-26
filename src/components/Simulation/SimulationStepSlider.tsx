@@ -1,6 +1,5 @@
 import { Box, Slider } from "@mui/material";
 import { Mark } from "@mui/base";
-import { useEffect, useState } from "react";
 import { seasonMonth, setSimulationStep, simulationStep } from "../../appState/simulationSignals";
 import { appView } from "../../appState/appViewSignals";
 import CircularSlider from "@fseehawer/react-circular-slider";
@@ -16,30 +15,29 @@ const marks: Mark[] = [
   
   // hard-code a mapping from month label to data-inde
   const monthToIndex = {
-    Jan: 1,
-    Feb: 2,
-    Mär: 3,
-    Apr: 4,
-    Mai: 5,
-    Jun: 6,
-    Jul: 7,
-    Aug: 8,
-    Sep: 9,
-    Okt: 10,
-    Nov: 11,
-    Dez: 12,
+    Jan: 0,
+    Feb: 1,
+    Mär: 2,
+    Apr: 3,
+    Mai: 4,
+    Jun: 5,
+    Jul: 6,
+    Aug: 7,
+    Sep: 8,
+    Okt: 9,
+    Nov: 10,
+    Dez: 11,
   };
 
 interface SimulationStepSliderProps {
     noMonthSlider?: boolean;
   }
   const SimulationStepSlider: React.FC<SimulationStepSliderProps> = ({ noMonthSlider }) => {
-    const [dataIndex, setDataIndex] = useState<keyof typeof monthToIndex>('Jun');
-  
-    useEffect(() => {
-      seasonMonth.value = monthToIndex[dataIndex];
-    }, [dataIndex])
-  
+    const handleMonthChange = (month: keyof typeof monthToIndex) => {
+      if (monthToIndex[month] !== seasonMonth.peek() - 1) {
+        seasonMonth.value = monthToIndex[month] + 1;
+      }
+    }
     return <>
       <Box display="flex" mt={1} p={1} alignItems="center">         
         <Slider
@@ -56,8 +54,8 @@ interface SimulationStepSliderProps {
             width={90}
             label=""
             data={Object.keys(monthToIndex)}
-            dataIndex={6}
-            onChange={(mon: keyof typeof monthToIndex) => setDataIndex(mon)}
+            dataIndex={seasonMonth.peek() - 1}
+            onChange={handleMonthChange}
             valueFontSize="0.9rem"
             labelColor="black"
           />

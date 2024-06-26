@@ -23,6 +23,7 @@ import MapToolsCard from "../components/MapTools/MapToolsCard";
 import SideLineDetailCard from "../components/TreeLines/SideLineDetailCard";
 import { NavigationControl } from "react-map-gl";
 import Glossary from "../components/Glossary/Glossary";
+import BLossomsLocationsSource from "../components/MainMap/BlossomsLocationsSource";
 
 const DesktopMain: React.FC = () => {
 
@@ -90,6 +91,7 @@ const DesktopMain: React.FC = () => {
             <TreeLineSource />
             <TreeShadeSource /> 
             <TreeLineTooltip />
+            <BLossomsLocationsSource />
             <ReferenceAreaSource />
             <DistanceMeasurementsSource />
           </MainMap>
