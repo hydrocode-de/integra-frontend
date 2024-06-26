@@ -32,7 +32,11 @@ const MainActionCard: React.FC = () => {
     })
 
     return <>
-        <Accordion expanded={activeCard.value === 'tree-edit'} onChange={() => handleCardToggle('tree-edit')}>
+        <Accordion 
+            expanded={activeCard.value === 'tree-edit'} 
+            onChange={() => handleCardToggle('tree-edit')}
+            disableGutters
+        >
             <AccordionSummary expandIcon={<ExpandMore />}>Meine Planung</AccordionSummary>
 
             <AccordionDetails>

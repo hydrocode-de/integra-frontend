@@ -5,7 +5,11 @@ import { activeCard, handleCardToggle } from "../../appState/appViewSignals"
 
 const MapToolsCard: React.FC = () => {
     return <>
-        <Accordion expanded={activeCard.value === 'map-tools'} onChange={() => handleCardToggle('map-tools')}>
+        <Accordion 
+            expanded={activeCard.value === 'map-tools'} 
+            onChange={() => handleCardToggle('map-tools')}
+            disableGutters
+        >
             <AccordionSummary expandIcon={<ExpandMore />}>
                 Kartenwerkzeuge
             </AccordionSummary>

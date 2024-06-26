@@ -2,37 +2,42 @@ import { useSignal, useSignalEffect } from "@preact/signals-react";
 import { activeTreeDetailId, setDetailId } from "../../appState/sideContentSignals";
 import { deleteTreeLocation, rawTreeFeatures, updateSingleTreeSeed } from "../../appState/treeLocationSignals";
 import { TreeLocation } from "../../appState/tree.model";
-import { Box, Card, CardActionArea, Chip, Collapse, IconButton, Rating, Slider, Tooltip, Typography } from "@mui/material";
-import { Close, ExpandLess, ExpandMore, VisibilityOutlined, DeleteOutline } from "@mui/icons-material";
+import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Box, Chip, IconButton, Slider, Typography } from "@mui/material";
+import { Close, ExpandMore, VisibilityOutlined, DeleteOutline } from "@mui/icons-material";
 import { flyTo } from "../MainMap/MapObservableStore";
 import { simulationStep } from "../../appState/simulationSignals";
+import { activeCard, handleCardToggle } from "../../appState/appViewSignals";
+import { germanSpecies } from "../../appState/backendSignals";
 
 const SideTreeDetailCard: React.FC = () => {
-    // state to track if the card is open
-    const open = useSignal<boolean>(true);
-
     // get a copy of the tree
     const tree = useSignal<TreeLocation["features"][0] | undefined>(undefined)
 
     // For now, we use a mix of pollen, nectar and blossoms, like an overall rating
-    const pollenRating = useSignal<number>(0)
-    const nectarRating = useSignal<number>(0)
-    const blossomsRating = useSignal<number>(0)
+    // const pollenRating = useSignal<number>(0)
+    // const nectarRating = useSignal<number>(0)
+    // const blossomsRating = useSignal<number>(0)
 
-    // for now hard-code the limits, can be requested from supabase one day
-    useSignalEffect(() => {
-        // pollenRating is the relative amount of pollen compared to the max of 140.000.000.000.000, rescaled to 0-5
-        pollenRating.value = tree.value?.properties.pollen! / 140000000000000 * 5 || 0
-        // nectarRating is the relative amount of nectar compared to the max of 12.000, rescaled to 0-5
-        nectarRating.value = tree.value?.properties.nectar! / 12000 * 5 || 0
-        //blossomsRating is the relative amount of blossoms compared to the max of 4.000.000, rescaled to 0-5
-        blossomsRating.value = tree.value?.properties.blossoms! / 4000000 * 5 || 0
-    })
+    // // for now hard-code the limits, can be requested from supabase one day
+    // useSignalEffect(() => {
+    //     // pollenRating is the relative amount of pollen compared to the max of 140.000.000.000.000, rescaled to 0-5
+    //     pollenRating.value = tree.value?.properties.pollen! / 140000000000000 * 5 || 0
+    //     // nectarRating is the relative amount of nectar compared to the max of 12.000, rescaled to 0-5
+    //     nectarRating.value = tree.value?.properties.nectar! / 12000 * 5 || 0
+    //     //blossomsRating is the relative amount of blossoms compared to the max of 4.000.000, rescaled to 0-5
+    //     blossomsRating.value = tree.value?.properties.blossoms! / 4000000 * 5 || 0
+    // })
 
     // listen to changes in the activeTreeDetailId signal
     useSignalEffect(() => {
         if (activeTreeDetailId.value) {
+            // set the data of the current tree
             tree.value = rawTreeFeatures.value.filter(f => f.id === activeTreeDetailId.peek())[0]
+
+            // if the accordion is not open, open it
+            if (activeCard.peek() !== 'tree-detail') {
+                handleCardToggle('tree-detail')
+            }
         } else {
             tree.value = undefined
         }
@@ -67,35 +72,17 @@ const SideTreeDetailCard: React.FC = () => {
     if (!tree.value) return null
 
     return <>
-        <Card sx={{
-            mt: open.value ? '16px' : '0px', 
-            ml: open.value ? '16px' : '0px',
-            p: open.value ? 2 : 1
-        }}>
-            <Box display="flex">
-                <IconButton onClick={handleView} size="small">
-                    <VisibilityOutlined />
-                </IconButton>
+        <Accordion 
+            expanded={activeCard.value === 'tree-detail'} 
+            onChange={() => handleCardToggle('tree-detail')}
+            disableGutters
+        >
+            <AccordionSummary expandIcon={<ExpandMore />}>
+                { germanSpecies.peek()[tree.value.properties.treeType] }
+            </AccordionSummary>
 
-                <CardActionArea onClick={() => open.value =!open.peek()}>
-                    <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" m={0}>
-                        <Typography variant={open.value ? "h6" : "body1"} my="auto">
-                            { tree.value.properties.treeType }
-                        </Typography>
-                        { open.value ? <ExpandLess /> : <ExpandMore /> }
-                    </Box>
-                </CardActionArea>
-
-                <IconButton onClick={handleClose} size="small">
-                    <Close />
-                </IconButton>
-                <IconButton onClick={handleDelete} size="small">
-                    <DeleteOutline />
-                </IconButton>
-            </Box>
-
-            <Collapse in={open.value}>
-                <Box sx={{overflowY: 'scroll', p: 1}}>
+            <AccordionDetails>
+                <Box>
                     {/* Place chips to inform if the Tree actually exists */}
                     { tree.value.properties.age! > 0 ? (
                         tree.value.properties.harvestAge! > tree.value.properties.age! ? (
@@ -143,37 +130,27 @@ const SideTreeDetailCard: React.FC = () => {
                             wird in {tree.value.properties.harvestAge! - tree.value.properties.age!} Jahren geerntet&nbsp;
                             (mit {tree.value.properties.harvestAge!} Jahren)
                         </Typography>
-
-                        <Typography variant="h6" mt="2">
-                            Schatten
-                        </Typography>
-                        <Rating value={4} readOnly />
-
-                        <Tooltip 
-                            title={<Box display="flex" flexDirection="column">
-                                <span>Pollen: {pollenRating.value.toFixed(1)}</span>
-                                <span>Nektar: {nectarRating.value.toFixed(1)}</span>
-                                <span>Blühtenzahl {blossomsRating.value.toFixed(1)}</span>
-                            </Box>} 
-                            placement="right"
-                        >
-                            <Box>
-                                <Typography variant="h6" mt="2">
-                                    Blühangebot
-                                </Typography>
-                                <Rating 
-                                    readOnly 
-                                    value={(blossomsRating.value + nectarRating.value + pollenRating.value) / 3.} 
-                                    precision={0.5}
-                                />
-                            </Box>
-                        </Tooltip>
-                        
-                        
                     </Box>
                 </Box>
-            </Collapse>
-        </Card>
+            </AccordionDetails>
+
+            <AccordionActions>
+            {/* <Box mt={0.5} display="flex" flexDirection="row" justifyContent="space-between"> */}
+                        <IconButton onClick={handleView} size="small">
+                            <VisibilityOutlined />
+                        </IconButton>
+                        {/* <Box display="flex" flexDirection="row"> */}
+                            <IconButton onClick={handleClose} size="small">
+                                <Close />
+                            </IconButton>
+                            <IconButton onClick={handleDelete} size="small">
+                                <DeleteOutline />
+                            </IconButton>
+                        {/* </Box> */}
+                    {/* </Box> */}
+            </AccordionActions>
+
+        </Accordion>
     </>
 }
 

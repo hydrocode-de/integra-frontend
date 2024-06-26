@@ -31,7 +31,7 @@ export type ActivePage = 'map' | 'summary' | 'glossary'
 export const activePage = signal<ActivePage>('map')
 
 // action card settings
-export type ActiveActionCard = 'none' | 'map-tools' | 'tree-edit' | 'detail'
+export type ActiveActionCard = 'none' | 'map-tools' | 'tree-edit' | 'tree-detail' | 'line-detail'
 const activeActionCard = signal<ActiveActionCard>('tree-edit')
 export const activeCard = computed<ActiveActionCard>(() => activeActionCard.value)
 
