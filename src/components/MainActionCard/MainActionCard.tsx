@@ -7,6 +7,7 @@ import { zoom } from "../../appState/mapSignals";
 import { referenceArea } from "../../appState/referenceAreaSignals";
 import { useState } from "react";
 import ZoomBackCard from "./ZoomBackCard";
+import { activeCard, handleCardToggle } from "../../appState/appViewSignals";
 
 const MainActionCard: React.FC = () => {
     // the main action card toggles between different modes:
@@ -31,7 +32,7 @@ const MainActionCard: React.FC = () => {
     })
 
     return <>
-        <Accordion>
+        <Accordion expanded={activeCard.value === 'tree-edit'} onChange={() => handleCardToggle('tree-edit')}>
             <AccordionSummary expandIcon={<ExpandMore />}>Meine Planung</AccordionSummary>
 
             <AccordionDetails>

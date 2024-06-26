@@ -1,10 +1,11 @@
 import { Accordion, AccordionDetails, AccordionSummary, Box, IconButton } from "@mui/material"
 import { ExpandMore, FitScreenOutlined } from "@mui/icons-material"
 import { fitReferenceArea, referenceArea } from "../../appState/referenceAreaSignals"
+import { activeCard, handleCardToggle } from "../../appState/appViewSignals"
 
 const MapToolsCard: React.FC = () => {
     return <>
-        <Accordion>
+        <Accordion expanded={activeCard.value === 'map-tools'} onChange={() => handleCardToggle('map-tools')}>
             <AccordionSummary expandIcon={<ExpandMore />}>
                 Kartenwerkzeuge
             </AccordionSummary>
