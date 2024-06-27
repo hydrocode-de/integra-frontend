@@ -1,6 +1,6 @@
 // These signals will be used to activate or deactivate certain views in the app.
 
-import { signal } from "@preact/signals-react";
+import { computed, signal } from "@preact/signals-react";
 
 export type AppView = 'none' | 'biomass' | 'shade' | 'blossoms' | 'insects'
 // as soon as we can change the 'tabs', go for none initially
@@ -26,9 +26,17 @@ export const removeTreeFromPalette = (treeType: string) => {
     console.log(treePalette.value)
 }
 
+// tab settings
 export type ActivePage = 'map' | 'summary' | 'glossary'
-
 export const activePage = signal<ActivePage>('map')
 
+// action card settings
+export type ActiveActionCard = 'none' | 'map-tools' | 'tree-edit' | 'tree-detail' | 'line-detail'
+const activeActionCard = signal<ActiveActionCard>('tree-edit')
+export const activeCard = computed<ActiveActionCard>(() => activeActionCard.value)
 
-
+// put the handler into an extra card so that we can manage the behavior of the accordion at one place
+export const handleCardToggle = (card: ActiveActionCard) => {
+    // toogle the card
+    activeActionCard.value = activeActionCard.value === card ? 'none' : card
+}

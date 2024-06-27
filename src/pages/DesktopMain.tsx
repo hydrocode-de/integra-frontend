@@ -85,6 +85,7 @@ const DesktopMain: React.FC = () => {
             <SideTreeDetailCard />
             <SideLineDetailCard />
           </SideContent>
+          
 
           <MainMap mapId="desktop">
             <NavigationControl position="bottom-right" visualizePitch />
