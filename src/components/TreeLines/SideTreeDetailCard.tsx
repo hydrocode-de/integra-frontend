@@ -13,21 +13,23 @@ const SideTreeDetailCard: React.FC = () => {
     // get a copy of the tree
     const tree = useSignal<TreeLocation["features"][0] | undefined>(undefined)
 
+    // use a signal to handle the open state locally
+    const open = useSignal(true)
+
     // listen to changes in the activeTreeDetailId signal
     useSignalEffect(() => {
         if (activeTreeDetailId.value) {
             // set the data of the current tree
             tree.value = rawTreeFeatures.value.filter(f => f.id === activeTreeDetailId.peek())[0]
 
-            // if the accordion is not open, open it
-            if (activeCard.peek() !== 'tree-detail') {
-                handleCardToggle('tree-detail')
-            }
+            // // if the accordion is not open, open it
+            // if (activeCard.peek() !== 'tree-detail') {
+            //     handleCardToggle('tree-detail')
+            // }
         } else {
             tree.value = undefined
         }
     })
-
 
     // some card handlers
     const handleClose = () => {
@@ -58,8 +60,10 @@ const SideTreeDetailCard: React.FC = () => {
 
     return <>
         <Accordion 
-            expanded={activeCard.value === 'tree-detail'} 
-            onChange={() => handleCardToggle('tree-detail')}
+            // expanded={activeCard.value === 'tree-detail'} 
+            // onChange={() => handleCardToggle('tree-detail')}
+            expanded={open.value}
+            onChange={() => open.value = !open.peek()}
             disableGutters
         >
             <AccordionSummary expandIcon={<ExpandMore />}>

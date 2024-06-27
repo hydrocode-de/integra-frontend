@@ -1,6 +1,6 @@
 import { ExpandMore } from "@mui/icons-material";
 import { Accordion, AccordionDetails, AccordionSummary, Box, Card, CardActionArea, Collapse, Typography } from "@mui/material";
-import { useSignalEffect } from "@preact/signals-react";
+import { useSignal, useSignalEffect } from "@preact/signals-react";
 import ReferenceAreaEditor from "./ReferenceAreaEditor";
 import DraggableElements from "./DraggableElements";
 import { zoom } from "../../appState/mapSignals";
@@ -10,6 +10,9 @@ import ZoomBackCard from "./ZoomBackCard";
 import { activeCard, handleCardToggle } from "../../appState/appViewSignals";
 
 const MainActionCard: React.FC = () => {
+    // add a local signal to handle the open state
+    const open = useSignal(true)
+    
     // the main action card toggles between different modes:
     // - finding a location and adding a reference area
     // - adding trees
@@ -33,8 +36,10 @@ const MainActionCard: React.FC = () => {
 
     return <>
         <Accordion 
-            expanded={activeCard.value === 'tree-edit'} 
-            onChange={() => handleCardToggle('tree-edit')}
+            // expanded={activeCard.value === 'tree-edit'} 
+            // onChange={() => handleCardToggle('tree-edit')}
+            expanded={open.value}
+            onChange={() => open.value = !open.peek()}
             disableGutters
         >
             <AccordionSummary expandIcon={<ExpandMore />}>Meine Planung</AccordionSummary>

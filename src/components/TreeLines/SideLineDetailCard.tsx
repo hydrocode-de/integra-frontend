@@ -9,6 +9,9 @@ import { flyTo } from "../MainMap/MapObservableStore";
 import { activeCard, handleCardToggle } from "../../appState/appViewSignals";
 
 const SideLineDetailCard: React.FC = () => {
+    // create a local signal to handle open
+    const open = useSignal(true)
+
     // get a copy of the treeline
     const treeLine = useSignal<CalculatedTreeLine["features"][0] | undefined>(undefined)
 
@@ -18,9 +21,9 @@ const SideLineDetailCard: React.FC = () => {
             treeLine.value = calculatedTreeLineFeatures.value.filter(line => line.properties.id === activeTreeLineId.peek())[0]
 
             // if the card is not open, open it
-            if (activeCard.peek() !== 'line-detail') {
-                handleCardToggle('line-detail')
-            }
+            // if (activeCard.peek() !== 'line-detail') {
+            //     handleCardToggle('line-detail')
+            // }
         } else {
             treeLine.value = undefined
         }
@@ -48,8 +51,10 @@ const SideLineDetailCard: React.FC = () => {
 
     return <>
         <Accordion
-            expanded={activeCard.value === 'line-detail'}
-            onChange={() => handleCardToggle('line-detail')}
+            // expanded={activeCard.value === 'line-detail'}
+            // onChange={() => handleCardToggle('line-detail')}
+            expanded={open.value}
+            onChange={() => open.value = !open.peek()}
             disableGutters
         >
             <AccordionSummary expandIcon={<ExpandMore />}>
