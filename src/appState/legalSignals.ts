@@ -19,7 +19,7 @@ export const treeLineAreaShare = computed<number>(() => {
     // get the treeLine Area
     const lines = area(treeLineArea.value)
 
-    return lines / refArea * 100
+    return (lines / refArea * 100) || 0
 })
 
 // the amount of planted trees per hectare
@@ -31,4 +31,33 @@ export const treesPerHectar = computed<number>(() => {
     const refArea = area(referenceArea.value) / 10000
 
     return trees / refArea
+})
+
+// make sure no tree-line is smaller than 3 or larger than 25m
+export const conformTreeLineWidth = computed<boolean>(() => {
+    // check each tree line
+    const singleChecks = calculatedTreeLineFeatures.value.map(line => line.properties.width >= 3 && line.properties.width <= 25)
+
+    // reduce to a single boolean
+    const allChecks = singleChecks.reduce((acc, cur) => acc && cur, true)
+
+    return allChecks
+})
+
+// emit a signal of all constraints
+type LegalConstraints = {
+    numberOfTreeLines: boolean,
+    treeLineAreaShare: boolean,
+    treesPerHectar: boolean,
+    conformTreeLineWidth: boolean
+}
+export const legalConstraints = computed<LegalConstraints>(() => {
+    return {
+        numberOfTreeLines: numberOfTreeLines.value >= 2,
+        treeLineAreaShare: treeLineAreaShare.value <= 40,
+        ecoTreeLineShare: treeLineAreaShare.value >= 2 && treeLineAreaShare.value <= 35,
+        treesPerHectar: treesPerHectar.value >= 50 && treesPerHectar.value <= 200,
+        conformTreeLineWidth: conformTreeLineWidth.value,
+        
+    }
 })
