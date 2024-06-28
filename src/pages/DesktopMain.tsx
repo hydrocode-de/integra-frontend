@@ -24,6 +24,7 @@ import SideLineDetailCard from "../components/TreeLines/SideLineDetailCard";
 import { NavigationControl } from "react-map-gl";
 import Glossary from "../components/Glossary/Glossary";
 import BLossomsLocationsSource from "../components/MainMap/BlossomsLocationsSource";
+import LegalSummaryCard from "../components/LegalFramework/LegalSummaryCard";
 
 const DesktopMain: React.FC = () => {
 
@@ -82,6 +83,7 @@ const DesktopMain: React.FC = () => {
           <SideContent>
             <MapToolsCard />
             <MainActionCard />
+            <LegalSummaryCard />
             <SideTreeDetailCard />
             <SideLineDetailCard />
           </SideContent>
