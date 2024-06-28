@@ -28,18 +28,6 @@ const LegalSummaryCard: React.FC = () => {
                     </Alert>
                     <hr />
 
-                    {/* <List>
-                        <ListItem>
-                            <ListItemIcon color="success"><Check color="success" /></ListItemIcon>
-                            <ListItemText color="success">
-                                Anzahl an Baumreihen
-                            </ListItemText>
-                        </ListItem>
-                    </List>    
-                    <Box mb={0.6} display="flex" justifyContent="space-between">
-                        <Close color="error" />
-                        <Typography color="error" variant="body1">Gesamtflächenanteil &lt; 40%</Typography>
-                    </Box> */}
                     <Alert sx={{mb: 1}} severity="warning">
                         Baumreihen: 0 / 2
                     </Alert>
