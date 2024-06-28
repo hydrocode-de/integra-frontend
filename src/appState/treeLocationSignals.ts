@@ -89,12 +89,19 @@ export const addNewTree = (tree: {location: {lat: number, lng: number}, treeType
     // get the next id
     const nextId = `s${rawTreeLocationSeedData.peek().length + 1}`
 
-    // get the shape associated to this tree
-    const icon_abbrev = treeSpecies.peek().find(species => species.latin_name === tree.treeType)!.icon_abbrev
-    if (!icon_abbrev) {
+    // get the species
+    const species = treeSpecies.peek().find(species => species.latin_name === tree.treeType)!
+    if (!species) {
         console.log(`ERROR: addNewTree('${tree.treeType}'): no icon associated to this treeType`)
         console.log(treeSpecies.peek())
     }
+
+    // get the shape associated to this tree
+    const icon_abbrev = species.icon_abbrev
+    
+    // get the type of species
+    const type = species.type
+
 
     rawTreeLocationSeedData.value = [
         ...rawTreeLocationSeedData.value,
@@ -104,7 +111,8 @@ export const addNewTree = (tree: {location: {lat: number, lng: number}, treeType
             age: editAge.peek(),
             harvestAge: editHarvestAge.peek(),
             treeLineId: editTreeLineId.peek(),
-            icon_abbrev: icon_abbrev
+            icon_abbrev: icon_abbrev,
+            type: type
         }
     ]
 }
