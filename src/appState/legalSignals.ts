@@ -1,8 +1,12 @@
 import { computed } from "@preact/signals-react";
-import { calculatedTreeLineFeatures, treeLineArea } from "./treeLineSignals";
+import { calculatedTreeLineFeatures, treeLineArea, treeLineAreaFeatures } from "./treeLineSignals";
 import { referenceArea } from "./referenceAreaSignals";
-import { area } from "@turf/turf";
+import { area, buffer, intersect, polygonToLine, union } from "@turf/turf";
 import { treeLocationFeatures } from "./geoJsonSignals";
+
+// set some constants that might change in the future
+const MIN_DISTANCE = 20
+const MAX_DISTANCE = 100
 
 /**
  * Here, we implement the legal signal that are formulated as constraints.
@@ -44,20 +48,67 @@ export const conformTreeLineWidth = computed<boolean>(() => {
     return allChecks
 })
 
-// emit a signal of all constraints
-type LegalConstraints = {
-    numberOfTreeLines: boolean,
-    treeLineAreaShare: boolean,
-    treesPerHectar: boolean,
-    conformTreeLineWidth: boolean
-}
-export const legalConstraints = computed<LegalConstraints>(() => {
-    return {
-        numberOfTreeLines: numberOfTreeLines.value >= 2,
-        treeLineAreaShare: treeLineAreaShare.value <= 40,
-        ecoTreeLineShare: treeLineAreaShare.value >= 2 && treeLineAreaShare.value <= 35,
-        treesPerHectar: treesPerHectar.value >= 50 && treesPerHectar.value <= 200,
-        conformTreeLineWidth: conformTreeLineWidth.value,
+/**
+ * Here we need to do some geometry calculations to check the minimum distance to the edge
+ * and between each other
+ */
+export const minimumDistanceArea = computed<GeoJSON.FeatureCollection<GeoJSON.Polygon | GeoJSON.MultiPolygon>>(() => {
+    // create the container
+    const features: GeoJSON.Feature<GeoJSON.Polygon | GeoJSON.MultiPolygon>[] = []
+
+    // get the reference area
+    const refArea = referenceArea.value
+    if (!refArea) return {type: 'FeatureCollection', features: []}
+
+    // get the tree lines
+    const lines = treeLineAreaFeatures.value
+    //const lines = calculatedTreeLineFeatures.value
+    if (!lines || lines.length === 0) return {type: 'FeatureCollection', features: []}
+
+    // get the outline of the reference area and buffer by 20 meters
+    const out = buffer((polygonToLine(refArea.features[0]) as GeoJSON.Feature<GeoJSON.LineString>), 20, {units: 'meters'})
+    
+    // use the intersection of the reference area itself to discard everything outside the reference area
+    const minimumDistToEdge = intersect(out, refArea.features[0])
+
+    // finally check each line if it is too close to another line
+    lines.forEach(line => {
+        // add the intersection of this line with the minimum distance
+        if (minimumDistToEdge) {
+            const distToEdge = intersect(line, minimumDistToEdge)
+            if (distToEdge) features.push(distToEdge)
+        }
         
-    }
+        // now check the other lines
+        // buffer the line by 20 meters
+        const bufferedLine = buffer(line, 20, {units: 'meters'})
+
+        // intersect with the other lines
+        lines.filter(l => l.properties.id !== line.properties.id).forEach(other => {
+            // get the intersection
+            const distToLine = intersect(bufferedLine, other)
+            if (distToLine) features.push(distToLine)
+        })
+    })
+    
+    // finally return the features
+    return {type: 'FeatureCollection', features}
 })
+
+// // emit a signal of all constraints
+// type LegalConstraints = {
+//     numberOfTreeLines: boolean,
+//     treeLineAreaShare: boolean,
+//     treesPerHectar: boolean,
+//     conformTreeLineWidth: boolean
+// }
+// export const legalConstraints = computed<LegalConstraints>(() => {
+//     return {
+//         numberOfTreeLines: numberOfTreeLines.value >= 2,
+//         treeLineAreaShare: treeLineAreaShare.value <= 40,
+//         ecoTreeLineShare: treeLineAreaShare.value >= 2 && treeLineAreaShare.value <= 35,
+//         treesPerHectar: treesPerHectar.value >= 50 && treesPerHectar.value <= 200,
+//         conformTreeLineWidth: conformTreeLineWidth.value,
+        
+//     }
+// })

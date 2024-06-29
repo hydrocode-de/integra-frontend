@@ -1,7 +1,7 @@
 import { Check, Close, ExpandMore } from "@mui/icons-material"
 import { Accordion, AccordionDetails, AccordionSummary, Alert, Box, Card, CardContent, Chip, List, ListItem, ListItemIcon, ListItemText, Typography } from "@mui/material"
 import { useSignal } from "@preact/signals-react"
-import { conformTreeLineWidth, numberOfTreeLines, treeLineAreaShare, treesPerHectar } from "../../appState/legalSignals"
+import { conformTreeLineWidth, minimumDistanceArea, numberOfTreeLines, treeLineAreaShare, treesPerHectar } from "../../appState/legalSignals"
 
 const LegalSummaryCard: React.FC = () => {
     // create a local signal to handle open
@@ -46,8 +46,8 @@ const LegalSummaryCard: React.FC = () => {
                         <br />(Ziel 3 - 25 m)
                     </Alert>
 
-                    <Alert sx={{mb: 1}} severity="warning">
-                        Abstand zum Rand: 130 m <br />(Ziel 20 - 100 m)
+                    <Alert sx={{mb: 1}} severity={minimumDistanceArea.value.features.length > 0 ? 'warning' : 'success'}>
+                        { minimumDistanceArea.value.features.length > 0 ? 'Mindestabstände von 20 m nicht eingehalten' : 'Mindestabstände eingehalten'}
                     </Alert>
                     
                         
