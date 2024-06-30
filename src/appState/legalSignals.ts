@@ -97,3 +97,21 @@ export const minimumDistanceArea = computed<GeoJSON.FeatureCollection<GeoJSON.Po
 
 // set a flag if the distances should be showed in the map
 export const showDistances = signal<boolean>(true)
+
+// calculate the flag if the constraints are fulfilled
+type FundingCondition = {
+    directPayments: boolean
+    ecoRegulation: boolean
+}
+
+export const fundingConditions = computed<FundingCondition>(() => {
+    return {
+        directPayments: (numberOfTreeLines.value >= 2 && treeLineAreaShare.value <= 40) || (treesPerHectar.value >= 50 && treesPerHectar.value <= 200),
+        ecoRegulation: (
+            numberOfTreeLines.value >= 2 &&
+            conformTreeLineWidth.value &&
+            minimumDistanceArea.value.features.length === 0 &&
+            (treeLineAreaShare.value >= 2 && treeLineAreaShare.value <= 35)
+        )
+    }
+})

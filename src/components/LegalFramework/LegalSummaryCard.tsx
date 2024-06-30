@@ -1,7 +1,7 @@
 import { Check, Close, ExpandMore } from "@mui/icons-material"
-import { Accordion, AccordionDetails, AccordionSummary, Alert, Box, Card, CardContent, Chip, List, ListItem, ListItemIcon, ListItemText, Typography } from "@mui/material"
+import { Accordion, AccordionDetails, AccordionSummary, Alert, Box, Chip } from "@mui/material"
 import { useSignal } from "@preact/signals-react"
-import { conformTreeLineWidth, minimumDistanceArea, numberOfTreeLines, treeLineAreaShare, treesPerHectar } from "../../appState/legalSignals"
+import { conformTreeLineWidth, fundingConditions, minimumDistanceArea, numberOfTreeLines, treeLineAreaShare, treesPerHectar } from "../../appState/legalSignals"
 
 const LegalSummaryCard: React.FC = () => {
     // create a local signal to handle open
@@ -19,8 +19,18 @@ const LegalSummaryCard: React.FC = () => {
             <AccordionDetails>
                 <Box>
                     <Box mb={2} display="flex" justifyContent="space-between">
-                        <Chip label="Direktzahlungen" color="success" icon={<Check />} variant="outlined" />
-                        <Chip label="Ökoregelung" color="error" icon={<Close />} variant="outlined" />
+                        <Chip 
+                            label="Direktzahlungen" 
+                            color={fundingConditions.value.directPayments ? 'success' : 'error'}
+                            icon={fundingConditions.value.directPayments ? <Check /> : <Close />} 
+                            variant="outlined" 
+                        />
+                        <Chip 
+                            label="Ökoregelung" 
+                            color={fundingConditions.value.ecoRegulation ? 'success' : 'error'} 
+                            icon={fundingConditions.value.ecoRegulation ? <Check /> : <Close />} 
+                            variant="outlined" 
+                        />
                     </Box>
 
                     <Alert severity="info">
