@@ -1,4 +1,4 @@
-import { computed } from "@preact/signals-react";
+import { computed, signal } from "@preact/signals-react";
 import { calculatedTreeLineFeatures, treeLineArea, treeLineAreaFeatures } from "./treeLineSignals";
 import { referenceArea } from "./referenceAreaSignals";
 import { area, buffer, intersect, polygonToLine, union } from "@turf/turf";
@@ -95,20 +95,5 @@ export const minimumDistanceArea = computed<GeoJSON.FeatureCollection<GeoJSON.Po
     return {type: 'FeatureCollection', features}
 })
 
-// // emit a signal of all constraints
-// type LegalConstraints = {
-//     numberOfTreeLines: boolean,
-//     treeLineAreaShare: boolean,
-//     treesPerHectar: boolean,
-//     conformTreeLineWidth: boolean
-// }
-// export const legalConstraints = computed<LegalConstraints>(() => {
-//     return {
-//         numberOfTreeLines: numberOfTreeLines.value >= 2,
-//         treeLineAreaShare: treeLineAreaShare.value <= 40,
-//         ecoTreeLineShare: treeLineAreaShare.value >= 2 && treeLineAreaShare.value <= 35,
-//         treesPerHectar: treesPerHectar.value >= 50 && treesPerHectar.value <= 200,
-//         conformTreeLineWidth: conformTreeLineWidth.value,
-        
-//     }
-// })
+// set a flag if the distances should be showed in the map
+export const showDistances = signal<boolean>(true)
