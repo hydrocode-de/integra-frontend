@@ -93,6 +93,7 @@ const DistanceMeasurementsSource: React.FC = () => {
             <Layer 
                 id="minimum-distance"
                 source="minimum-distance"
+                beforeId="tree-locations"
                 type="fill"
                 layout={{
                     visibility: showDistances.value ? 'visible' : 'none'
