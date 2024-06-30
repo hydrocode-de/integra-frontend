@@ -1,7 +1,7 @@
 import { computed, signal } from "@preact/signals-react";
 import { calculatedTreeLineFeatures, treeLineArea, treeLineAreaFeatures } from "./treeLineSignals";
 import { referenceArea } from "./referenceAreaSignals";
-import { area, buffer, intersect, polygonToLine, union } from "@turf/turf";
+import { area, buffer, distance, explode, intersect, lineString, nearestPointOnLine, nearestPointToLine, polygonToLine } from "@turf/turf";
 import { treeLocationFeatures } from "./geoJsonSignals";
 
 // set some constants that might change in the future
@@ -66,7 +66,7 @@ export const minimumDistanceArea = computed<GeoJSON.FeatureCollection<GeoJSON.Po
     if (!lines || lines.length === 0) return {type: 'FeatureCollection', features: []}
 
     // get the outline of the reference area and buffer by 20 meters
-    const out = buffer((polygonToLine(refArea.features[0]) as GeoJSON.Feature<GeoJSON.LineString>), 20, {units: 'meters'})
+    const out = buffer((polygonToLine(refArea.features[0]) as GeoJSON.Feature<GeoJSON.LineString>), MIN_DISTANCE, {units: 'meters'})
     
     // use the intersection of the reference area itself to discard everything outside the reference area
     const minimumDistToEdge = intersect(out, refArea.features[0])
@@ -91,6 +91,54 @@ export const minimumDistanceArea = computed<GeoJSON.FeatureCollection<GeoJSON.Po
         })
     })
     
+    // finally return the features
+    return {type: 'FeatureCollection', features}
+})
+
+export const maximumDistances = computed<GeoJSON.FeatureCollection<GeoJSON.LineString>>(() => {
+    // create the container
+    const features: GeoJSON.Feature<GeoJSON.LineString>[] = []
+
+    // get the reference area
+    const refArea = referenceArea.value
+    if (!refArea) return {type: 'FeatureCollection', features: []}
+
+    // get the tree lines
+    const lines = treeLineAreaFeatures.value
+    if (!lines || lines.length === 0) return {type: 'FeatureCollection', features: []}
+
+    // get the outline of the reference area
+    const outline = (polygonToLine(refArea.features[0]) as GeoJSON.Feature<GeoJSON.LineString>)
+    // turn the outline into a distance buffer
+    const outlineBuffer = buffer(outline, MAX_DISTANCE, {units: 'meters'})
+
+    // check that the minimimum distance of each tree line is not lager than MAX_DISTANCE
+    lines.forEach(line => {
+        // check if the line intersects with the outline
+        if (!intersect(line, outlineBuffer)){
+            // there is nothing within the buffer, so we need to find the closest distance
+            const start = nearestPointToLine(explode(line), outline)
+            
+            // turn the polygon into a line and find thre closest point on the line
+            //const lineAreaOutline = polygonToLine(line) as GeoJSON.Feature<GeoJSON.LineString>
+            const end = nearestPointOnLine(outline, start)
+
+            // add the line to the features
+            const feature = {
+                type: 'Feature',
+                geometry: {
+                    type: 'LineString',
+                    coordinates: [start.geometry.coordinates, end.geometry.coordinates]
+                },
+                properties: {
+                    // distance: distance(start, end, {units: 'meters'}),
+                    label: `${distance(start, end, {units: 'meters'}).toFixed(0)} m`
+                }
+            } as GeoJSON.Feature<GeoJSON.LineString>
+            features.push(feature)
+        } 
+    })
+
     // finally return the features
     return {type: 'FeatureCollection', features}
 })

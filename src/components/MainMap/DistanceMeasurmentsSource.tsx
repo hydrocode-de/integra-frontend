@@ -1,7 +1,7 @@
 import { Layer, Source, useMap } from "react-map-gl"
 import { calculateMouseDistance, mouseDistanceLineFeatures, treeLineDistanceFeatures } from "../../appState/distanceSignals"
 import { useEffect } from "react"
-import { minimumDistanceArea, showDistances } from "../../appState/legalSignals"
+import { maximumDistances, minimumDistanceArea, showDistances } from "../../appState/legalSignals"
 
 const DistanceMeasurementsSource: React.FC = () => {
     // get a reference of the map
@@ -101,6 +101,43 @@ const DistanceMeasurementsSource: React.FC = () => {
                 paint={{
                     'fill-color': 'red',
                     'fill-opacity': 0.8
+                }}
+            />
+        </Source>
+
+        {/* maximum distance source */}
+        <Source
+            id="maximum-distances"
+            type="geojson"
+            data={maximumDistances.value}
+            generateId
+        >
+            <Layer 
+                id="maximum-distances"
+                source="maximum-distances"
+                beforeId="tree-locations"
+                type="line"
+                layout={{
+                    visibility: showDistances.value ? 'visible' : 'none'
+                }}
+                paint={{
+                    'line-color': 'red',
+                    'line-width': 3
+                    }}
+            />
+            <Layer 
+                id="maximum-distance-label"
+                source="maximum-distances"
+                beforeId="tree-locations"
+                type="symbol"
+                layout={{
+                    "text-field": ["get", "label"],
+                    "text-size": 16,
+                    "text-allow-overlap": true,
+                    "text-anchor": "top",
+                    "symbol-placement": "line-center",
+                    "visibility": showDistances.value ? 'visible' : 'none'
+                
                 }}
             />
         </Source>
