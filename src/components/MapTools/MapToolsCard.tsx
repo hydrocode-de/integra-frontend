@@ -1,8 +1,9 @@
-import { Accordion, AccordionDetails, AccordionSummary, Box, IconButton } from "@mui/material"
-import { ExpandMore, FitScreenOutlined } from "@mui/icons-material"
+import { Accordion, AccordionDetails, AccordionSummary, Box, IconButton, Tooltip } from "@mui/material"
+import { ErrorOutline, ExpandMore, FitScreenOutlined, VisibilityOff } from "@mui/icons-material"
 import { fitReferenceArea, referenceArea } from "../../appState/referenceAreaSignals"
 import { activeCard, handleCardToggle } from "../../appState/appViewSignals"
 import { useSignal } from "@preact/signals-react"
+import { minimumDistanceArea, showDistances } from "../../appState/legalSignals"
 
 const MapToolsCard: React.FC = () => {
     // create a local signal to handle open
@@ -29,6 +30,16 @@ const MapToolsCard: React.FC = () => {
                         >
                             <FitScreenOutlined />
                         </IconButton>
+
+                        <Tooltip title="Zeige Abstandshinweise für Förderbedingungen">
+                            <IconButton 
+                                color={minimumDistanceArea.value.features.length > 0 ? 'primary' : 'default'}
+                                disabled={minimumDistanceArea.value.features.length === 0}
+                                onClick={() => showDistances.value = !showDistances.peek()}
+                            >
+                                {showDistances.value ? <VisibilityOff /> : <ErrorOutline />}
+                            </IconButton>
+                        </Tooltip>
                     </Box>
                 </Box>
             </AccordionDetails>
