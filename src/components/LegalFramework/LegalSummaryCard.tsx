@@ -1,7 +1,7 @@
 import { Check, Close, ExpandMore } from "@mui/icons-material"
 import { Accordion, AccordionDetails, AccordionSummary, Alert, Box, Chip, Typography } from "@mui/material"
 import { useSignal } from "@preact/signals-react"
-import { conformTreeLineWidth, fundingConditions, maximumDistances, minimumDistanceArea, numberOfTreeLines, treeLineAreaShare, treesPerHectar } from "../../appState/legalSignals"
+import { Bundesland, conformTreeLineWidth, fundingConditions, maximumDistances, minimumDistanceArea, numberOfTreeLines, treeLineAreaShare, treesPerHectar } from "../../appState/legalSignals"
 import TouchRipple from "@mui/material/ButtonBase/TouchRipple"
 
 const LegalSummaryCard: React.FC = () => {
@@ -42,10 +42,19 @@ const LegalSummaryCard: React.FC = () => {
                         />
                     </Box>
 
-                    <Alert severity="info">
-                        Zusätzlich gelten Bestimmungen des Landes: Baden-Württemberg.<br />
-                        <a href="">Informieren Sie sich hier.</a>
+                    {Bundesland.value !== '' ? (
+                        <Alert severity="info">
+                        Zusätzlich gelten Bestimmungen des Landes: {Bundesland.value}.<br />
+                        <a href={`https://google.com/search?q=Förderbedingungen Agroforst ${Bundesland.value}`}>
+                            Informieren Sie sich hier.
+                        </a>
                     </Alert>
+                    ) : (
+                        <Alert severity="error">
+                            Das gewählte Feld scheint nicht eindeutig einem Bundesland zugeordnet werden zu können.
+                        </Alert>
+                    )}
+                    
                     <hr />
 
                     { activeOption.value === 'direct' ? <>
@@ -86,14 +95,6 @@ const LegalSummaryCard: React.FC = () => {
                             { maximumDistances.value.features.length > 0 ? 'Maximalabstände von 100 m überschritten' : 'Maximalabstände eingehalten'}
                         </Alert>
                     </> : null}
-                    
-
-                    
-                    
-                    
-                        
-                    
-                    
                     
                 </Box>
             </AccordionDetails>
