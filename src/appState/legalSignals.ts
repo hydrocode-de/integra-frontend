@@ -1,7 +1,7 @@
-import { computed, signal } from "@preact/signals-react";
+import { computed, effect, signal } from "@preact/signals-react";
 import { calculatedTreeLineFeatures, treeLineArea, treeLineAreaFeatures } from "./treeLineSignals";
 import { referenceArea } from "./referenceAreaSignals";
-import { area, buffer, distance, explode, intersect, lineString, nearestPointOnLine, nearestPointToLine, polygonToLine } from "@turf/turf";
+import { area, booleanContains, booleanWithin, buffer, distance, explode, intersect, lineString, nearestPointOnLine, nearestPointToLine, polygonToLine, within } from "@turf/turf";
 import { treeLocationFeatures } from "./geoJsonSignals";
 
 // set some constants that might change in the future
@@ -162,4 +162,26 @@ export const fundingConditions = computed<FundingCondition>(() => {
             (treeLineAreaShare.value >= 2 && treeLineAreaShare.value <= 35)
         )
     }
+})
+
+const bl = signal<GeoJSON.FeatureCollection<GeoJSON.Polygon>>({type: 'FeatureCollection', features: []})
+fetch('bl/bundeslaender.geojson').then(res => res.json()).then(data => bl.value = data)
+// effect(() => console.log(bl.value))
+
+// whenever the reference Area changes, we load the bundeslaender and check the location
+export const Bundesland = computed<string>(() => {
+    // get the reference area
+    const refArea = referenceArea.value
+    if (refArea.features.length === 0) return ''
+
+    let name = ''
+    // check each bundesland
+    bl.peek().features.forEach(land => {
+        if (intersect(land, refArea.features[0])) {
+            name = (land.properties as any).NUTS_NAME
+        }
+    })
+
+    if (name === '') console.log('KEIN BUNDESLAND GEFUNDEN')
+    return name
 })
