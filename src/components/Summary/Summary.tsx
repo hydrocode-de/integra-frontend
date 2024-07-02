@@ -9,6 +9,7 @@ import { useState } from "react";
 import SimulationStepSlider from "../Simulation/SimulationStepSlider";
 import TextEditField from "./TextEditField";
 import ForestrySelect from "./ForestrySelect";
+import SummaryLegal from "./SummaryLegal";
 
 
 const Summary = () => {
@@ -169,6 +170,10 @@ const Summary = () => {
         <Typography color={"textSecondary"} sx={{maxWidth: 600,pb: 1,}}>
           Wichtige Rechtliche Rahmenbedingen zu Anlage ihres Agroforstsystemes
         </Typography>
+      </Grid>
+
+      <Grid item xs={12} p={1}>
+        <SummaryLegal />
       </Grid>
 
     </Grid>

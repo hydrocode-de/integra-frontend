@@ -3,13 +3,17 @@ import { Accordion, AccordionDetails, AccordionSummary, Alert, Box, Chip, Typogr
 import { useSignal } from "@preact/signals-react"
 import { Bundesland, conformTreeLineWidth, fundingConditions, maximumDistances, minimumDistanceArea, numberOfTreeLines, treeLineAreaShare, treesPerHectar } from "../../appState/legalSignals"
 import TouchRipple from "@mui/material/ButtonBase/TouchRipple"
+import { referenceArea } from "../../appState/referenceAreaSignals"
 
 const LegalSummaryCard: React.FC = () => {
     // create a local signal to handle open
-    const open = useSignal(true)
+    const open = useSignal(false)
 
     // add a signal to track the current funding options shown
     const activeOption = useSignal<'direct' | 'eco'>('direct')
+
+    // only show the card if there is a field selected
+    if (referenceArea.value.features.length === 0) return null
 
     return <>
         <Accordion
