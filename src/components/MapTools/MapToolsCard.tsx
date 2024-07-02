@@ -3,7 +3,7 @@ import { ErrorOutline, ExpandMore, FitScreenOutlined, VisibilityOff } from "@mui
 import { fitReferenceArea, referenceArea } from "../../appState/referenceAreaSignals"
 import { activeCard, handleCardToggle } from "../../appState/appViewSignals"
 import { useSignal } from "@preact/signals-react"
-import { minimumDistanceArea, showDistances } from "../../appState/legalSignals"
+import { maximumDistances, minimumDistanceArea, showDistances } from "../../appState/legalSignals"
 
 const MapToolsCard: React.FC = () => {
     // create a local signal to handle open
@@ -33,8 +33,8 @@ const MapToolsCard: React.FC = () => {
 
                         <Tooltip title="Zeige Abstandshinweise für Förderbedingungen">
                             <IconButton 
-                                color={minimumDistanceArea.value.features.length > 0 ? 'primary' : 'default'}
-                                disabled={minimumDistanceArea.value.features.length === 0}
+                                color={minimumDistanceArea.value.features.length + maximumDistances.value.features.length > 0 ? 'primary' : 'default'}
+                                disabled={minimumDistanceArea.value.features.length + maximumDistances.value.features.length === 0}
                                 onClick={() => showDistances.value = !showDistances.peek()}
                             >
                                 {showDistances.value ? <VisibilityOff /> : <ErrorOutline />}

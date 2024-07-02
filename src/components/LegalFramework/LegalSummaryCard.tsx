@@ -2,7 +2,6 @@ import { Check, Close, ExpandMore } from "@mui/icons-material"
 import { Accordion, AccordionDetails, AccordionSummary, Alert, Box, Chip, Typography } from "@mui/material"
 import { useSignal } from "@preact/signals-react"
 import { Bundesland, conformTreeLineWidth, fundingConditions, maximumDistances, minimumDistanceArea, numberOfTreeLines, treeLineAreaShare, treesPerHectar } from "../../appState/legalSignals"
-import TouchRipple from "@mui/material/ButtonBase/TouchRipple"
 import { referenceArea } from "../../appState/referenceAreaSignals"
 
 const LegalSummaryCard: React.FC = () => {

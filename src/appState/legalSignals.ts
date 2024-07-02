@@ -137,6 +137,43 @@ export const maximumDistances = computed<GeoJSON.FeatureCollection<GeoJSON.LineS
             } as GeoJSON.Feature<GeoJSON.LineString>
             features.push(feature)
         } 
+
+        // secondly, we need to check each other line
+        lines.filter(l => l.properties.id !== line.properties.id).forEach(other => {
+            // buffer the other line by MAX_DISTANCE
+            const bufferedOther = buffer(other, MAX_DISTANCE, {units: 'meters'})
+
+            // as we might check each line combination twice, we need to check if this combination was already checked
+            const comb = `${other.properties.id} - ${line.properties.id}`
+            if (features.find(f => f.properties?.combination === comb)) return
+            
+            // check if the line intersects with the buffer
+            if (!intersect(bufferedOther, line)) {
+                // get the outline of the other line
+                const otherOutline = polygonToLine(other) as GeoJSON.Feature<GeoJSON.LineString>
+
+                // find the start point 
+                const start = nearestPointToLine(explode(line), otherOutline)
+
+                // find the end point
+                const end = nearestPointOnLine(otherOutline, start)
+
+                // add the line to the features
+                const feature = {
+                    type: 'Feature',
+                    geometry: {
+                        type: 'LineString',
+                        coordinates: [start.geometry.coordinates, end.geometry.coordinates]
+                    },
+                    properties: {
+                        // distance: distance(start, end, {units: 'meters'}),
+                        label: `${distance(start, end, {units: 'meters'}).toFixed(0)} m`,
+                        combination: `${line.properties.id} - ${other.properties.id}`
+                    }
+                } as GeoJSON.Feature<GeoJSON.LineString>
+                features.push(feature)
+            }
+        })
     })
 
     // finally return the features
