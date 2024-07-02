@@ -27,6 +27,7 @@ export interface TreeLocationProperties extends Partial<TreeDataPoint> {
     id: string,
     treeLineId?: string,
     treeType: string,
+    type: 'Baum' | 'Strauch',
     icon_abbrev?: string
 }
 
@@ -48,6 +49,7 @@ export interface RawTreeLocation {
     id: string,
     location: {lat: number, lng: number},
     treeType: string,
+    type: 'Baum' | 'Strauch',
     icon_abbrev?: string  
     treeLineId: string,
     age: number,
